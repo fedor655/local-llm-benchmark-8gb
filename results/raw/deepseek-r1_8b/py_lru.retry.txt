@@ -1,0 +1,93 @@
+<<<THINKING>>>
+Мы создадим класс LRUCache с использованием двусторонней связи (двойного связного списка) и хеш-таблицы (словаря).
+ Хеш-таблица будет хранить ключи и ссылки на узлы двустороннего списка.
+ Двусторонний список будет отслеживать порядок использования: самый недавно использованный в голове, самый старый (менее часто используемый) в хвосте.
+ При добавлении нового элемента:
+   - Если ключ уже существует, обновляем значение и перемещаем узел в начало (голову) списка.
+   - Если ключа нет, добавляем новый узел в начало и, если пропускная способность достигнута, удаляем последний узел (хвост) из списка и из словаря.
+ При получении значения (get):
+   - Если ключ есть, перемещаем узел в начало списка (обновляем порядок использования) и возвращаем значение.
+   - Если нет, возвращаем -1.
+
+ Структура узла:
+   - key
+   - value
+   - prev
+   - next
+
+ Мы также будем хранить в атрибутах класса:
+   - capacity: пропускная способность
+   - head и tail: указатели на начало и конец списка
+
+ Реализуем методы:
+   - __init__(self, capacity: int)
+   - get(self, key)
+   - put(self, key, value)
+
+ Важно: при put, если ключ уже существует, то мы обновляем значение и перемещаем узел в начало, но не увеличиваем capacity.
+
+ Давайте реализуем:
+
+<<<END THINKING>>>
+
+```python
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.cache = {}
+        self.head = None
+        self.tail = None
+
+    def get(self, key):
+        if key in self.cache:
+            node = self.cache[key]
+            self._remove_node(node)
+            self._add_node_at_head(node)
+            return node.value
+        return -1
+
+    def put(self, key, value):
+        if key in self.cache:
+            node = self.cache[key]
+            self._remove_node(node)
+            self._add_node_at_head(node)
+            node.value = value
+        else:
+            if len(self.cache) >= self.capacity:
+                self._remove_tail()
+            new_node = Node(key, value)
+            self.cache[key] = new_node
+            self._add_node_at_head(new_node)
+
+    def _remove_node(self, node):
+        if node.prev:
+            node.prev.next = node.next
+        else:
+            self.head = node.next
+        if node.next:
+            node.next.prev = node.prev
+        else:
+            self.tail = node.prev
+
+    def _add_node_at_head(self, node):
+        if self.head is None:
+            self.head = node
+            self.tail = node
+        else:
+            node.next = self.head
+            self.head.prev = node
+            self.head = node
+
+    def _remove_tail(self):
+        if self.tail:
+            del self.cache[self.tail.key]
+            self._remove_node(self.tail)
+
+class Node:
+    __slots__ = ('key', 'value', 'prev', 'next')
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+        self.prev = None
+        self.next = None
+```

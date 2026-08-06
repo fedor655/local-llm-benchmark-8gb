@@ -1,0 +1,32 @@
+<<<THINKING>>>
+We need to output only one code block. Provide function is_match(s: str, p: str) -> bool. Use dynamic programming with O(n*m) time and memory. For large strings thousands, memory okay. Use 2 rows optimization. Implementation in Python. Use iterative DP. '?' matches one char. '*' matches any sequence. Standard wildcard matching. We'll implement DP with two rows. Complexity O(n*m). Provide code.
+<<<END THINKING>>>
+
+```python
+def is_match(s: str, p: str) -> bool:
+    n, m = len(s), len(p)
+    # dp[j] will represent dp[i][j] for current i
+    dp = [False] * (m + 1)
+    dp[0] = True  # empty pattern matches empty string
+
+    # Initialize first row (i = 0, empty string)
+    for j in range(1, m + 1):
+        if p[j - 1] == '*':
+            dp[j] = dp[j - 1]
+        else:
+            break
+
+    for i in range(1, n + 1):
+        prev = dp[0]
+        dp[0] = False  # non-empty string cannot match empty pattern
+        for j in range(1, m + 1):
+            temp = dp[j]
+            if p[j - 1] == '*':
+                dp[j] = dp[j] or dp[j - 1]  # '*' matches empty or one more char
+            elif p[j - 1] == '?' or p[j - 1] == s[i - 1]:
+                dp[j] = prev
+            else:
+                dp[j] = False
+            prev = temp
+    return dp[m]
+```

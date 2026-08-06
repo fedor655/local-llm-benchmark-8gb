@@ -1,0 +1,23 @@
+```python
+def нормализовать_телефон(s: str) -> str | None:
+    """
+    Принимает российский номер телефона в произвольном виде и возвращает его в каноническом виде '+79123456789'.
+    Если из строки нельзя получить корректный российский номер — вернуть None.
+    """
+    s = s.replace(' ', '')
+    s = s.replace('-', '')
+    s = s.replace('(', '')
+    s = s.replace(')', '')
+
+    if s.startswith('+7'):
+        s = s[3:]
+    elif s.startswith('8'):
+        s = s[2:]
+    
+    if len(s) == 11 and s.isdigit():
+        return '+7' + s
+    elif len(s) == 10 and s.isdigit():
+        return '+7' + s
+    else:
+        return None
+```

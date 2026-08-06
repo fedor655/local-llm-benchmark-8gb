@@ -1,0 +1,3 @@
+ Выполняет компьютерные вычисления
+
+(Execute computer calculations)

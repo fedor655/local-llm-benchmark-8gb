@@ -1,0 +1,12 @@
+<<<THINKING>>>
+Okay, let's see. The user is asking which number is bigger between 9.11 and 9.9. Hmm, I need to compare these two decimals.
+
+First, I'll look at the whole number part. Both numbers have 9 as the units digit. So that's the same. Now, the decimal parts. 
+
+For 9.11, the decimal part is .11, which is 11 hundredths. For 9.9, the decimal part is .9, which is 9 tenths. Wait, 9 tenths is the same as 90 hundredths. So comparing 11 hundredths vs. 90 hundredths, 90 is larger. 
+
+Therefore, 9.9 is greater than 9.11. Let me double-check. If I convert both to fractions, 9.11 is 911/100 and 9.9 is 990/100. Since 990 is more than 911, 9.9 is bigger. Yep, that makes sense. The user wants the larger number, so the answer should be 9.9.
+
+<<<END THINKING>>>
+
+ОТВЕТ: 9.9

@@ -1,0 +1,26 @@
+```javascript
+function parseQuery(qs) {
+    const result = {};
+    if (qs.startsWith('?')) {
+        qs = qs.slice(1);
+    }
+    if (!qs) {
+        return result;
+    }
+    const pairs = qs.split('&');
+    for (const pair of pairs) {
+        if (!pair) continue;
+        const [key, value] = pair.split('=').map(decodeURIComponent).map(s => s.replace(/\+/g, ' '));
+        if (result[key]) {
+            if (Array.isArray(result[key])) {
+                result[key].push(value);
+            } else {
+                result[key] = [result[key], value];
+            }
+        } else {
+            result[key] = value;
+        }
+    }
+    return result;
+}
+```

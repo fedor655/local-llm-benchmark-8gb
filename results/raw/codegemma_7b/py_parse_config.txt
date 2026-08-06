@@ -1,0 +1,34 @@
+```python
+from typing import Dict
+
+def parse_config(text: str) -> Dict[str, Dict[str, any]]:
+    sections = {}
+    current_section = ''
+
+    for line in text.splitlines():
+        line = line.strip().lstrip('#;').strip()
+        if not line:
+            continue
+
+        if line.startswith('['):
+            current_section = line[1:-1].strip()
+            sections[current_section] = {}
+        else:
+            key, value = line.split('=', 1)
+            key = key.strip()
+            value = value.strip('"').strip()
+
+            if value.lower() in ('true', 'false'):
+                sections[current_section][key] = value.lower() == 'true'
+            elif value.isdigit():
+                sections[current_section][key] = int(value)
+            elif value.replace('.', '', 1).isdigit():
+                sections[current_section][key] = float(value)
+            else:
+                sections[current_section][key] = value
+
+    if not sections:
+        sections[''] = {}
+
+    return sections
+```

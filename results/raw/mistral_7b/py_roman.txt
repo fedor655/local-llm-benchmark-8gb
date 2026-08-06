@@ -1,0 +1,12 @@
+ ```python
+from functools import reduce
+
+def int_to_roman(n):
+    thousands = ["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV"]
+    numbers = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1]
+    return ''.join(thousands[i] if n >= numbers[i] else thousands[i+1] + thousands[i] for i in range(len(numbers))) if n > 0 else ''
+
+def roman_to_int(s):
+    values = {'M': 1000, 'CM': 900, 'D': 500, 'CD': 400, 'C': 100, 'XC': 90, 'L': 50, 'XL': 40, 'X': 10, 'IX': 9, 'V': 5, 'IV': 4}
+    return reduce((lambda x, y: x + values[y] if y in values else x), reversed(s), 0)
+```

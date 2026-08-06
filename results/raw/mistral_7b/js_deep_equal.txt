@@ -1,0 +1,46 @@
+ ```javascript
+function deepEqual(a, b) {
+  if (a === b) return true;
+
+  const typeA = typeof a;
+  const typeB = typeof b;
+
+  // Примитивы сравниваются строго, но NaN равен NaN, а +0 не равен -0
+  if (typeA !== typeB) return false;
+
+  switch (typeA) {
+    case 'number':
+      return a !== a ? b !== b : a === b;
+    case 'string':
+      return a === b;
+    case 'boolean':
+      return a === b;
+    case 'object':
+      if (!a || !b) return false; // null не равен пустому объекту
+
+      if (Array.isArray(a)) {
+        if (!Array.isArray(b)) return false;
+        if (a.length !== b.length) return false;
+
+        for (let i = 0; i < a.length; i++) {
+          if (!deepEqual(a[i], b[i])) return false;
+        }
+        return true;
+      }
+
+      const keysA = Object.keys(a);
+      const keysB = Object.keys(b);
+
+      if (keysA.length !== keysB.length) return false;
+
+      for (let i = 0; i < keysA.length; i++) {
+        if (!deepEqual(a[keysA[i]], b[keysA[i]])) return false;
+      }
+      return true;
+    case 'function':
+    // Object.is для сравнения NaN и +0
+    case 'symbol':
+      return false;
+  }
+}
+```

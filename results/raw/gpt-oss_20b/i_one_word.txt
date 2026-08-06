@@ -1,0 +1,7 @@
+<<<THINKING>>>
+The user asks: "Какой протокол используется для передачи гипертекста в интернете? Ответь ОДНИМ словом ЗАГЛАВНЫМИ БУКВАМИ, без точки и без каких-либо других символов."
+
+We need to answer with one word, uppercase letters, no punctuation. The protocol used for hypertext transfer is HTTP. So answer: HTTP. Ensure no punctuation, no spaces. Just "HTTP".
+<<<END THINKING>>>
+
+HTTP

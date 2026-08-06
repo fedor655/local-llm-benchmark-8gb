@@ -1,0 +1,6 @@
+<<<THINKING>>>
+User: "Назови столицу Австралии. Ответь одним словом." They want the capital of Australia. The answer: Canberra. They want one word. Then the last line must be "ОТВЕТ: <значение>" with no explanation after. So we should output "Canberra" and then "ОТВЕТ: Canberra". But the instruction: "Отвечай кратко. В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение> Без пояснений после этой строки." So we need to output something, maybe just the answer and then the line. But they want the last line to be "ОТВЕТ: Canberra". So we can output "Canberra" on first line, then "ОТВЕТ: Canberra" on second line. That satisfies. No explanation after that. So final.
+<<<END THINKING>>>
+
+Canberra
+ОТВЕТ: Canberra

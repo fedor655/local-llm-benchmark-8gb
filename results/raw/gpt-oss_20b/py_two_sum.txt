@@ -1,0 +1,26 @@
+<<<THINKING>>>
+We need to output only one block of code in triple backticks. The function two_sum with O(n). Use dictionary mapping value to index. Need to handle duplicates. We need to return smallest i, then j. Approach: iterate over list with index i, compute complement = target - nums[i]. Check if complement in dict. But we need to ensure i<j. Since we iterate forward, dict contains earlier indices. So if complement in dict, j = i, i = dict[complement]. But we need i<j. Since dict holds earlier index, that's fine. But we need to ensure we return smallest i. Since we iterate i from 0 to n-1, first found pair will have smallest j? Wait: Suppose there are multiple pairs with same i but different j. Our algorithm will find first j encountered. Since we iterate i forward, for each i we check complement in dict. That means j is current i, i is earlier index. So for a given i, we only find one j (the current i). But there could be multiple j for same i? Actually for a given i, only one j is current i. But there could be earlier j? Wait we are iterating i as current index. For each i, we check if complement exists earlier. That gives pair (dict[complement], i). For a given i, there is only one j (current i). But there could be earlier i that also matches with some later j. But we want smallest i. Since we iterate i from 0 upward, the first pair found will have smallest j? Actually we want smallest i. Suppose pair (i=1, j=4) and pair (i=2, j=3). Our algorithm: i=0 none; i=1 complement found? maybe j=4? Wait j=4 > i. But we only find when i=4 we check complement 1? Actually we iterate i forward. For pair (1,4), when i=4 we will find complement 1 in dict. So we will return (1,4). For pair (2,3), when i=3 we find complement 2. That returns (2,3). Which pair has smaller i? (1,4) has i=1, (2,3) has i=2. So we want (1,4). Our algorithm will find (1,4) when i=4, but we might have already found (2,3) earlier when i=3? Wait we iterate i from 0 to n-1. At i=3, we find complement 2? But 2 is earlier index 2. So we return (2,3). That has i=2. But we want (1,4). So our algorithm returns wrong pair. So we need to consider all pairs and choose minimal i. Approach: iterate over all indices, but we need to consider pairs where i<j. We can store dict of value to index. But we need to consider all pairs. We can iterate i from 0 to n-1, for each j>i, but that's O(n^2). Instead we can iterate over i from 0 to n-1, and for each i, we can check complement in dict of earlier indices? That gives pairs where earlier index is complement. That ensures i is later index. So we get pairs where earlier index < current index. That covers all pairs. But we might miss pairs where earlier index is current i and later index is j. But we will catch them when we reach j. So all pairs will be considered. But we might return pair with larger i earlier. Because we return when we find first pair. But we want minimal i. So we need to keep track of best pair found so far, and update if new pair has smaller i or same i but smaller j. Since we iterate i forward, we will find pairs with increasing j. For each pair found, i is earlier index. But we might find pair with larger i earlier? Wait we iterate i as current index. For pair (1,4), we find when i=4. For pair (2,3), we find when i=3. So we find (2,3) earlier. So we need to compare and keep best. So we can maintain best_i, best_j. When we find a pair (i0, j0) where i0 < j0, we check if best is None or i0 < best_i or (i0 == best_i and j0 < best_j). Then update. After loop, return best or None.
+
+Implementation: dict = {} mapping value to index. For idx, val in enumerate(nums): complement = target - val. if complement in dict: i0 = dict[complement]; j0 = idx. Check best. Then dict[val] = idx (but careful: if duplicate values, we want earliest index? For complement search, we want earliest index. So we should not overwrite earlier index. So only set if val not in dict. That ensures earliest index stored. But if we have duplicate values, we might need to consider later duplicates as earlier index? For pair (i=0, val=2), (i=1, val=2), target=4. We want pair (0,1). When idx=1, complement=2, dict[2] = 0. So we find pair (0,1). Good. If we had earlier index 0, we keep it. So we should not overwrite.
+
+Edge: if val appears again later, we don't update dict. So earlier index remains.
+
+Return best tuple or None.
+
+Let's code.
+<<<END THINKING>>>
+
+```python
+def two_sum(nums: list[int], target: int) -> tuple[int, int] | None:
+    index_of = {}
+    best = None
+    for j, val in enumerate(nums):
+        comp = target - val
+        if comp in index_of:
+            i = index_of[comp]
+            if best is None or i < best[0] or (i == best[0] and j < best[1]):
+                best = (i, j)
+        if val not in index_of:
+            index_of[val] = j
+    return best
+```

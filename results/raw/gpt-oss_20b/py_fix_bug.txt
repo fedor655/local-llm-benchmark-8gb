@@ -1,0 +1,65 @@
+<<<THINKING>>>
+We need to return corrected function. The function should find first and last index of target in sorted list. The original code has bugs: hi initialized to len(nums) but should be len(nums)-1? Actually binary search typical uses hi = len(nums)-1. Also mid calculation uses division / instead of //, and updates lo incorrectly. Also first should be lo if nums[lo]==target else -1. Similarly last should be lo-1. Let's implement correctly.
+
+We need to return (-1,-1) if not found.
+
+Implement:
+
+def search_range(nums, target):
+    lo, hi = 0, len(nums)-1
+    first = -1
+    while lo <= hi:
+        mid = (lo+hi)//2
+        if nums[mid] < target:
+            lo = mid+1
+        elif nums[mid] > target:
+            hi = mid-1
+        else:
+            first = mid
+            hi = mid-1
+    lo, hi = 0, len(nums)-1
+    last = -1
+    while lo <= hi:
+        mid = (lo+hi)//2
+        if nums[mid] < target:
+            lo = mid+1
+        elif nums[mid] > target:
+            hi = mid-1
+        else:
+            last = mid
+            lo = mid+1
+    return (first, last)
+
+Return tuple. That should be fine.
+<<<END THINKING>>>
+
+```python
+def search_range(nums, target):
+    # Возвращает (первый_индекс, последний_индекс) вхождения target
+    # в отсортированном по возрастанию списке nums, либо (-1, -1).
+    lo, hi = 0, len(nums) - 1
+    first = -1
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        if nums[mid] < target:
+            lo = mid + 1
+        elif nums[mid] > target:
+            hi = mid - 1
+        else:
+            first = mid
+            hi = mid - 1
+
+    lo, hi = 0, len(nums) - 1
+    last = -1
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        if nums[mid] < target:
+            lo = mid + 1
+        elif nums[mid] > target:
+            hi = mid - 1
+        else:
+            last = mid
+            lo = mid + 1
+
+    return (first, last)
+```

@@ -1,0 +1,5 @@
+<<<THINKING>>>
+We need 7^100 mod 13. Compute using modular exponent. 7 mod 13. Euler's totient phi(13)=12. 7^12 ≡1 mod13. 100 mod12 = 4 (since 12*8=96). So 7^100 ≡ 7^4 mod13. Compute 7^2=49≡49-39=10. 7^4=(7^2)^2=10^2=100≡100-91=9. So remainder 9. Output: "ОТВЕТ: 9".
+<<<END THINKING>>>
+
+ОТВЕТ: 9

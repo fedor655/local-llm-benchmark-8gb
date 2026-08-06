@@ -1,0 +1,134 @@
+<<<THINKING>>>
+Okay, I need to write a Python function called нормализовать_телефон that takes a string and returns the normalized Russian phone number or None if it's invalid. Let me think about the requirements.
+
+First, the input can be in various formats like '+7 (912) 345-67-89', '8-912-345-67-89', or '89123456789'. The output should be '+79123456789' if valid. The function should return None if it can't form a valid number.
+
+Valid numbers are either 11 digits starting with 7 or 8, or 10 digits without the country code. Wait, but the country code for Russia is +7, so maybe the 10-digit numbers are without the leading 7. Wait, the problem says: "11 цифр, начинающихся с 7 или 8, либо 10 цифр без кода страны". So, the valid numbers are either 11 digits starting with 7 or 8, or 10 digits without the country code. Wait, but the country code is +7, so maybe the 10-digit numbers are the ones without the +7. So, for example, '89123456789' is 11 digits starting with 8, which is valid. But if the input is '9123456789' (10 digits), that's invalid because it doesn't start with 7 or 8. Wait, no. Wait the problem says: "11 цифр, начинающихся с 7 или 8, либо 10 цифр без кода страны". So the 10-digit numbers are those without the country code. So, for example, a number like '8912345678' (10 digits) would be invalid because it's 10 digits but starts with 8. Wait, no. Wait, the 10-digit numbers are those that don't have the country code. So, the country code is +7, so the 10-digit numbers are the ones that start with 8 (since 8 is the local code in Russia). Wait, maybe I need to clarify.
+
+Wait, in Russia, phone numbers can be either with the country code +7 (which is 11 digits) or without it (10 digits). So the valid numbers are either 11 digits starting with 7 (which includes the country code) or 10 digits starting with 8 (which is the local code). Wait, but the problem says "11 цифр, начинающихся с 7 или 8, либо 10 цифр без кода страны". So the 11-digit numbers can start with 7 or 8? Wait, that's confusing. Because the country code is +7, so the 11-digit number would start with 7, followed by 10 digits. But maybe the problem allows 11-digit numbers starting with 8 as well? Or perhaps the 11-digit numbers are those that include the country code (so starting with 7) and the 10-digit numbers are those without the country code (so starting with 8). So the valid numbers are:
+
+- 11 digits starting with 7 (country code included)
+- 10 digits starting with 8 (country code not included)
+
+Wait, but the problem says "11 цифр, начинающихся с 7 или 8, либо 10 цифр без кода страны". So the 11-digit numbers can start with 7 or 8? That seems odd. Maybe the problem is that the 11-digit numbers can start with 7 or 8, but the 10-digit numbers are without the country code. Wait, but the country code is +7, so the 11-digit number would start with 7. So perhaps the problem allows 11-digit numbers starting with 7 or 8? That's unclear. Let me re-read the problem statement.
+
+The problem says: "Если из строки нельзя получить корректный российский номер (11 цифр, начинающихся с 7 или 8, либо 10 цифр без кода страны) — вернуть None."
+
+So the valid numbers are either:
+
+- 11 digits starting with 7 or 8 (so 11 digits, first digit is 7 or 8)
+OR
+- 10 digits without the country code (so 10 digits, but what's the first digit? Maybe it's 8, since that's the local code in Russia. But the problem says "без кода страны", which would mean without the country code. So the country code is +7, so the 10-digit number is the local part, which starts with 8. So the 10-digit number must start with 8. But the problem says "10 цифр без кода страны" — so the 10-digit number is the local part, which in Russia starts with 8. So the valid numbers are:
+
+Either:
+
+- 11 digits starting with 7 (country code included) or 8 (but that would be 11 digits starting with 8, which is not standard. Wait, maybe the problem allows 11-digit numbers starting with 7 or 8, but the 10-digit numbers are without the country code. So for example, a 10-digit number could be 8912345678 (starts with 8), which is valid. But a 10-digit number starting with 7 would be invalid. So the function needs to check if the input can be converted into either of these two cases.
+
+So the steps for the function:
+
+1. Process the input string to extract all digits.
+2. Check if the digits are either:
+   a. 11 digits starting with 7 or 8
+   b. 10 digits starting with 8 (since that's the local code without the country code)
+3. If it matches either, return the normalized form. For case a, the normalized form is '+7' followed by the 10 digits (so 11 digits total). For case b, the normalized form is '+7' followed by the 10 digits (so 11 digits). Wait, but the 10-digit number is the local part, so adding the country code would make it 11 digits. So for example, if the input is '8912345678' (10 digits), the normalized form is '+7912345678' (11 digits). Wait, but the problem says the output should be '+79123456789' which is 11 digits. So perhaps the 10-digit number is the local part, and adding the country code makes it 11 digits. So the normalized form is '+7' followed by the 10 digits (for the 10-digit case) or the 11-digit number (which starts with 7 or 8) would be converted to '+7' followed by the 10 digits. Wait, but if the input is 11 digits starting with 7, then the normalized form is '+7' + the remaining 10 digits. If the input is 11 digits starting with 8, then the normalized form would be '+7' + the remaining 10 digits. Wait, but that would be 11 digits. So the function needs to check if the input is 11 digits starting with 7 or 8, then return '+7' followed by the rest. Or if it's 10 digits starting with 8, then return '+7' followed by those 10 digits.
+
+Wait, but the problem says the output should be '+79123456789' which is 11 digits. So the normalized form is always 11 digits starting with 7. So for example, if the input is '89123456789' (11 digits starting with 8), the normalized form is '+79123456789'. But that's 11 digits. Wait, but the country code is +7, so the 11-digit number would be '+7' followed by 10 digits. So the normalized form is always '+7' followed by 10 digits. So the function needs to check if the input can be converted into 11 digits (starting with 7 or 8) or 10 digits (starting with 8). Then, the normalized form is '+7' followed by the 10 digits.
+
+So the steps:
+
+- Remove all non-digit characters from the input string.
+- Check if the resulting string is 11 digits long and starts with 7 or 8. If yes, return '+7' + the remaining 10 digits.
+- Else, check if it's 10 digits long and starts with 8. If yes, return '+7' + those 10 digits.
+- Else, return None.
+
+Wait, but the 10-digit case is the local number without the country code. So adding the country code would make it 11 digits. So the normalized form is '+7' followed by the 10 digits.
+
+So the function should process the input string to extract all digits, then check the length and starting digit.
+
+Let me think about the code.
+
+First, process the input string to get all digits. For example, for '+7 (912) 345-67-89', the digits are '79123456789' (11 digits). For '8-912-345-67-89', the digits are '89123456789' (11 digits). For '89123456789', it's 11 digits. For '8912345678' (10 digits), it's valid if starts with 8.
+
+So the code steps:
+
+def нормализовать_телефон(s: str) -> str | None:
+    # Extract digits
+    digits = ''.join(filter(str.isdigit, s))
+    # Check length and starting digit
+    if len(digits) == 11:
+        if digits[0] in ('7', '8'):
+            return f'+7{digits[1:]}'
+    elif len(digits) == 10:
+        if digits[0] == '8':
+            return f'+7{digits}'
+    return None
+
+Wait, but the problem says that the 11-digit numbers can start with 7 or 8. So for example, if the input is '89123456789' (11 digits starting with 8), the normalized form is '+79123456789'. But according to the problem's example, the output is '+79123456789', which is 11 digits. So the code above would handle that.
+
+But wait, the problem says that the 11-digit numbers can start with 7 or 8. So the code checks if the first digit is 7 or 8. Then returns '+7' followed by the rest. But in the case where the first digit is 8, the code would return '+7' + the rest, which would be 11 digits. For example, '89123456789' becomes '+79123456789'.
+
+But what about the 10-digit case? If the input is '8912345678' (10 digits starting with 8), then the code returns '+78912345678' (11 digits). Which is correct.
+
+But what if the input is '79123456789' (11 digits starting with 7)? The code returns '+79123456789', which is correct.
+
+But what if the input is '7912345678' (10 digits starting with 7)? Then the code would not process it because the length is 10 and the first digit is 7, which is not 8. So it returns None. Which is correct, because the 10-digit number must start with 8.
+
+So the code seems to handle all cases.
+
+Now, the function needs a docstring in Russian. So the docstring should explain what the function does.
+
+Putting it all together:
+
+def нормализовать_телефон(s: str) -> str | None:
+    """
+    Нормализует российский номер телефона в стандартный формат '+7XXXXXXXXXX'.
+    Возвращает None, если номер некорректный (не 11 цифр, начинающихся с 7 или 8, или 10 цифр без кода страны).
+    """
+    digits = ''.join(filter(str.isdigit, s))
+    if len(digits) == 11 and digits[0] in ('7', '8'):
+        return f'+7{digits[1:]}'
+    elif len(digits) == 10 and digits[0] == '8':
+        return f'+7{digits}'
+    return None
+
+Wait, but in the 10-digit case, the code returns '+7' + digits (which is 10 digits), making it 11 digits. That's correct.
+
+Testing some examples:
+
+Example 1: '+7 (912) 345-67-89' → digits is '79123456789' (11 digits, starts with 7) → returns '+79123456789'.
+
+Example 2: '8-912-345-67-89' → digits is '89123456789' (11 digits, starts with 8) → returns '+79123456789'.
+
+Example 3: '89123456789' → same as example 2.
+
+Example 4: '8912345678' → 10 digits, starts with 8 → returns '+78912345678'.
+
+Example 5: '7912345678' → 10 digits, starts with 7 → returns None.
+
+Example 6: '891234567890' → 12 digits → returns None.
+
+Example 7: '79123456789' → 11 digits, starts with 7 → returns '+79123456789'.
+
+Example 8: '8912345678' → 10 digits, starts with 8 → returns '+78912345678'.
+
+So the code seems to handle these cases.
+
+Now, the function should return None if the input can't be converted. So the code checks for the two valid cases and returns None otherwise.
+
+So the code should be correct.
+
+<<<END THINKING>>>
+
+```python
+def нормализовать_телефон(s: str) -> str | None:
+    """
+    Нормализует российский номер телефона в стандартный формат '+7XXXXXXXXXX'.
+    Возвращает None, если номер некорректный (не 11 цифр, начинающихся с 7 или 8, или 10 цифр без кода страны).
+    """
+    digits = ''.join(filter(str.isdigit, s))
+    if len(digits) == 11 and digits[0] in ('7', '8'):
+        return f'+7{digits[1:]}'
+    elif len(digits) == 10 and digits[0] == '8':
+        return f'+7{digits}'
+    return None
+```

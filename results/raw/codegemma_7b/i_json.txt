@@ -1,0 +1,10 @@
+```json
+{
+  "name": "тест",
+  "count": 7,
+  "tags": ["a", "b", "c"],
+  "nested": {
+    "ok": true
+  }
+}
+```

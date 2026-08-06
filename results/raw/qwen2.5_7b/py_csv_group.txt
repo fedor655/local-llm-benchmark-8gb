@@ -1,0 +1,27 @@
+```python
+from typing import *
+import csv
+
+def top_by_group(csv_text: str, group_col: str, value_col: str, k: int) -> List[Tuple[str, float]]:
+    """
+    Считывает CSV и группирует строки по указанной колонке, суммируя значения из другой колонки.
+    Возвращает k групп с наибольшей суммой, отсортированные по условиям.
+    """
+    reader = csv.DictReader(csv_text.splitlines())
+    groups = {}
+    
+    for row in reader:
+        group = row[group_col]
+        value = row.get(value_col)
+        
+        if not value or not value.replace('.', '', 1).isdigit():
+            continue
+        
+        if group not in groups:
+            groups[group] = 0.0
+        groups[group] += float(value)
+    
+    sorted_groups = sorted(groups.items(), key=lambda x: (-x[1], x[0]))
+    
+    return sorted_groups[:k]
+```

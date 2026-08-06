@@ -1,0 +1,25 @@
+```python
+from collections import defaultdict
+
+def topo_sort(n: int, edges: list[tuple[int, int]]) -> list[int] | None:
+    graph = defaultdict(list)
+    in_degree = [0] * n
+    
+    for u, v in edges:
+        graph[u].append(v)
+        in_degree[v] += 1
+    
+    queue = [i for i in range(n) if in_degree[i] == 0]
+    order = []
+    
+    while queue:
+        node = queue.pop(0)
+        order.append(node)
+        
+        for neighbor in graph[node]:
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
+                
+    return order if len(order) == n else None
+```

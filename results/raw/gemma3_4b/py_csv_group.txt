@@ -1,0 +1,32 @@
+```python
+def top_by_group(csv_text: str, group_col: str, value_col: str, k: int) -> list[tuple[str, float]]:
+    """
+    На вход — текст CSV с заголовком в первой строке (разделитель — запятая, кавычек и экранирования нет).
+    Нужно:
+      - сгруппировать строки по колонке group_col;
+      - в каждой группе просуммировать числовые значения из колонки value_col;
+      - строки, где значение в value_col пустое или не парсится как число, пропустить, но саму группу не терять, если в ней есть хоть одна валидная строка;
+      - вернуть k групп с наибольшей суммой, отсортированных по убыванию суммы, а при равных суммах — по имени группы по алфавиту (по возрастанию);
+      - если групп меньше k, вернуть все.
+    """
+    import csv
+    from io import StringIO
+    import pandas as pd
+
+    data = StringIO(csv_text)
+    df = pd.read_csv(data)
+
+    grouped = df.groupby(group_col)[value_col].agg(['sum', 'count'])
+    grouped = grouped.reset_index()
+    grouped['sum'] = grouped[value_col].fillna(0).astype(float)
+    grouped = grouped.dropna(subset=[value_col])
+    grouped = grouped.sort_values(by=['sum', group_col], ascending=[False, True])
+    grouped = grouped.groupby(group_col).sum().reset_index()
+    grouped = grouped.sort_values(by=['sum', group_col], ascending=[False, True])
+    grouped = grouped.head(k)
+
+    result = []
+    for group in grouped.groupby(group_col):
+        result.append((group[group_col][0], group['sum'].iloc[0]))
+    return result
+```

@@ -1,0 +1,110 @@
+<<<THINKING>>>
+We need to output a single code block with the function deepEqual(a,b) in JavaScript. Must follow requirements:
+
+- primitives: strict equality except NaN equal NaN, +0 not equal -0. In JS, 0 === -0 is true, but we need to treat +0 != -0. So we need to check if a===b but also handle 0 and -0. We can use Object.is which distinguishes +0 and -0 and treats NaN equal NaN. But requirement: primitives compare strictly, but NaN equal NaN, +0 not equal -0. Object.is does exactly that. So for primitives, we can use Object.is(a,b). But need to treat null vs empty object: null is primitive. So if a===null and b===null, Object.is returns true. Good.
+
+- arrays: equal if same length and deepEqual each element. Also array never equal to plain object. So we need to detect arrays via Array.isArray.
+
+- plain objects: equal if same set of own keys and deepEqual values. Need to ensure that prototypes don't matter? "обычные объекты" likely means plain objects (not arrays, not Date). So we need to check if both are objects and not null, not array, not Date. Use typeof === 'object' and not null. For Date, we need to compare getTime.
+
+- Date: compare getTime.
+
+- null not equal empty object: handled by type check.
+
+- Need to handle circular references? Not specified; we can ignore.
+
+Implementation: function deepEqual(a,b) { ... }
+
+Edge cases: functions? Not specified; treat as objects? Probably not needed.
+
+Implementation steps:
+
+1. If Object.is(a,b) return true. This covers primitives, NaN, +0/-0 difference.
+
+2. If typeof a !== 'object' or a === null or typeof b !== 'object' or b === null: return false. Because if one is primitive and not equal, we already returned false.
+
+3. If a and b are both Date: return a.getTime() === b.getTime().
+
+4. If Array.isArray(a) !== Array.isArray(b): return false.
+
+5. If Array.isArray(a) && Array.isArray(b): compare lengths, then loop.
+
+6. If a and b are plain objects: get own property names via Object.keys. Compare lengths, then each key exists in both, and deepEqual values.
+
+Return false otherwise.
+
+Also need to ensure that array never equals plain object: handled by array check.
+
+Also need to ensure that null not equal empty object: null is not object.
+
+Edge: if a is Date and b is not Date: false.
+
+Edge: if a is array and b is object: false.
+
+Edge: if a is object and b is array: false.
+
+Edge: if a is object and b is Date: false.
+
+Edge: if a is object and b is object: compare keys.
+
+Also need to handle that Date is object but not array. So we need to check Date before array? Actually we check array first, but if a is Date, Array.isArray(a) false, so skip. Then check if a instanceof Date && b instanceof Date. Good.
+
+Also need to handle that functions are objects but not plain objects. Not specified; we can treat them as plain objects? Probably not needed.
+
+Implementation:
+
+function deepEqual(a,b) {
+  if (Object.is(a,b)) return true;
+  if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) return false;
+  if (a instanceof Date && b instanceof Date) return a.getTime() === b.getTime();
+  if (Array.isArray(a) !== Array.isArray(b)) return false;
+  if (Array.isArray(a)) {
+    if (a.length !== b.length) return false;
+    for (let i=0; i<a.length; i++) {
+      if (!deepEqual(a[i], b[i])) return false;
+    }
+    return true;
+  }
+  // plain objects
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+  if (keysA.length !== keysB.length) return false;
+  for (let key of keysA) {
+    if (!Object.prototype.hasOwnProperty.call(b, key)) return false;
+    if (!deepEqual(a[key], b[key])) return false;
+  }
+  return true;
+}
+
+Return global function. Should we declare as function deepEqual(a,b) { ... }? Yes.
+
+Wrap in triple backticks.
+<<<END THINKING>>>
+
+```javascript
+function deepEqual(a, b) {
+  if (Object.is(a, b)) return true;
+  if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) return false;
+
+  if (a instanceof Date && b instanceof Date) return a.getTime() === b.getTime();
+
+  if (Array.isArray(a) !== Array.isArray(b)) return false;
+
+  if (Array.isArray(a)) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (!deepEqual(a[i], b[i])) return false;
+    }
+    return true;
+  }
+
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+  if (keysA.length !== keysB.length) return false;
+  for (const key of keysA) {
+    if (!Object.prototype.hasOwnProperty.call(b, key)) return false;
+    if (!deepEqual(a[key], b[key])) return false;
+  }
+  return true;
+}
+```

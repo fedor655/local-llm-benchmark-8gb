@@ -1,0 +1,22 @@
+```python
+import csv
+from collections import defaultdict
+
+def top_by_group(csv_text: str, group_col: str, value_col: str, k: int) -> list[tuple[str, float]]:
+    reader = csv.DictReader(csv_text.splitlines())
+    
+    # Group sums by the specified group column
+    group_sums = defaultdict(float)
+    for row in reader:
+        try:
+            group_value = row[group_col]
+            value_to_add = float(row[value_col])
+            group_sums[group_value] += value_to_add
+        except (ValueError, KeyError):
+            continue
+
+    # Sort groups by sum descending and then by name ascending
+    sorted_groups = sorted(group_sums.items(), key=lambda x: (-x[1], x[0]))
+
+    return sorted_groups[:k]
+```

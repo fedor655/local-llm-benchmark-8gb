@@ -1,0 +1,31 @@
+```
+from typing import List, Tuple, Optional
+
+def topo_sort(n: int, edges: List[Tuple[int, int]]) -> Optional[List[int]]:
+    from collections import defaultdict, deque
+    
+    # Создаем граф и массив для хранения степени вхождения
+    graph = defaultdict(list)
+    in_degree = [0] * n
+    
+    for u, v in edges:
+        graph[u].append(v)
+        in_degree[v] += 1
+    
+    # Инициализируем очередь с вершинами нулевой степени вхождения
+    queue = deque([i for i in range(n) if in_degree[i] == 0])
+    
+    topo_order = []
+    
+    while queue:
+        node = queue.popleft()
+        topo_order.append(node)
+        
+        for neighbor in graph[node]:
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
+    
+    # Если размер топологической сортировки не равен n, значит есть цикл
+    return topo_order if len(topo_order) == n else None
+```

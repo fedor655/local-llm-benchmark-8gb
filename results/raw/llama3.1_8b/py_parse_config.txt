@@ -1,0 +1,27 @@
+```python
+def parse_config(text: str) -> dict:
+    config = {'': {}}
+    section = ''
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith(('#', ';')):
+            continue
+        if line.startswith('['):
+            section = line[1:-1].strip()
+            config[section] = {}
+        else:
+            key, value = line.split('=', 1)
+            key = key.strip()
+            value = value.strip().replace('"', '')
+            try:
+                value = int(value)
+            except ValueError:
+                try:
+                    value = float(value)
+                except ValueError:
+                    pass
+            if value.lower() in ('true', 'false'):
+                value = value.lower() == 'true'
+            config[section][key] = value
+    return {k: v for k, v in config.items() if v}
+```

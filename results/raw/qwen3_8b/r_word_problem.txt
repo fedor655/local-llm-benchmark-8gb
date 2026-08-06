@@ -1,0 +1,14 @@
+<<<THINKING>>>
+Okay, let's see. The problem is about a customer buying a mix of apples and pears. Apples are 80 rubles per kg, pears are 120 rubles per kg. The total weight is 5 kg, and the total cost is 480 rubles. We need to find out how many kilograms of pears he bought.
+
+First, I should set up equations. Let me denote the weight of apples as x kg and pears as y kg. So, the first equation is x + y = 5 because the total weight is 5 kg. The second equation would be the total cost: 80x + 120y = 480.
+
+Now, I need to solve this system of equations. Maybe I can use substitution or elimination. Let me try substitution. From the first equation, x = 5 - y. Then substitute this into the second equation.
+
+So replacing x with (5 - y) in the cost equation: 80*(5 - y) + 120y = 480. Let me calculate that. 80*5 is 400, and 80*(-y) is -80y. So the equation becomes 400 - 80y + 120y = 480. Combine like terms: 400 + 40y = 480. Subtract 400 from both sides: 40y = 80. Then divide both sides by 40: y = 2. So the customer bought 2 kg of pears.
+
+Wait, let me check if that makes sense. If y is 2, then x is 5 - 2 = 3 kg of apples. The cost would be 3*80 + 2*120 = 240 + 240 = 480. Yes, that adds up. So the answer should be 2.
+
+<<<END THINKING>>>
+
+ОТВЕТ: 2

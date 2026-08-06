@@ -1,0 +1,17 @@
+```javascript
+function parseQuery(qs) {
+    if (qs.startsWith('?')) qs = qs.slice(1);
+    const pairs = qs.split('&').filter(pair => pair.trim() !== '');
+    const result = {};
+    for (const pair of pairs) {
+        const [key, value] = pair.split('=', 2).map(decodeURIComponent);
+        if (result.hasOwnProperty(key)) {
+            if (!Array.isArray(result[key])) result[key] = [result[key]];
+            result[key].push(value);
+        } else {
+            result[key] = value;
+        }
+    }
+    return result;
+}
+```

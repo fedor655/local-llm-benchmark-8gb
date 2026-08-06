@@ -1,0 +1,233 @@
+<<<THINKING>>>
+Okay, let's look at the problem. The user provided a Python function called search_range that's supposed to find the first and last occurrence of a target in a sorted list. But there are bugs in the code. My task is to correct the function while keeping the name and signature the same.
+
+First, I'll read through the existing code to understand what it's doing. The function uses two binary search loops. The first one is supposed to find the first occurrence, and the second the last. Let me check each part step by step.
+
+In the first loop, they initialize lo to 0 and hi to len(nums). Then, while lo < hi, they calculate mid as (lo + hi)/2. Wait, in Python 3, dividing integers with / gives a float. But mid should be an integer index. So using (lo + hi) // 2 would be better here. Oh, wait, in the first loop, they use / 2, which could result in a float. That's a problem because mid is used as an index. So that's a bug. They should use integer division here. So changing (lo + hi)/2 to (lo + hi) // 2 would fix that.
+
+Next, the condition: if nums[mid] < target, set lo = mid. Else, hi = mid. Wait, this is for finding the first occurrence. Let me think. Normally, in binary search for the first occurrence, when the middle element is less than target, we move lo to mid + 1. But here, the code is moving lo to mid. That might not be correct. Let me think again. Let's say we're looking for the first occurrence. The loop is trying to find the leftmost index where the target appears. So when nums[mid] is less than target, we need to search the right half. So lo = mid + 1. But in the current code, when nums[mid] is less than target, lo is set to mid. That would keep the search in the left half, which is incorrect. So that's a bug. Similarly, when nums[mid] is greater than or equal to target, we set hi to mid. That's correct for finding the first occurrence. Wait, maybe not. Let me think again. Let's take an example. Suppose the array is [5, 7, 7, 8, 8, 10], target is 8. The first occurrence is index 3. Let's simulate the first loop. Initially, lo=0, hi=6. mid is (0+6)/2=3.0. nums[3] is 8, which is equal to target. So hi is set to 3. Now lo=0, hi=3. mid is (0+3)/2=1.5, which would be 1 as integer division. nums[1] is 7 < 8, so lo becomes 1+1=2. Now lo=2, hi=3. mid is (2+3)/2=2.5 → 2. nums[2] is 7 < 8 → lo becomes 3. Now lo=3, hi=3. Loop ends. So first is 3. But the first occurrence is 3, which is correct. Wait, but maybe the first loop is supposed to find the first occurrence. But in this case, it works. Hmm. Maybe the first loop is correct? Or maybe there's a mistake in the logic. Let me think again. The first loop is trying to find the first occurrence. Let me think of another example. Suppose the array is [5, 7, 7, 8, 8, 10], target is 7. The first occurrence is index 1. Let's simulate. Initial lo=0, hi=6. mid is 3. nums[3] is 8 > 7 → hi=3. Now lo=0, hi=3. mid is 1.5 → 1. nums[1] is 7, which is equal to target. So hi=1. Now lo=0, hi=1. mid is 0.5 → 0. nums[0] is 5 < 7 → lo=0+1=1. Now lo=1, hi=1. Loop ends. first is 1. Which is correct. So maybe the first loop is correct. But why is the condition for the first loop? Let me think. The first loop is trying to find the first occurrence. So when nums[mid] is less than target, we need to search the right half. So lo = mid + 1. But in the current code, when nums[mid] < target, lo is set to mid. That would keep the search in the left half. Wait, that's a mistake. Because if nums[mid] is less than target, the first occurrence must be to the right of mid. So the code should set lo = mid + 1. But in the current code, it's setting lo = mid. That's a bug. So that's the first error. So in the first loop, when nums[mid] < target, lo should be mid + 1. But the code has lo = mid. That's incorrect. So that's a bug. Similarly, in the second loop, the code is trying to find the last occurrence. Let me check that. The second loop initializes lo=0, hi=len(nums). While lo < hi: mid = (lo + hi) // 2. If nums[mid] <= target, then lo = mid + 1. Else, hi = mid. So when nums[mid] is <= target, we move lo to mid + 1. That's correct for finding the last occurrence. Because if the element is equal to target, we need to check the right half to see if there's a later occurrence. So the second loop seems correct. But let's check the first loop again. The first loop's condition is: if nums[mid] < target, lo = mid. Else, hi = mid. Wait, that's not correct. Because when nums[mid] is less than target, the first occurrence is in the right half. So lo should be mid + 1. But the code is setting lo to mid. That would keep the search in the left half, which is wrong. So that's a bug. So the first loop's condition is incorrect. So the first loop should be: if nums[mid] < target: lo = mid + 1 else: hi = mid. But in the current code, it's lo = mid. So that's a mistake. So the first loop's logic is wrong. Let me think again. Let me think of the first loop's purpose. The first loop is trying to find the first occurrence. So the standard approach for finding the first occurrence is to adjust the search range to the right when the mid element is less than target. But in the current code, when nums[mid] is less than target, lo is set to mid. That would not move the search to the right. So that's incorrect. So the first loop's condition is wrong. So the first loop should be: if nums[mid] < target: lo = mid + 1 else: hi = mid. But in the current code, it's lo = mid. So that's a bug. So the first loop's code is wrong. Similarly, in the second loop, the code is correct. So the first loop's code is incorrect. So the first loop's code should be adjusted. Also, in the first loop, mid is calculated as (lo + hi)/2, which could be a float. So that's another bug. So the first loop's mid calculation should use integer division. So changing (lo + hi)/2 to (lo + hi) // 2. Also, in the first loop, when nums[mid] is less than target, lo should be mid + 1. So the first loop's code should be:
+
+while lo < hi:
+    mid = (lo + hi) // 2
+    if nums[mid] < target:
+        lo = mid + 1
+    else:
+        hi = mid
+
+Then, after the loop, first is lo. But wait, in the original code, after the first loop, first is set to lo. Let me think. Let's take the example where the array is [5,7,7,8,8,10], target is 7. The first occurrence is index 1. Let's simulate the corrected first loop. Initial lo=0, hi=6. mid is (0+6)//2=3. nums[3] is 8 > 7 → hi=3. Now lo=0, hi=3. mid is (0+3)//2=1. nums[1] is 7, which is equal to target. So hi=1. Now lo=0, hi=1. mid is 0. nums[0] is 5 < 7 → lo = 0+1=1. Now lo=1, hi=1. Loop ends. first is 1. Which is correct. So the corrected first loop would work. So the original code's first loop had two bugs: mid calculation and the condition for lo. So the first loop's code should be adjusted. Similarly, the second loop's mid calculation uses (lo + hi) // 2, which is correct. The second loop's condition is if nums[mid] <= target: lo = mid + 1 else: hi = mid. That's correct for finding the last occurrence. Let me test that. For the same example, target is 7. The last occurrence is index 2. Let's simulate the second loop. Initial lo=0, hi=6. mid is 3. nums[3] is 8 > 7 → hi=3. Now lo=0, hi=3. mid is 1. nums[1] is 7 <= 7 → lo = 1+1=2. Now lo=2, hi=3. mid is (2+3)//2=2. nums[2] is 7 <=7 → lo=2+1=3. Now lo=3, hi=3. Loop ends. last is 3. Wait, but the last occurrence of 7 is index 2. So this would return 3 as last, which is wrong. Wait, that's a problem. Wait, what's happening here. Let me re-simulate. The second loop is supposed to find the last occurrence. Let me think again. The second loop's code is:
+
+lo, hi = 0, len(nums)
+while lo < hi:
+    mid = (lo + hi) // 2
+    if nums[mid] <= target:
+        lo = mid + 1
+    else:
+        hi = mid
+last = lo
+
+So for the array [5,7,7,8,8,10], target is 7. Let's simulate:
+
+Initial lo=0, hi=6. mid is (0+6)//2=3. nums[3] is 8 >7 → hi=3. Now lo=0, hi=3. mid is (0+3)//2=1. nums[1] is 7 <=7 → lo=1+1=2. Now lo=2, hi=3. mid is (2+3)//2=2. nums[2] is 7 <=7 → lo=2+1=3. Now lo=3, hi=3. Loop ends. last is 3. But the last occurrence of 7 is index 2. So this code returns 3 as the last index, which is incorrect. That's a problem. So the second loop's logic is wrong. What's the issue here?
+
+Ah, I see. The second loop is trying to find the last occurrence. The standard approach for finding the last occurrence is to adjust the search to the right when the element is equal to target. Let me think again. The standard binary search for last occurrence would be:
+
+Initialize lo=0, hi=len(nums)-1. While lo <= hi: mid = (lo + hi)//2. If nums[mid] <= target: lo = mid + 1. Else: hi = mid -1. Then, the last occurrence is hi. But the current code's approach is different. Let me think. The current code's second loop is:
+
+lo, hi = 0, len(nums)
+while lo < hi:
+    mid = (lo + hi) // 2
+    if nums[mid] <= target:
+        lo = mid + 1
+    else:
+        hi = mid
+last = lo
+
+Wait, in this case, when nums[mid] is <= target, we move lo to mid +1. So the loop continues until lo equals hi. Let's take the example again. The array is [5,7,7,8,8,10], target is 7. The correct last occurrence is index 2. Let's simulate:
+
+Initial lo=0, hi=6. mid=3. nums[3]=8>7 → hi=3. Now lo=0, hi=3. mid=1. nums[1]=7 <=7 → lo=2. Now lo=2, hi=3. mid=2. nums[2]=7 <=7 → lo=3. Now lo=3, hi=3. Loop ends. last is 3. But the correct last occurrence is 2. So this code returns 3, which is wrong. So why is that happening? Because the code is not correctly finding the last occurrence. So what's the problem here?
+
+Ah, because the code is using hi = len(nums) as the initial hi. So in the example, the array has length 6, so hi starts at 6. But the indices are 0-5. So when mid is 3, which is index 3, the value is 8. So the code moves hi to 3. Then, the loop continues. But when the code ends, lo is 3, which is beyond the last index (5). So the code is returning 3 as the last occurrence, which is incorrect. So the problem is that the initial hi is len(nums), which is 6. So the loop is considering indices up to 5. But when the code sets hi to mid, which is 3, then the loop continues. But the code's logic is incorrect. So how to fix this?
+
+The standard approach for finding the last occurrence is to adjust the search range. Let me think. The correct approach for finding the last occurrence is to perform a binary search where, when nums[mid] <= target, we move the left to mid +1, and when it's greater, we move the right to mid. The loop continues until lo >= hi. Then, the last occurrence is hi -1 if the target exists. Wait, perhaps the code's logic is incorrect. Let me think again. Let's take the example where the array is [5,7,7,8,8,10], target is 7. The correct last occurrence is index 2. Let's simulate the correct approach.
+
+Another approach: the second loop should find the last occurrence. So the code should be:
+
+lo = 0
+hi = len(nums) - 1
+while lo <= hi:
+    mid = (lo + hi) // 2
+    if nums[mid] <= target:
+        lo = mid + 1
+    else:
+        hi = mid - 1
+last = hi if nums[hi] == target else -1
+
+But this is different from the current code. The current code uses hi = len(nums) initially, which is incorrect. So the initial hi should be len(nums) -1. Also, the loop condition is while lo < hi, which may not be sufficient. So the second loop's code is incorrect. So the second loop's initial hi is len(nums), which is wrong. It should be len(nums) -1. Also, the loop condition is while lo < hi, but perhaps it should be while lo <= hi. Let me adjust the code accordingly.
+
+So, the second loop's code should be:
+
+lo, hi = 0, len(nums) - 1
+while lo <= hi:
+    mid = (lo + hi) // 2
+    if nums[mid] <= target:
+        lo = mid + 1
+    else:
+        hi = mid - 1
+last = hi if nums[hi] == target else -1
+
+But in the original code, the second loop is:
+
+lo, hi = 0, len(nums)
+while lo < hi:
+    mid = (lo + hi) // 2
+    if nums[mid] <= target:
+        lo = mid + 1
+    else:
+        hi = mid
+last = lo
+
+So the initial hi is len(nums), which is 6 in the example. The loop runs while lo < hi. So when lo is 3 and hi is 3, the loop stops. Then, last is set to lo, which is 3. But the correct last occurrence is 2. So the code is incorrect. So the second loop's initial hi is wrong. It should be len(nums) -1. Also, the loop condition is while lo < hi, which may not capture all cases. So the second loop's code is incorrect. So the second loop's code needs to be adjusted.
+
+Putting it all together, the first loop's mid calculation is using (lo + hi)/2, which should be (lo + hi) // 2. Also, the condition for the first loop is incorrect. The first loop should set lo = mid + 1 when nums[mid] < target. The second loop's initial hi is len(nums), which is wrong. It should be len(nums) -1. Also, the loop condition is while lo < hi, which may not be sufficient. So the corrected code would have:
+
+First loop:
+
+lo, hi = 0, len(nums) - 1
+while lo < hi:
+    mid = (lo + hi) // 2
+    if nums[mid] < target:
+        lo = mid + 1
+    else:
+        hi = mid
+first = lo if nums[lo] == target else -1
+
+Wait, but the original code returns (first, last) where first is lo after the first loop. But in the original code, after the first loop, first is set to lo. But in the original code, the first loop's hi is len(nums), not len(nums) -1. So that's another bug. So the first loop's initial hi is len(nums), which is incorrect. It should be len(nums) -1. Because the indices are from 0 to len(nums)-1.
+
+So, putting all these corrections together:
+
+The first loop should have lo=0, hi=len(nums)-1. The mid calculation should be (lo + hi) // 2. The condition for the first loop is: if nums[mid] < target, lo = mid + 1 else hi = mid. After the loop, first is lo if nums[lo] == target else -1. But the original code sets first = lo regardless. So that's another issue. For example, if the target is not present, the first loop may return a lo that is out of bounds. So the original code may return lo as first, which could be len(nums)-1 + 1, which is out of range. So the original code's first loop is incorrect in its initial hi and mid calculation.
+
+So, to summarize, the bugs in the original code are:
+
+1. In the first loop, mid is calculated as (lo + hi)/2, which is a float. Should be integer division.
+2. In the first loop, when nums[mid] < target, lo is set to mid instead of mid + 1.
+3. In the first loop, the initial hi is len(nums), which is incorrect. It should be len(nums) -1.
+4. In the second loop, the initial hi is len(nums), which is incorrect. It should be len(nums) -1.
+5. The second loop's loop condition is while lo < hi, which may not capture all cases. It should be while lo <= hi.
+6. The second loop's logic for finding the last occurrence is incorrect, leading to incorrect indices.
+
+So, the corrected code should:
+
+- For the first loop:
+   - Initialize lo=0, hi=len(nums)-1
+   - mid = (lo + hi) // 2
+   - if nums[mid] < target: lo = mid + 1
+   - else: hi = mid
+   - After loop, first is lo if nums[lo] == target else -1
+
+- For the second loop:
+   - Initialize lo=0, hi=len(nums)-1
+   - mid = (lo + hi) // 2
+   - if nums[mid] <= target: lo = mid + 1
+   - else: hi = mid - 1
+   - After loop, last is hi if nums[hi] == target else -1
+
+But the original code returns (first, last) where first is lo from the first loop and last is lo from the second loop. So the original code's first loop may return lo as the first occurrence, but if the target is not present, lo could be out of bounds. So the corrected code should handle that.
+
+Putting all these corrections into the code:
+
+def search_range(nums, target):
+    # Возвращает (первый_индекс, последний_индекс) вхождения target
+    # в отсортированном по возрастанию списке nums, либо (-1, -1).
+    lo, hi = 0, len(nums) - 1
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if nums[mid] < target:
+            lo = mid + 1
+        else:
+            hi = mid
+    first = lo if nums[lo] == target else -1
+    lo, hi = 0, len(nums) - 1
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if nums[mid] <= target:
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    last = hi if nums[hi] == target else -1
+    return (first, last)
+
+Wait, but in the second loop, the initial hi is len(nums)-1. The loop condition is while lo < hi. Let's test this with the example where target is 7. The array is [5,7,7,8,8,10]. len(nums) is 6, so hi is 5. Let's simulate the second loop:
+
+Initial lo=0, hi=5. mid = (0+5)//2=2. nums[2] is 7 <=7 → lo=2+1=3. Now lo=3, hi=5. mid=(3+5)//2=4. nums[4] is 8 >7 → hi=4-1=3. Now lo=3, hi=3. Loop ends. last is hi=3. But the correct last occurrence is 2. So this code returns 3, which is incorrect. What's wrong here?
+
+Ah, because the second loop's condition is while lo < hi. When lo and hi are equal, the loop stops. But in this case, the correct last occurrence is 2. So the code is not finding it. So the second loop's logic is still incorrect. Let me think again. The second loop's code is trying to find the last occurrence. The standard approach is to adjust the search range to the right when nums[mid] <= target. So, for example, in the array [5,7,7,8,8,10], target is 7. The last occurrence is index 2. Let's simulate the correct approach:
+
+Initialize lo=0, hi=5. mid=2. nums[2]=7 <=7 → lo=3. Now lo=3, hi=5. mid=4. nums[4]=8>7 → hi=3. Now lo=3, hi=3. Loop ends. hi is 3. But the correct last occurrence is 2. So this approach is not working. What's wrong here?
+
+Ah, because the code is using hi = mid -1 when nums[mid] > target. So when nums[mid] is greater than target, we move hi to mid-1. But in this case, when mid is 4, nums[mid] is 8>7 → hi=3. Now lo=3, hi=3. The loop ends. So hi is 3, which is not the correct index. So the code is not finding the last occurrence. What's the issue here?
+
+The problem is that the code is not considering that the last occurrence could be at mid. So perhaps the loop condition should be while lo <= hi. Let me try that. Let's adjust the loop condition to while lo <= hi. Let's simulate again:
+
+Initial lo=0, hi=5. mid=2. nums[2]=7 <=7 → lo=3. Now lo=3, hi=5. mid=4. nums[4]=8>7 → hi=3. Now lo=3, hi=3. Loop continues (since lo <= hi). mid=3. nums[3]=8>7 → hi=2. Now lo=3, hi=2. Loop ends. So hi is 2. Which is correct. So the code should have the loop condition as while lo <= hi. So the second loop's code should be:
+
+lo, hi = 0, len(nums) - 1
+while lo <= hi:
+    mid = (lo + hi) // 2
+    if nums[mid] <= target:
+        lo = mid + 1
+    else:
+        hi = mid - 1
+last = hi if nums[hi] == target else -1
+
+But in this case, after the loop, hi is 2. So last is 2. Which is correct. So the second loop's code needs to have the loop condition as while lo <= hi. Also, the initial hi is len(nums)-1. So the second loop's code should be adjusted accordingly.
+
+So, putting all these corrections together, the corrected code would be:
+
+def search_range(nums, target):
+    # Возвращает (первый_индекс, последний_индекс) вхождения target
+    # в отсортированном по возрастанию списке nums, либо (-1, -1).
+    lo, hi = 0, len(nums) - 1
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if nums[mid] < target:
+            lo = mid + 1
+        else:
+            hi = mid
+    first = lo if nums[lo] == target else -1
+    lo, hi = 0, len(nums) - 1
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        if nums[mid] <= target:
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    last = hi if nums[hi] == target else -1
+    return (first, last)
+
+But wait, in the first loop, after the loop, lo is set to the first occurrence. But what if the target is not present? For example, if the array is [1,3,5], target is 2. The first loop would have lo=1, hi=1. nums[1] is 3 > 2 → hi=1. So the loop ends. first is 1, but nums[1] is 3 != 2. So first is set to -1. So the code correctly returns -1.
+
+Similarly, for the second loop, if the target is not present, hi would be something, but nums[hi] != target, so last is -1.
+
+So this code should handle all cases correctly.
+
+Now, let's check the original code's first loop. The original code had mid calculated as (lo + hi)/2, which is a float. So changing that to integer division is necessary. Also, the first loop's condition was incorrect. So the corrected code should have those changes.
+
+So the final corrected code is as above.
+
+<<<END THINKING>>>
+
+```python
+def search_range(nums, target):
+    lo, hi = 0, len(nums) - 1
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if nums[mid] < target:
+            lo = mid + 1
+        else:
+            hi = mid
+    first = lo if nums[lo] == target else -1
+    lo, hi = 0, len(nums) - 1
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        if nums[mid]

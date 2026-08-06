@@ -1,0 +1,31 @@
+```python
+def topo_sort(n: int, edges: list[tuple[int, int]]) -> list[int] | None:
+    """
+    Вершины пронумерованы 0..n-1, ребро (a, b) означает 'a должно идти до b'.
+    Функция возвращает любой корректный порядок топологической сортировки, а если в графе есть цикл — None.
+    """
+    graph = [[] for _ in range(n)]
+    in_degree = [0] * n
+    for u, v in edges:
+        graph[u].append(v)
+        in_degree[v] += 1
+
+    queue = [i for i in range(n) if in_degree[i] == 0]
+    result = []
+    count = 0
+
+    while queue:
+        u = queue.pop(0)
+        result.append(u)
+        count += 1
+
+        for v in graph[u]:
+            in_degree[v] -= 1
+            if in_degree[v] == 0:
+                queue.append(v)
+
+    if count != n:
+        return None
+    else:
+        return result
+```

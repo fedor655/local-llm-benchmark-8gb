@@ -1,0 +1,3 @@
+```javascript
+"function parseQuery(qs) {\n  if (!qs) return {};\n  qs = qs.trim();\n  if (qs.charAt(0) === '?') qs = qs.slice(1);\n  const result = {};\n  const pairs = qs.split('&');\n  for (const pair of pairs) {\n    const [key, value] = pair.split('=');\n    if (key === undefined) continue;\n    const decodedKey = decodeURIComponent(key);\n    let decodedValue = decodeURIComponent(value === undefined ? '' : value);\n    if (decodedKey in result) {\n      if (Array.isArray(result[decodedKey])) {\n        result[decodedKey].push(decodedValue);\n      } else {\n        result[decodedKey] = [result[decodedKey], decodedValue];\n      }\n    } else {\n      result[decodedKey] = decodedValue;\n    }\n  }\n  return result;\n}"
+```

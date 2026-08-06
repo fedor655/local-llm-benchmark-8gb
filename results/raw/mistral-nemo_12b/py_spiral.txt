@@ -1,0 +1,20 @@
+```python
+def spiral_order(matrix):
+    if not matrix:
+        return []
+    rows, cols = len(matrix), len(matrix[0])
+    seen = [[False] * cols for _ in range(rows)]
+    dx, dy = [0, 1, 0, -1], [1, 0, -1, 0]
+    x, y, direction = 0, 0, 0
+    result = []
+    for _ in range(rows * cols):
+        result.append(matrix[x][y])
+        seen[x][y] = True
+        nx, ny = x + dx[direction], y + dy[direction]
+        if 0 <= nx < rows and 0 <= ny < cols and not seen[nx][ny]:
+            x, y = nx, ny
+        else:
+            direction = (direction + 1) % 4
+            x, y = x + dx[direction], y + dy[direction]
+    return result
+```

@@ -1,0 +1,340 @@
+<<<THINKING>>>
+Okay, I need to write a function called is_match that checks if a string s matches a pattern p. The pattern has two special characters: '?' which matches any single character, and '*' which matches any sequence of characters, including an empty one. The solution must run in polynomial time and handle strings up to several thousand characters long. Hmm, how to approach this?
+
+First, I remember that a dynamic programming approach is typically used for such pattern matching problems. The standard approach for the wildcard matching problem (with * and ?) uses a DP table where dp[i][j] represents whether the first i characters of s match the first j characters of p.
+
+But wait, the user mentioned polynomial time. The standard DP approach has a time complexity of O(n*m), which is polynomial, so that's acceptable. However, for very large strings (like thousands of characters), we need to optimize space as well. But maybe the user is okay with O(n*m) time as long as it's polynomial.
+
+Let me outline the DP approach. The DP table will have (len(s)+1) rows and (len(p)+1) columns. The base case is dp[0][0] = True, meaning empty string matches empty pattern. For the first row (when s is empty), the pattern must consist of only '*'s. So for dp[0][j], it's True if all characters in p up to j are '*'s.
+
+Then, for each character in s and pattern, we check:
+
+- If p[j-1] is '?', then dp[i][j] = dp[i-1][j-1]
+- If p[j-1] is '*', then dp[i][j] = dp[i][j-1] (match zero characters) or dp[i-1][j] (match one or more characters)
+- Else, check if the current characters match and the previous state is True.
+
+Wait, but for the '*' case, the recurrence is a bit tricky. The '*' can match zero or more characters. So, when we have a '*', we can either consider it as matching zero characters (so we look at dp[i][j-1]) or as matching one or more characters (so we look at dp[i-1][j], since the '*' can consume the current character in s).
+
+But in the standard DP approach, the transition for '*' is dp[i][j] = dp[i][j-1] or dp[i-1][j]. However, this can lead to O(n*m) time and space. For large strings, the space might be an issue. But since the user allows polynomial time, maybe it's acceptable.
+
+But wait, the user says the solution must work for strings of several thousand characters. Let's say s and p are each 1000 characters. Then the DP table would be 1001 x 1001, which is about a million entries. That's manageable in terms of memory, but perhaps we can optimize space.
+
+Alternatively, we can use a 1D DP array. Let me think. For the standard approach, the current row depends only on the previous row. So we can optimize space by using two rows: previous and current. But for the '*' case, since it can refer to the same row (for zero characters) or the previous row (for one or more), maybe we need to track that.
+
+Wait, let's think again. The standard DP approach uses a 2D array. Let me try to code that first.
+
+So, the function is_match(s, p) would create a DP table with (len(s)+1) rows and (len(p)+1) columns. Initialize dp[0][0] = True. Then for the first row (i=0), check if all characters in p up to j are '*'s. For example, if p is "a*b", then for j=0, it's True (empty pattern), j=1, p[0] is 'a' which is not '*', so dp[0][1] is False. Then for j=2, p[1] is '*', so dp[0][2] is True (since '*' can match zero characters). Wait, no. Wait, for the first row (i=0, s is empty), the pattern must be all '*'s. So for dp[0][j], it's True if p[0..j-1] consists of only '*'s. So for each j, if p[j-1] is '*' and dp[0][j-1] is True, then dp[0][j] is True. Otherwise, False.
+
+Then, for each i and j:
+
+if p[j-1] is '?', then dp[i][j] = dp[i-1][j-1]
+
+if p[j-1] is '*', then dp[i][j] = dp[i][j-1] (match zero) or dp[i-1][j] (match one or more)
+
+else, check if s[i-1] == p[j-1] and dp[i-1][j-1]
+
+But wait, the standard approach for the '*' case is to take the OR of the current cell's left (zero characters) and the cell above (one or more). So that's how the DP transitions.
+
+But for the space optimization, perhaps we can use a 1D array. Let me think. Let's say we have a 1D array dp where dp[j] represents whether the first i characters of s match the first j characters of p. Then, for each row i, we can compute the new dp array based on the previous row.
+
+But for the '*' case, when we process j, we need to know the previous value of dp[j] (for zero characters) and the previous row's dp[j] (for one or more). Wait, maybe not. Let me think again.
+
+Let me try to outline the 1D DP approach. Let's have a 1D array dp where dp[j] represents whether the first i characters of s match the first j characters of p. For each i, we can compute the new dp array.
+
+Initially, dp[0] is True (empty string matches empty pattern). For the first row (i=0), we need to check if the pattern up to j is all '*'s. So for j from 1 to len(p), dp[j] = dp[j-1] and p[j-1] == '*'.
+
+Then, for each i from 1 to len(s), and for each j from 1 to len(p):
+
+if p[j-1] is '?', then dp[j] = dp[j-1] (since the previous state for j-1 must be True)
+
+if p[j-1] is '*', then dp[j] = dp[j-1] (zero characters) or dp[j] (from previous i's state, which would be the case where '*' matches one or more characters). Wait, but how to handle this in 1D array?
+
+Wait, for the '*' case, the current dp[j] can be updated as follows:
+
+dp[j] = dp[j] (which represents the case where '*' matches zero characters) or dp[j-1] (which represents the case where '*' matches one or more characters). Wait, no. Because when we process j, the previous value of dp[j] (before the current i) is the value from the previous row (i-1). So for the current i, when we process j, if p[j-1] is '*', then dp[j] = dp[j] (from previous i's state, which is the case where '*' matches one or more) or dp[j-1] (from the same i's state, which is the case where '*' matches zero). Wait, this seems confusing.
+
+Alternatively, perhaps the 1D approach can be done with a temporary variable. Let me think. For each i, we can have a new array curr, and for each j, compute curr[j] based on the previous row's dp and the current row's previous values.
+
+But maybe it's easier to use a 2D array. Let's proceed with that.
+
+Now, considering the constraints. For strings of length up to several thousand, say 10^3, then 10^3 * 10^3 is 1e6 operations, which is acceptable.
+
+So, the code would be something like:
+
+Initialize a 2D array dp with (len(s)+1) rows and (len(p)+1) columns.
+
+Set dp[0][0] = True.
+
+For j from 1 to len(p):
+
+    dp[0][j] = dp[0][j-1] and p[j-1] == '*'
+
+Then, for each i from 1 to len(s):
+
+    for each j from 1 to len(p):
+
+        if p[j-1] == '?':
+
+            dp[i][j] = dp[i-1][j-1]
+
+        elif p[j-1] == '*':
+
+            dp[i][j] = dp[i][j-1] or dp[i-1][j]
+
+        else:
+
+            dp[i][j] = (s[i-1] == p[j-1]) and dp[i-1][j-1]
+
+Finally, return dp[len(s)][len(p)]
+
+Wait, but in the case of '*', the dp[i][j] is True if either the '*' matches zero characters (so we look at dp[i][j-1], which is the same row, previous j) or it matches one or more (so look at dp[i-1][j], which is the previous row, same j).
+
+But in the standard DP approach, this is correct.
+
+But for the space, using a 2D array might be a problem for very large strings. However, given that the user allows polynomial time, perhaps the 2D approach is acceptable.
+
+But let's think about possible optimizations. For example, using a 1D array and updating it in place. Let me try to think about that.
+
+Let's have a 1D array dp where dp[j] represents whether the first i characters of s match the first j characters of p. Initially, dp[0] = True. For the first row (i=0), we can compute dp[j] as dp[j-1] and p[j-1] == '*' for each j.
+
+Then, for each i from 1 to len(s):
+
+    create a new array curr, or update the dp array in reverse order.
+
+Wait, for the 1D approach, when processing j, if we process from left to right, the dp[j] would be overwritten before it's needed for the current i. So perhaps we need to process j in reverse order.
+
+Alternatively, for each i, we can have a temporary array to store the current row.
+
+But perhaps the 2D approach is easier to code correctly.
+
+Now, let's test some cases.
+
+Test case 1: s = "abc", p = "a?c". The answer should be True.
+
+The DP table would be filled as follows:
+
+dp[0][0] = True.
+
+For j=1, p[0] is 'a', so dp[0][1] is False (since s is empty).
+
+For j=2, p[1] is '?', but since s is empty, dp[0][2] is False.
+
+For j=3, p[2] is 'c', so dp[0][3] is False.
+
+Then for i=1 (s[0] is 'a'):
+
+j=1: p[0] is 'a', so dp[1][1] = True.
+
+j=2: p[1] is '?', so dp[1][2] = dp[0][1] which is False? Wait, no. Wait, for i=1, j=2: p[j-1] is '?', so it matches any single character. So dp[1][2] = dp[0][1], which is False? But that's not correct. Wait, because for i=1 (s is 'a'), j=2 (p is 'a?'), then the first character of p is 'a' and the second is '?'. So the pattern 'a?' would match 'a' only if the second character is a '?', but since the pattern is length 2, and the string is length 1, it's not possible. So dp[1][2] would be False. Wait, but maybe I'm getting confused here.
+
+Wait, the pattern p is of length j. So for j=2, the pattern is two characters. For the string s of length i=1, the pattern must match the entire string. So for j=2, the pattern is two characters, and the string is one character. So the pattern can't match unless the pattern is something like '?', but here it's 'a?'. So the pattern is longer than the string, so it's not a match. Hence, dp[1][2] is False.
+
+But when i=3 (s is 'abc'), j=3 (p is 'a?c'), then dp[3][3] would be True.
+
+So the code should handle that.
+
+Another test case: s = "aa", p = "a*". The answer is True.
+
+In the DP table, dp[2][2] would be True.
+
+Another test case: s = "ab", p = "?*". The answer is True.
+
+Now, considering the code.
+
+But what about the space? For large strings, the 2D array could be a problem. However, given that the user allows polynomial time, perhaps the 2D approach is acceptable.
+
+But for the code, let's proceed with the 2D approach.
+
+Now, coding this in Python.
+
+But wait, in Python, creating a 2D array for large strings could be memory intensive. For example, if s and p are each 1000 characters, the array would be 1001 x 1001, which is about a million entries. That's manageable.
+
+So, the code would be:
+
+def is_match(s: str, p: str) -> bool:
+    m, n = len(s), len(p)
+    dp = [[False]*(n+1) for _ in range(m+1)]
+    dp[0][0] = True
+    for j in range(1, n+1):
+        dp[0][j] = dp[0][j-1] and p[j-1] == '*'
+    for i in range(1, m+1):
+        for j in range(1, n+1):
+            if p[j-1] == '?':
+                dp[i][j] = dp[i-1][j-1]
+            elif p[j-1] == '*':
+                dp[i][j] = dp[i][j-1] or dp[i-1][j]
+            else:
+                dp[i][j] = (s[i-1] == p[j-1]) and dp[i-1][j-1]
+    return dp[m][n]
+
+Wait, but for the case where the pattern has a '*' followed by other characters, this code should handle it.
+
+But let's test the case where p is "a*b", s is "aabb".
+
+The pattern is a*b, which should match aabb.
+
+Let's see:
+
+The DP table for i=4 (s is "aabb") and j=3 (p is "a*b").
+
+At j=3, p[2] is '*', so dp[4][3] = dp[4][2] (which is whether the first 4 characters of s match the first 2 of p, which is "a*") or dp[3][3] (whether first 3 of s match first 3 of p, which is "a*b").
+
+But I think the code would correctly compute this.
+
+Another edge case: s is empty, p is "*". Then dp[0][1] is True.
+
+Another case: s is "a", p is "?", returns True.
+
+But what about when the pattern has multiple '*'s? For example, s is "abc", p is "*". Then dp[3][1] is True.
+
+But in the code, for j=1, p[0] is '*', so dp[0][1] is True. Then for i=1, j=1: dp[1][1] = dp[1][0] (which is False) or dp[0][1] (True). So dp[1][1] is True. Similarly for i=2, j=1: dp[2][1] = dp[2][0] (False) or dp[1][1] (True). So it's True. And so on. So the code would return True for s="abc" and p="*".
+
+This seems correct.
+
+But what about when the pattern has a '*' followed by other characters? For example, s is "abc", p is "a*c". The code should return True.
+
+In the DP table, for i=3, j=3: p[2] is 'c'. So check if s[2] == 'c' (yes) and dp[2][2] (which is whether the first 2 characters of s match the first 2 of p, which is "a*"). For dp[2][2], since p[1] is '*', dp[2][2] is dp[2][1] (which is True) or dp[1][2] (which is ...). Wait, perhaps the code handles this correctly.
+
+Another thing to consider is that the code uses a 2D array, which for large m and n could be memory intensive. However, given that the user allows polynomial time, and the code runs in O(mn) time, which is acceptable for up to several thousand characters.
+
+But the user mentioned that the solution should not have exponential time. The standard DP approach is O(mn), which is polynomial, so that's acceptable.
+
+Therefore, the code above should work. However, there's a possible optimization for space. Let's think about using a 1D array and updating it in place.
+
+Let me try to think about that. The 1D array can be used, where dp[j] represents whether the first i characters of s match the first j characters of p. For each i, we can compute the new dp array based on the previous row.
+
+But for the '*' case, when processing j, we need to know the previous value of dp[j] (from the previous i) and the current value of dp[j-1] (from the same i). So perhaps we can use a temporary variable to store the previous value.
+
+Let me try to outline the 1D approach:
+
+Initialize dp as a list of size n+1, with dp[0] = True.
+
+For j from 1 to n:
+
+    dp[j] = dp[j-1] and p[j-1] == '*' (for the first row, i=0)
+
+Then, for each i from 1 to m:
+
+    prev_dp = dp.copy()  # or use a temporary variable
+
+    for j from 1 to n:
+
+        if p[j-1] == '?':
+
+            dp[j] = prev_dp[j-1]
+
+        elif p[j-1] == '*':
+
+            dp[j] = dp[j-1] or prev_dp[j]
+
+        else:
+
+            dp[j] = (s[i-1] == p[j-1]) and prev_dp[j-1]
+
+But this approach requires keeping track of the previous row's values. However, in Python, making a copy of the dp array for each i could be memory intensive. Alternatively, we can use two 1D arrays: previous and current.
+
+Let me think. For each i, we can have a current array that is updated based on the previous array.
+
+Initialize previous = [False]*(n+1), with previous[0] = True.
+
+For j from 1 to n:
+
+    previous[j] = previous[j-1] and p[j-1] == '*'
+
+Then, for each i from 1 to m:
+
+    current = [False]*(n+1)
+
+    current[0] = False  # since s is not empty
+
+    for j from 1 to n:
+
+        if p[j-1] == '?':
+
+            current[j] = previous[j-1]
+
+        elif p[j-1] == '*':
+
+            current[j] = current[j-1] or previous[j]
+
+        else:
+
+            current[j] = (s[i-1] == p[j-1]) and previous[j-1]
+
+    previous = current.copy()
+
+But this approach uses O(n) space, which is better for large m and n.
+
+But in Python, for large n, this could be more efficient. However, the original code with 2D array is easier to code correctly.
+
+But the user's requirement is to return exactly one code block. So, the code I wrote earlier with the 2D array is acceptable.
+
+But let me check for possible errors. For example, when the pattern has multiple '*'s, the code should handle it.
+
+Another possible edge case: s is "abc", p is "*a". The pattern "*a" should match "abc" only if the last character is 'a', which it is. So the code should return True.
+
+In the DP table, for i=3, j=2 (p is "*a"):
+
+At j=2, p[1] is 'a'. So for dp[3][2], we check if s[2] == 'a' (yes) and dp[2][1] (which is whether the first 2 characters of s match the first 1 of p, which is "*"). dp[2][1] is True because the pattern "*" can match any sequence, including the first two characters. So dp[3][2] would be True.
+
+Yes, that's correct.
+
+So the code seems to handle that.
+
+Another case: s is "a", p is "a*". The code should return True. For i=1, j=2: p[1] is '*', so dp[1][2] = dp[1][1] (which is True, since p[0] is 'a' and s[0] is 'a') or dp[0][2] (which is False). So dp[1][2] is True.
+
+Yes.
+
+Therefore, the code should work correctly.
+
+Now, the code in Python:
+
+def is_match(s: str, p: str) -> bool:
+    m, n = len(s), len(p)
+    dp = [[False]*(n+1) for _ in range(m+1)]
+    dp[0][0] = True
+    for j in range(1, n+1):
+        dp[0][j] = dp[0][j-1] and p[j-1] == '*'
+    for i in range(1, m+1):
+        for j in range(1, n+1):
+            if p[j-1] == '?':
+                dp[i][j] = dp[i-1][j-1]
+            elif p[j-1] == '*':
+                dp[i][j] = dp[i][j-1] or dp[i-1][j]
+            else:
+                dp[i][j] = (s[i-1] == p[j-1]) and dp[i-1][j-1]
+    return dp[m][n]
+
+But wait, in the case where the pattern has a '*' followed by other characters, the code should correctly handle it. For example, s = "abc", p = "a*c".
+
+But let's think about the code's handling of that. For i=3 (s is "abc"), j=3 (p is "a*c").
+
+p[2] is 'c'. So check if s[2] == 'c' (yes) and dp[2][2] (which is whether the first 2 characters of s match the first 2 of p, which is "a*").
+
+dp[2][2] is True because p[1] is '*' which can match any sequence, including the first two characters of s. So dp[3][3] would be True.
+
+Yes.
+
+Therefore, the code should work correctly.
+
+Now, the user requires that the code returns exactly one code block. So the code above is the correct implementation.
+
+<<<END THINKING>>>
+
+```python
+def is_match(s: str, p: str) -> bool:
+    m, n = len(s), len(p)
+    dp = [[False] * (n + 1) for _ in range(m + 1)]
+    dp[0][0] = True
+    for j in range(1, n + 1):
+        dp[0][j] = dp[0][j - 1] and p[j - 1] == '*'
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if p[j - 1] == '?':
+                dp[i][j] = dp[i - 1][j - 1]
+            elif p[j - 1] == '*':
+                dp[i][j] = dp[i][j - 1] or dp[i - 1][j]
+            else:
+                dp[i][j] = (s[i - 1] == p[j - 1]) and dp[i - 1][j - 1]
+    return dp[m][n]
+```

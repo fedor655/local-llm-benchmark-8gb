@@ -1,0 +1,408 @@
+<<<THINKING>>>
+We need to output only one code block. The function parse_config(text: str) -> dict. Implementation details: parse INI-like config. Let's design.
+
+We need to handle:
+
+- lines: strip whitespace.
+- ignore empty lines and lines starting with # or ; after strip.
+- Section lines: [section] with optional spaces inside? The spec: lines like [секция] start new section. Should we allow spaces inside? Probably strip spaces inside brackets. So we can detect if line starts with '[' and ends with ']' after strip. Then section_name = line[1:-1].strip().
+
+- Key-value lines: key = value. We split on first '='. But there may be '=' inside value. So we use line.split('=', 1). But we need to ignore lines that don't contain '='? They are invalid? Probably ignore? But spec says lines like ключ = значение. So we can skip lines without '='.
+
+- For key and value: strip spaces.
+
+- If value is surrounded by double quotes: remove them and treat as string. Should we handle escaped quotes? Not specified. So just check if value starts and ends with '"' and length >=2. Remove them. Keep as string.
+
+- Else parse type: if value lower() in ('true','false'): bool. If int: try int(value). If float: try float(value). But need to differentiate int vs float. We can try int first, if fails try float. But float may parse ints too. So we can check if '.' in value or 'e' etc. But simpler: try int, if fails try float. But int('3.0') fails. So fine.
+
+- If value is quoted, we skip type parsing.
+
+- Section '' created only if there were pairs before first section. So we need to track if we have seen any key before first section. If yes, we create '' section. But we also need to include it in result if there were pairs. So we can start current_section = None. When encountering key-value before any section, we set current_section = '' if not set. But we only add to result if we have at least one pair. So we can maintain a dict result = {}. When we first encounter a key before any section, we set current_section = '' and add to result if not present.
+
+- For each key-value, we add to result[current_section][key] = value. If key repeats, override.
+
+- Section may be empty: we need to include even if no pairs. So when encountering a section line, we set current_section = section_name. If section_name not in result, we add result[section_name] = {}. Even if no pairs later.
+
+- At the end, we return result.
+
+Edge cases: lines with only spaces: ignore. Lines starting with '#' or ';' after strip: ignore.
+
+Also, lines like [section] may have spaces inside: e.g., [ section ]. We should strip inside.
+
+Also, key may have spaces around: key = value. So we strip key and value.
+
+Also, value may have leading/trailing spaces: we strip.
+
+Also, value may be quoted: e.g., "some string". We remove quotes and keep as string. Should we also strip quotes after removing? We just remove outer quotes. If value has quotes inside? Not needed.
+
+Also, if value is quoted, we skip type parsing. So we treat as string.
+
+Also, if value is quoted but contains spaces? We keep them.
+
+Also, if value is quoted but contains '='? We keep them.
+
+Also, if value is quoted but contains quotes? Not needed.
+
+Also, if value is quoted but empty: "" -> empty string.
+
+Also, if value is quoted but has leading/trailing spaces inside quotes: we keep them? The spec says quotes removed and value remains string without type parsing. Should we strip spaces inside quotes? Probably not. But we might strip outer quotes only.
+
+Also, if value is quoted but contains leading/trailing spaces outside quotes? We strip them before checking quotes. So we will strip spaces around value, then check if startswith('"') and endswith('"'). So if value is ' "abc" ' after strip, we get '"abc"'. Then we remove quotes -> 'abc'. Good.
+
+Also, if value is quoted but contains quotes inside? Not needed.
+
+Also, if value is quoted but contains '='? We keep.
+
+Also, if value is quoted but contains spaces? We keep.
+
+Also, if value is quoted but contains leading/trailing spaces inside quotes? We keep.
+
+Also, if value is quoted but contains quotes inside? Not needed.
+
+Also, if value is quoted but contains quotes inside? Not needed.
+
+Also, if value is quoted but contains quotes inside? Not needed.
+
+Ok.
+
+Also, we need to handle repeated keys: last wins.
+
+Also, we need to include empty section '' only if there were pairs before first section. So we can track a flag: has_pre_section_pairs = False. When we first add a key before any section, set flag True. Then at the end, if flag True, ensure '' in result. But we already add when adding first key. So fine.
+
+Also, we need to include empty section '' only if there were pairs before first section. So we should not add '' if no pairs. So we only add when we add a key before any section. So we can set current_section = '' only when we first encounter a key before any section. So we can do: if current_section is None: current_section = '' and result[''] = {}. But we need to ensure we only add if we actually add a key. So we can do: if current_section is None: current_section = '' and result[''] = {}. Then add key. That ensures '' added only if we add a key. Good.
+
+Also, if we later encounter a section line, we set current_section accordingly. If section not in result, add empty dict.
+
+Also, if we encounter key-value after section, we add to that section.
+
+Also, if we encounter key-value before any section but we already had a section? That cannot happen because once we encounter a section, current_section is set. But if we later see a key-value before any section? Not possible.
+
+Also, we need to handle lines like 'key=value' with no spaces. We split on first '='.
+
+Also, we need to handle lines like 'key = value = something' -> split on first '=' -> key 'key', value 'value = something'.
+
+Also, we need to handle lines like 'key=' -> value ''.
+
+Also, we need to handle lines like '=value' -> key ''? Not typical. But we can treat key ''.
+
+Also, we need to handle lines like 'key = ' -> value ''.
+
+Also, we need to handle lines like 'key = "value with = sign"' -> after strip, value '"value with = sign"', we remove quotes -> 'value with = sign'.
+
+Also, we need to handle lines like 'key = "value with spaces" ' -> after strip, value '"value with spaces"', remove quotes -> 'value with spaces'.
+
+Also, we need to handle lines like 'key = "value with spaces" and more' -> after strip, value '"value with spaces" and more', not quoted fully. So we treat as normal value. But spec says if value is wrapped in double quotes, quotes removed and value remains string. It doesn't say quotes must wrap entire value. But typical INI: quotes may wrap entire value. So we can check if value startswith('"') and endswith('"'). If yes, remove quotes. Else parse type.
+
+Also, we need to handle values like 'true', 'True', 'FALSE', etc. So we lower-case.
+
+Also, we need to handle int: try int(value). But if value is '001', int('001') -> 1. That's fine.
+
+Also, we need to handle float: try float(value). But if value is '1e3', float('1e3') -> 1000.0. That's fine.
+
+Also, we need to handle negative numbers: '-5', '-3.14'.
+
+Also, we need to handle values like '1.0' -> float.
+
+Also, we need to handle values like '1.' -> float.
+
+Also, we need to handle values like '.5' -> float.
+
+Also, we need to handle values like '1e-3' -> float.
+
+Also, we need to handle values like 'true' -> bool.
+
+Also, we need to handle values like 'false' -> bool.
+
+Also, we need to handle values like 'True' -> bool.
+
+Also, we need to handle values like 'FALSE' -> bool.
+
+Also, we need to handle values like 'True ' -> bool after strip.
+
+Also, we need to handle values like '  true  ' -> bool after strip.
+
+Also, we need to handle values like '  123  ' -> int after strip.
+
+Also, we need to handle values like '  123.456  ' -> float after strip.
+
+Also, we need to handle values like '  "some string"  ' -> string after strip and quotes removed.
+
+Also, we need to handle lines like '# comment' or '; comment' after strip. So we ignore.
+
+Also, we need to handle lines like '   # comment' -> after strip '# comment', ignore.
+
+Also, we need to handle lines like '   ; comment' -> ignore.
+
+Also, we need to handle lines like '   [section]   ' -> after strip, [section], parse.
+
+Also, we need to handle lines like '   [section]   ' -> section name 'section'.
+
+Also, we need to handle lines like '   [section name]   ' -> section name 'section name'.
+
+Also, we need to handle lines like '   [   section   ]   ' -> section name 'section'.
+
+Also, we need to handle lines like '   [   ]   ' -> section name ''? But spec says lines like [секция] start new section. If empty section name, we treat as ''? But maybe not used. But we can allow.
+
+Also, we need to handle lines like 'key = value' with spaces around '='. We split on first '='. So key 'key', value 'value'.
+
+Also, we need to handle lines like 'key= value' -> key 'key', value 'value'.
+
+Also, we need to handle lines like 'key =value' -> key 'key', value 'value'.
+
+Also, we need to handle lines like 'key= value' -> key 'key', value 'value'.
+
+Also, we need to handle lines like 'key= value' -> key 'key', value 'value'.
+
+Ok.
+
+Also, we need to handle repeated keys: last wins. So we just assign.
+
+Also, we need to include empty section '' only if there were pairs before first section. So we only add when we add a key before any section.
+
+Also, we need to include section even if empty. So when we encounter a section line, we add result[section_name] = {} if not exist.
+
+Also, we need to handle case where there are no sections but some pairs: we add '' section.
+
+Also, we need to handle case where there are no pairs at all: result {}.
+
+Also, we need to handle case where there are sections but no pairs: result will have those sections with empty dicts.
+
+Ok.
+
+Implementation:
+
+def parse_config(text: str) -> dict:
+    result = {}
+    current_section = None
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if stripped.startswith('#') or stripped.startswith(';'):
+            continue
+        if stripped.startswith('[') and stripped.endswith(']'):
+            section_name = stripped[1:-1].strip()
+            current_section = section_name
+            if section_name not in result:
+                result[section_name] = {}
+            continue
+        # key-value
+        if '=' in stripped:
+            key, value = stripped.split('=', 1)
+            key = key.strip()
+            value = value.strip()
+            # handle quoted
+            if len(value) >= 2 and value[0] == '"' and value[-1] == '"':
+                parsed_value = value[1:-1]
+            else:
+                lower_val = value.lower()
+                if lower_val == 'true':
+                    parsed_value = True
+                elif lower_val == 'false':
+                    parsed_value = False
+                else:
+                    # try int
+                    try:
+                        parsed_value = int(value)
+                    except ValueError:
+                        try:
+                            parsed_value = float(value)
+                        except ValueError:
+                            parsed_value = value
+            if current_section is None:
+                current_section = ''
+                if '' not in result:
+                    result[''] = {}
+            result[current_section][key] = parsed_value
+    return result
+
+Edge: If we have key-value before any section, we set current_section = '' and add to result. Good.
+
+Edge: If we have key-value after section, we add to that section.
+
+Edge: If we have key-value after section but current_section is None? That cannot happen because we set current_section when encountering section. But if we never had section, current_section remains None until first key-value. So fine.
+
+Edge: If we have key-value after section but we had no section before? That means we had key-value before any section. So current_section set to ''.
+
+Edge: If we have section but no key-values after it, we still add empty dict.
+
+Edge: If we have section but no key-values before it, we still add empty dict.
+
+Edge: If we have no sections but no key-values, result {}.
+
+Edge: If we have no sections but key-values, result {'': {...}}.
+
+Edge: If we have sections but no key-values at all, result {'section1': {}, 'section2': {}}.
+
+Edge: If we have key-values before first section, we add ''.
+
+Edge: If we have key-values after first section, we add to that section.
+
+Edge: If we have repeated keys, last wins.
+
+Edge: If we have key-value with quotes, we treat as string.
+
+Edge: If we have key-value with quotes but value contains quotes inside? Not needed.
+
+Edge: If we have key-value with quotes but value contains '='? We treat as string.
+
+Edge: If we have key-value with quotes but value contains spaces? We keep.
+
+Edge: If we have key-value with quotes but value contains leading/trailing spaces inside quotes? We keep.
+
+Edge: If we have key-value with quotes but value contains trailing spaces after quotes? We strip before checking quotes, so trailing spaces removed. So we treat as quoted string.
+
+Edge: If we have key-value with quotes but value contains leading spaces before quotes? We strip before checking quotes, so leading spaces removed. So we treat as quoted string.
+
+Edge: If we have key-value with quotes but value contains quotes inside? Not needed.
+
+Edge: If we have key-value with quotes but value contains quotes inside? Not needed.
+
+Edge: If we have key-value with quotes but value contains quotes inside? Not needed.
+
+Ok.
+
+Potential improvement: We need to parse bool case-insensitive. We used lower().
+
+Potential improvement: We need to parse int before float. We did.
+
+Potential improvement: We need to parse float if int fails. We did.
+
+Potential improvement: We need to parse bool before int? But bool values 'true' and 'false' are not numeric. So int('true') fails, float('true') fails. So bool check first is fine.
+
+Potential improvement: We need to parse bool after int? But int('true') fails, so bool check after int would not parse. So we need bool check before int. We did.
+
+Potential improvement: We need to parse bool after int? Not needed.
+
+Potential improvement: We need to parse bool after int? Not needed.
+
+Ok.
+
+Edge: If value is 'True', lower() -> 'true', bool True. Good.
+
+Edge: If value is 'False', lower() -> 'false', bool False.
+
+Edge: If value is 'TRUE', lower() -> 'true', bool True.
+
+Edge: If value is 'FALSE', lower() -> 'false', bool False.
+
+Edge: If value is 'TrUe', lower() -> 'true', bool True.
+
+Edge: If value is 'FaLsE', lower() -> 'false', bool False.
+
+Edge: If value is 'true ' after strip -> 'true', bool True.
+
+Edge: If value is '  true  ' -> 'true', bool True.
+
+Edge: If value is '1' -> int 1.
+
+Edge: If value is '1.0' -> int fails, float 1.0.
+
+Edge: If value is '1e3' -> int fails, float 1000.0.
+
+Edge: If value is '1e-3' -> float 0.001.
+
+Edge: If value is '001' -> int 1.
+
+Edge: If value is '001.0' -> int fails, float 1.0.
+
+Edge: If value is 'abc' -> string.
+
+Edge: If value is '"abc"' -> string 'abc'.
+
+Edge: If value is '"abc"def' -> not quoted fully, so parse type: lower() -> 'abc"def' not bool, int fails, float fails, string 'abc"def'.
+
+Edge: If value is 'abc=def' -> split on first '=', key 'abc', value 'def'.
+
+Edge: If value is 'abc=def=ghi' -> key 'abc', value 'def=ghi'.
+
+Edge: If value is 'abc=' -> key 'abc', value '' -> parse type: lower() '' not bool, int fails, float fails, string ''.
+
+Edge: If value is '=def' -> key '', value 'def' -> parse type: bool? no, int? no, float? no, string 'def'.
+
+Edge: If value is '=' -> key '', value '' -> string ''.
+
+Edge: If value is 'key = "value with = sign"' -> after strip, key 'key', value '"value with = sign"', quoted -> string 'value with = sign'.
+
+Edge: If value is 'key = "value with = sign" and more' -> after strip, value '"value with = sign" and more', not quoted fully, parse type: bool? no, int? no, float? no, string '"value with = sign" and more'.
+
+Edge: If value is 'key = "value with spaces" ' -> after strip, value '"value with spaces"', quoted -> string 'value with spaces'.
+
+Edge: If value is 'key = "value with spaces" and more' -> not quoted fully.
+
+Edge: If value is 'key = "value with spaces"and more' -> not quoted fully.
+
+Edge: If value is 'key = "value with spaces"and more' -> not quoted fully.
+
+Ok.
+
+Edge: If value is 'key = "value with spaces"and more' -> not quoted fully.
+
+Ok.
+
+Edge: If value is 'key = "value with spaces"and more' -> not quoted fully.
+
+Ok.
+
+Edge: If value is 'key = "value with spaces"and more' -> not quoted fully.
+
+Ok.
+
+Edge: If value is 'key = "value with spaces"and more' -> not quoted fully.
+
+Ok.
+
+Edge: Enough.
+
+Now, we need to output only one code block. The function parse_config. We need to import typing? Not necessary. But we can include type hints.
+
+We need to ensure we don't include any other code or explanation. Just the function.
+
+We need to ensure we don't include tests or examples. Just the function.
+
+We need to ensure we don't include any other text outside triple backticks.
+
+Thus final answer: triple backticks, code, triple backticks.
+
+Let's produce final code.
+<<<END THINKING>>>
+
+```python
+def parse_config(text: str) -> dict:
+    result = {}
+    current_section = None
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith('#') or stripped.startswith(';'):
+            continue
+        if stripped.startswith('[') and stripped.endswith(']'):
+            section_name = stripped[1:-1].strip()
+            current_section = section_name
+            result.setdefault(section_name, {})
+            continue
+        if '=' in stripped:
+            key, value = stripped.split('=', 1)
+            key = key.strip()
+            value = value.strip()
+            if len(value) >= 2 and value[0] == '"' and value[-1] == '"':
+                parsed_value = value[1:-1]
+            else:
+                lower_val = value.lower()
+                if lower_val == 'true':
+                    parsed_value = True
+                elif lower_val == 'false':
+                    parsed_value = False
+                else:
+                    try:
+                        parsed_value = int(value)
+                    except ValueError:
+                        try:
+                            parsed_value = float(value)
+                        except ValueError:
+                            parsed_value = value
+            if current_section is None:
+                current_section = ''
+                result.setdefault('', {})
+            result[current_section][key] = parsed_value
+    return result
+```

@@ -1,0 +1,29 @@
+```js
+function parseQuery(qs) {
+    const params = {};
+    if (!qs || qs.length === 0) return params;
+    
+    // Remove leading '?' if present
+    qs = qs[0] === '?' ? qs.slice(1) : qs;
+
+    // Split the query string by '&'
+    const pairs = qs.split('&');
+
+    for (let pair of pairs) {
+        if (!pair) continue;  // Ignore empty segments
+
+        let [key, value] = pair.split('=');
+        
+        key = decodeURIComponent(key.replace(/\+/g, ' '));
+        value = typeof value === 'undefined' ? '' : decodeURIComponent(value.replace(/\+/g, ' '));
+
+        if (params.hasOwnProperty(key)) {
+            params[key] = Array.isArray(params[key]) ? params[key].concat(value) : [params[key], value];
+        } else {
+            params[key] = value;
+        }
+    }
+
+    return params;
+}
+```

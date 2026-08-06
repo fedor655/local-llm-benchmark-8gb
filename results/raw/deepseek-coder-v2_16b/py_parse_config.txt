@@ -1,0 +1,40 @@
+ ```python
+import re
+
+def parse_config(text: str) -> dict:
+    config = {}
+    section = ''
+    lines = text.splitlines()
+    
+    for line in lines:
+        line = line.strip()
+        if not line or line.startswith('#') or line.startswith(';'):
+            continue
+        
+        if re.match(r'\[.*\]', line):
+            section = line[1:-1].strip()
+            config[section] = {}
+        else:
+            key, value = map(str.strip, re.split(r'=', line, 1))
+            value = parse_value(value)
+            if section:
+                config[section][key] = value
+            else:
+                config[''] = {key: value}
+    
+    return config
+
+def parse_value(value: str):
+    if value.startswith('"') and value.endswith('"'):
+        value = value[1:-1].split('=')[0].strip()
+    elif value.lower() == 'true':
+        return True
+    elif value.lower() == 'false':
+        return False
+    elif re.match(r'^-?\d+$', value):
+        return int(value)
+    elif re.match(r'^-?\d*\.\d+$', value):
+        return float(value)
+    else:
+        return value
+```

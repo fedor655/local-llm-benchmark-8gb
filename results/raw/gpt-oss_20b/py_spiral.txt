@@ -1,0 +1,34 @@
+<<<THINKING>>>
+We need to output only one block of code in triple backticks. The function spiral_order(matrix: list[list[int]]) -> list[int]. Should handle rectangular matrix, clockwise spiral starting from top-left. Empty matrix returns empty list. Implementation typical. Use boundaries: top, bottom, left, right. While top <= bottom and left <= right. Append top row left to right, increment top. Then right column top to bottom, decrement right. Then if top <= bottom: bottom row right to left, decrement bottom. Then if left <= right: left column bottom to top, increment left. Return result.
+
+Edge cases: matrix may be empty list or list of empty lists? "Пустая матрица" likely means matrix == [] or maybe matrix[0] == []? We'll treat if not matrix or not matrix[0] return [].
+
+Return list[int].
+
+Let's produce code.
+<<<END THINKING>>>
+
+```python
+def spiral_order(matrix: list[list[int]]) -> list[int]:
+    if not matrix or not matrix[0]:
+        return []
+    result = []
+    top, bottom = 0, len(matrix) - 1
+    left, right = 0, len(matrix[0]) - 1
+    while top <= bottom and left <= right:
+        for col in range(left, right + 1):
+            result.append(matrix[top][col])
+        top += 1
+        for row in range(top, bottom + 1):
+            result.append(matrix[row][right])
+        right -= 1
+        if top <= bottom:
+            for col in range(right, left - 1, -1):
+                result.append(matrix[bottom][col])
+            bottom -= 1
+        if left <= right:
+            for row in range(bottom, top - 1, -1):
+                result.append(matrix[row][left])
+            left += 1
+    return result
+```

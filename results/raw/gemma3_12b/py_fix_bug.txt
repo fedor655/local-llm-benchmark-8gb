@@ -1,0 +1,24 @@
+```python
+def search_range(nums, target):
+    # Возвращает (первый_индекс, последний_индекс) вхождения target
+    # в отсортированном по возрастанию списке nums, либо (-1, -1).
+    lo, hi = 0, len(nums)
+    first = -1
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if nums[mid] < target:
+            lo = mid + 1
+        else:
+            hi = mid
+    first = lo
+    lo, hi = 0, len(nums)
+    last = -1
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if nums[mid] <= target:
+            lo = mid + 1
+        else:
+            hi = mid
+    last = lo - 1
+    return (first, last)
+```

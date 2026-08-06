@@ -1,0 +1,31 @@
+```
+import csv
+from typing import List, Tuple
+
+def top_by_group(csv_text: str, group_col: str, value_col: str, k: int) -> List[Tuple[str, float]]:
+    from collections import defaultdict
+    
+    # Parse the CSV text
+    reader = csv.DictReader(csv_text.strip().splitlines())
+    
+    # Initialize a dictionary to hold sums for each group
+    group_sums = defaultdict(float)
+    
+    # Iterate over each row in the CSV
+    for row in reader:
+        group_name = row[group_col]
+        value_str = row[value_col].strip()
+        
+        if value_str:  # Check if the value column is not empty
+            try:
+                value = float(value_str)  # Try to convert the value to a float
+                group_sums[group_name] += value  # Add to the group's sum
+            except ValueError:
+                continue  # Skip this row if conversion fails
+    
+    # Sort groups by sum (descending) and then by name (ascending)
+    sorted_groups = sorted(group_sums.items(), key=lambda x: (-x[1], x[0]))
+    
+    # Return the top k groups
+    return sorted_groups[:k]
+```

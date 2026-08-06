@@ -1,0 +1,18 @@
+```python
+def two_sum(nums: list[int], target: int) -> tuple[int, int] | None:
+    """
+    Given an array of integers nums and an integer target, return indices of two numbers such that they add up to target.
+    You may assume that each input would have exactly one solution, and you may not use the same element twice.
+    For example:
+    two_sum([2, 7, 11, 15], 9) == (0, 1)
+    two_sum([3, 2, 4], 6) == (1, 2)
+    two_sum([3, 3], 6) == (0, 1)
+    """
+    nums_map = {}
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in nums_map:
+            return (nums_map[complement], i)
+        nums_map[num] = i
+    return None
+```

@@ -1,0 +1,17 @@
+```python
+import csv
+from collections import defaultdict
+
+def top_by_group(csv_text: str, group_col: str, value_col: str, k: int) -> list[tuple[str, float]]:
+    groups = defaultdict(float)
+    for row in csv.reader(csv_text.splitlines()):
+        if not row or row[0] == '':
+            break
+        group = row[0]
+        try:
+            value = float(row[1])
+            groups[group] += value
+        except (ValueError, IndexError):
+            pass
+    return sorted(groups.items(), key=lambda x: (-x[1], x[0]))[:k]
+```

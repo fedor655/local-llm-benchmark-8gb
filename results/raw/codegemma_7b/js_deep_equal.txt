@@ -1,0 +1,10 @@
+```javascript
+function deepEqual(a, b) {
+  if (a === b) return true;
+  if (a == null || b == null || typeof a != typeof b) return false;
+  if (a instanceof Date && b instanceof Date) return a.getTime() === b.getTime();
+  if (Array.isArray(a)) return Array.isArray(b) && a.length === b.length && a.every((v, i) => deepEqual(v, b[i]));
+  if (typeof a === 'object') return Object.keys(a).length === Object.keys(b).length && Object.keys(a).every(k => deepEqual(a[k], b[k]));
+  return false;
+}
+```

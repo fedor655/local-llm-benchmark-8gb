@@ -1,0 +1,17 @@
+```python
+def merge_intervals(intervals: list[list[int]]) -> list[list[int]]:
+    if not intervals: return []
+    # Сортируем отрезки по левой границе
+    intervals.sort(key=lambda x: x[0])
+    result = [intervals[0]]
+    for current_start, current_end in intervals[1:]:
+        last_start, last_end = result[-1]
+        # Если текущее отрезки соприкасается с последним в результате
+        if current_start <= last_end:
+            # Объединяем их
+            result[-1][1] = max(last_end, current_end)
+        else:
+            # Добавляем текущее отрезки в результат
+            result.append([current_start, current_end])
+    return result
+```

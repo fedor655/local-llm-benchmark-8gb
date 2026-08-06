@@ -1,0 +1,24 @@
+```javascript
+function parseQuery(qs) {
+    qs = qs.replace(/^\?/, '');
+    const pairs = qs.split('&');
+    const obj = {};
+    for (const pair of pairs) {
+        let [key, value] = pair.split('=');
+        key = decodeURIComponent(key.replace(/\+/g, ' '));
+        if (!value) {
+            value = '';
+        } else {
+            value = decodeURIComponent(value.replace(/\+/g, ' '));
+        }
+        if (obj[key]) {
+            obj[key].push(value);
+        } else {
+            obj[key] = [value];
+        }
+    }
+    return Object.fromEntries(Object.entries(obj).filter(([key, values]) => values.length > 1 ? values : values[0]));
+}
+
+parseQuery('?a=1&b=2&a=3');
+```

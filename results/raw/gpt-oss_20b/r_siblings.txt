@@ -1,0 +1,6 @@
+<<<THINKING>>>
+We need to parse the problem: "У Марии четыре брата и три сестры. Сколько сестёр у брата Марии? Ответь числом." So Maria has 4 brothers and 3 sisters. We need to find how many sisters a brother of Maria has. Let's think: Maria has 4 brothers. So each brother shares the same siblings: Maria, plus other siblings. Maria has 3 sisters. So total sisters for a brother: Maria's sisters plus Maria? Wait, a brother's sisters are all female siblings of that brother. The brother shares siblings with Maria. Maria has 3 sisters. Those are female siblings. Also Maria herself is a sister to the brother. So the brother has 4 sisters: Maria + 3 sisters. So answer: 4. But check: Maria has 4 brothers and 3 sisters. So total siblings: 4 brothers + 3 sisters + Maria = 8 siblings. For a brother, his sisters are all female siblings: Maria + 3 sisters = 4. So answer 4. Provide just number. Then last line: "ОТВЕТ: 4".
+<<<END THINKING>>>
+
+4
+ОТВЕТ: 4

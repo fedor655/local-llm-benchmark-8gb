@@ -1,0 +1,67 @@
+<<<THINKING>>>
+We need to output only one block of code in triple backticks, no other text. The function should normalize Russian phone numbers. Accepts string s. Should return canonical form '+79123456789' or None. Must handle various formats: '+7 (912) 345-67-89', '8-912-345-67-89', '89123456789', '9123456789' (10 digits). If 10 digits, we need to prefix '+7'. If 11 digits starting with 7 or 8, we need to convert to '+7' + rest 10 digits. If 11 digits starting with 8, replace 8 with 7. If 11 digits starting with 7, keep. If 10 digits, prefix '+7'. If 10 digits but maybe with leading 8? Actually 10 digits cannot start with 8? But we treat 10 digits as local number. If 11 digits but not starting with 7 or 8, return None. Also if after removing non-digits we get length not 10 or 11, return None. Also if 11 digits but first digit not 7 or 8, return None. Also if 10 digits but maybe first digit 8? But 10-digit numbers can start with 8? In Russia, local numbers start with 8? Actually 8 is used as trunk prefix, but local numbers don't start with 8. So 10-digit numbers start with 9? Usually mobile numbers start with 9. But we can just accept any 10-digit number. But spec says 10 digits without country code. So we accept any 10-digit number. So algorithm: digits = re.sub(r'\D', '', s). If len(digits)==11: if digits[0] in ('7','8'): normalized = '+7' + digits[1:] if digits[0]=='8' else '+7' + digits[1:]? Actually if digits[0]=='7', we keep digits[1:]? Wait canonical form is '+7' + 10 digits. So if digits[0]=='7', we keep digits[1:] as rest. If digits[0]=='8', we replace with 7: normalized = '+7' + digits[1:]. If digits[0] not 7 or 8: return None. If len(digits)==10: normalized = '+7' + digits. Else return None.
+
+Edge cases: string may contain spaces, parentheses, dashes, plus sign. We remove all non-digits. But if string contains plus sign, we ignore it. But if string contains plus sign and digits, we still remove plus sign. But if string contains plus sign but digits length 11? Eg '+7 912 345 6789' -> digits '79123456789', length 11, first digit 7 -> normalized '+79123456789'. Good.
+
+Return type: str | None. Provide docstring in Russian.
+
+We need to output only code block. So we will produce:
+
+```python
+import re
+
+def нормализовать_телефон(s: str) -> str | None:
+    """
+    Принимает строку с российским номером телефона в произвольном формате
+    и возвращает его в каноническом виде '+79123456789'.
+    Если из строки нельзя получить корректный российский номер
+    (11 цифр, начинающихся с 7 или 8, либо 10 цифр без кода страны),
+    возвращает None.
+    """
+    digits = re.sub(r'\D', '', s)
+    if len(digits) == 11:
+        if digits[0] == '7':
+            return '+7' + digits[1:]
+        if digits[0] == '8':
+            return '+7' + digits[1:]
+        return None
+    if len(digits) == 10:
+        return '+7' + digits
+    return None
+```
+
+But we need to ensure we import re. Also we might want to use typing for return type. But not necessary.
+
+We should also consider that if digits length 11 and first digit 8, we replace 8 with 7. So we can unify: if digits[0] in ('7','8'): return '+7' + digits[1:]. else None.
+
+Also we might want to strip leading zeros? Not necessary.
+
+Edge: If digits length 11 but first digit 7, we keep digits[1:]. Good.
+
+Return type: str | None. In Python 3.10+ we can use |. But we can also use Optional[str]. But spec says str | None.
+
+We should also ensure function name uses Cyrillic. It's okay.
+
+We need to output only code block. So final answer: code block with function.
+<<<END THINKING>>>
+
+```python
+import re
+
+def нормализовать_телефон(s: str) -> str | None:
+    """
+    Принимает строку с российским номером телефона в произвольном формате
+    и возвращает его в каноническом виде '+79123456789'.
+    Если из строки нельзя получить корректный российский номер
+    (11 цифр, начинающихся с 7 или 8, либо 10 цифр без кода страны),
+    возвращает None.
+    """
+    digits = re.sub(r'\D', '', s)
+    if len(digits) == 11:
+        if digits[0] in ('7', '8'):
+            return '+7' + digits[1:]
+        return None
+    if len(digits) == 10:
+        return '+7' + digits
+    return None
+```

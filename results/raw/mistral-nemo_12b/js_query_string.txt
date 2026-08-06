@@ -1,0 +1,12 @@
+```javascript
+function parseQuery(qs) {
+  return Object.fromEntries(
+    (qs[0] === '?' ? qs.substr(1) : qs)
+      .split('&')
+      .map(kv => [
+        decodeURIComponent(kv.split('=')[0].replace('+', ' ')),
+        kv.includes('=') ? decodeURIComponent(kv.split('=')[1]) : ''
+      ])
+  );
+}
+```

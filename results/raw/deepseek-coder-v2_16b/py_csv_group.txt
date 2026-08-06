@@ -1,0 +1,23 @@
+ ```python
+import csv
+from collections import defaultdict
+
+def top_by_group(csv_text: str, group_col: str, value_col: str, k: int) -> list[tuple[str, float]]:
+    reader = csv.DictReader(csv_text.splitlines(), delimiter=',')
+    groups = defaultdict(list)
+    
+    for row in reader:
+        group = row[group_col]
+        value = row[value_col]
+        if value and value.strip():
+            try:
+                value = float(value)
+                groups[group].append(value)
+            except ValueError:
+                continue
+    
+    summed_groups = [(group, sum(values)) for group, values in groups.items()]
+    sorted_groups = sorted(summed_groups, key=lambda x: (-x[1], x[0]))
+    
+    return sorted_groups[:k]
+```

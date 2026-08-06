@@ -1,0 +1,28 @@
+```python
+from collections import defaultdict, deque
+
+def topo_sort(n: int, edges: list[tuple[int, int]]) -> list[int] | None:
+    graph = defaultdict(list)
+    in_degree = [0] * n
+    
+    for a, b in edges:
+        graph[a].append(b)
+        in_degree[b] += 1
+        
+    queue = deque([i for i in range(n) if in_degree[i] == 0])
+    topo_order = []
+    
+    while queue:
+        node = queue.popleft()
+        topo_order.append(node)
+        
+        for neighbor in graph[node]:
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
+                
+    if len(topo_order) == n:
+        return topo_order
+    else:
+        return None
+```

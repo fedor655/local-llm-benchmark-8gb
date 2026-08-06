@@ -1,0 +1,42 @@
+ ```python
+def spiral_order(matrix):
+    if not matrix:
+        return []
+
+    m, n = len(matrix), len(matrix[0])
+    direction = 0
+    result, x, y = [], 0, 0
+
+    while True:
+        for i in range(n):
+            result.append(matrix[x][y + i])
+        if not grow_down(m, n, x, y):
+            break
+        for i in range(m - 1, -1, -1):
+            result.append(matrix[x + i][y - 1])
+        if not grow_right(n, x, y - 1):
+            break
+        for i in range(n - 1, -1, -1):
+            result.append(matrix[x + m - 1][y - i - 1])
+        if not grow_up(m, n, x + m - 1, y - 1):
+            break
+        for i in range(m - 2, -1, -1):
+            result.append(matrix[x + i + 1][y - 1])
+        if not grow_left(n, x + m - 1, y - 1):
+            break
+        x += 1
+        y -= 1
+    return result
+
+def grow_down(m, n, x, y):
+    return x < m - 1
+
+def grow_right(n, x, y):
+    return y < n - 1
+
+def grow_up(m, n, x, y):
+    return x > 0
+
+def grow_left(n, x, y):
+    return y > 0
+```

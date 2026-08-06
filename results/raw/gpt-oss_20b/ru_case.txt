@@ -1,0 +1,6 @@
+<<<THINKING>>>
+The user: "Поставь слово «дерево» в родительный падеж множественного числа. Ответь одним словом." They want the word "дерево" in genitive plural. The word "дерево" is neuter noun, plural "деревья". Genitive plural: "деревьев". So answer: "деревьев". They want one word. Then last line must be "ОТВЕТ: <значение>" with no explanation after. So output: "деревьев" then newline "ОТВЕТ: деревьев". Ensure no extra explanation.
+<<<END THINKING>>>
+
+деревьев
+ОТВЕТ: деревьев

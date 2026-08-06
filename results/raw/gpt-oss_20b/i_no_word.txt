@@ -1,0 +1,11 @@
+<<<THINKING>>>
+The user wants: "Напиши одно предложение о море на русском языке, в котором нет ни одной буквы «а». Длина — не менее 5 слов. Выведи только само предложение."
+
+We need to produce a sentence about the sea, in Russian, with no letter "а" (lowercase or uppercase). Must be at least 5 words. Output only the sentence, nothing else.
+
+We must ensure no "а" letter. That includes "А" uppercase. So we must avoid both. Also "а" appears in many words. We need to craft a sentence about the sea. Let's think of words: "Море" has "е" and "о" and "р" and "м" but no "а". Good. "Волны" has "о", "л", "н", "ы". Good. "Свет" has "с", "в", "е", "т". Good. "Глубокий" has "г", "л", "у", "б", "о", "к", "и", "й". Good. "Тихий" has "т", "и", "х", "и", "й". Good. "Песок" has "п", "е", "с", "о", "к". Good. "Корабль" has "к", "о", "р", "а", "б", "л", "ь" - contains "а". So avoid "корабль". "Бриз" has "б", "р", "и", "з". Good. "Солнце" has "с", "о", "л", "н", "ц", "е". Good. "Ветер" has "в", "е", "т", "е", "р". Good. "Плывут" has "п", "л", "ы", "в", "у", "т". Good. "Кит" has "к", "и", "т". Good. "Морской" has "м", "о", "р", "с", "к", "о", "й". Good. "Волны" again. "Тихий" again. "Свет" again.
+
+We need at least 5 words. Let's craft: "Море шумит, волны сверкают, ветер играет." Count words: "Море" (1), "шумит," (2), "волны" (3), "сверкают," (4), "ветер" (5), "играет." (6). That's 6 words. Check for letter "а": "Море" no a. "шумит" no a. "волны" no a. "сверкают" contains "а"? "сверкают" letters: с, в, е, р, к, а, ю, т. It contains "а". So cannot use "сверкают". Let's avoid that. Use "светит" maybe. "светит" letters: с, в, е, т, и, т. No a. So "Море шумит, волны сверкают, ветер играет." We need to replace "сверкают" with something else. "Море шумит, волны блестят, ветер играет." "блестят" letters: б, л, е, с, т, я, т. No a. Good. So sentence: "Море шумит, волны блестят, ветер играет." Count words: "Море" (1), "шумит," (2), "волны" (3), "блестят," (4), "ветер" (5), "играет." (6). Good. No letter "а". Check each word: "Море" no a. "шумит" no a. "волны" no a. "блестят" no a. "ветер" no a. "играет" no a. Good. Sentence about sea. It's fine. Output only the sentence. Ensure no trailing spaces or newlines? Just output the sentence. Let's do that.
+<<<END THINKING>>>
+
+Море шумит, волны блестят, ветер играет.

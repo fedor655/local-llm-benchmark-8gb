@@ -1,0 +1,55 @@
+<<<THINKING>>>
+We need to output only one block of code. The function signature: top_by_group(csv_text: str, group_col: str, value_col: str, k: int) -> list[tuple[str, float]].
+
+We need to parse CSV text. No quotes or escapes. So simple splitlines, skip empty lines at end. First line header. Find indices of group_col and value_col. Then iterate rows, skip empty lines. For each row, split by comma. If len < needed, skip? Probably skip row. For each row, get group value, value string. If value string empty or cannot parse to float, skip adding to sum but keep group if any valid row. So we need to maintain a dict group->sum. For each row, if value string is not empty and can parse to float, add to sum. If group not in dict, initialize sum 0. But we need to keep group even if no valid rows? The requirement: "строки, где значение в value_col пустое или не парсится как число, пропустить, но саму группу не терять, если в ней есть хоть одна валидная строка". That means if group has at least one valid row, we keep group. If group has only invalid rows, we ignore group entirely. So we can only add group to dict when we encounter a valid row. So we don't need to pre-add groups.
+
+After processing, we have dict of group->sum. Then sort items by (-sum, group). Then take first k. Return list of tuples (group, sum). Sum is float.
+
+Edge cases: k may be > number of groups. Return all.
+
+Also need to ignore empty lines at end. So we can strip trailing whitespace lines. Use splitlines() and filter out lines that are empty after strip? But we need to ignore empty lines at end only. But if there are empty lines in middle? Problem says "Пустые строки в конце файла игнорировать." So only trailing empty lines. So we can strip trailing empty lines: while lines and lines[-1].strip()=='' pop. But if there are empty lines in middle, we treat them as rows? They would produce fewer columns; we can skip them. But spec only says ignore trailing empty lines. So we can just ignore trailing empty lines.
+
+Implementation: def top_by_group(csv_text, group_col, value_col, k): lines = csv_text.splitlines(); while lines and lines[-1].strip()=='' : lines.pop(); if not lines: return []; header = lines[0].split(','); try: g_idx = header.index(group_col); v_idx = header.index(value_col); except ValueError: return []; sums = {}; for line in lines[1:]: if not line: continue; parts = line.split(','); if len(parts)<=max(g_idx, v_idx): continue; group = parts[g_idx]; val_str = parts[v_idx]; if val_str=='' : continue; try: val = float(val_str); except ValueError: continue; sums[group] = sums.get(group, 0.0)+val; # only add group when valid row. After loop, items = list(sums.items()); items.sort(key=lambda x: (-x[1], x[0])); return items[:k].
+
+Return type list[tuple[str, float]].
+
+Edge: if group has no valid rows, not in sums. Good.
+
+Return list of tuples.
+
+Ok. Provide code block.
+<<<END THINKING>>>
+
+```python
+def top_by_group(csv_text: str, group_col: str, value_col: str, k: int) -> list[tuple[str, float]]:
+    lines = csv_text.splitlines()
+    while lines and lines[-1].strip() == '':
+        lines.pop()
+    if not lines:
+        return []
+    header = lines[0].split(',')
+    try:
+        g_idx = header.index(group_col)
+        v_idx = header.index(value_col)
+    except ValueError:
+        return []
+    sums: dict[str, float] = {}
+    for line in lines[1:]:
+        if not line:
+            continue
+        parts = line.split(',')
+        if len(parts) <= max(g_idx, v_idx):
+            continue
+        group = parts[g_idx]
+        val_str = parts[v_idx]
+        if val_str == '':
+            continue
+        try:
+            val = float(val_str)
+        except ValueError:
+            continue
+        sums[group] = sums.get(group, 0.0) + val
+    items = list(sums.items())
+    items.sort(key=lambda x: (-x[1], x[0]))
+    return items[:k]
+```

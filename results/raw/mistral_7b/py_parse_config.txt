@@ -1,0 +1,32 @@
+ ```python
+from collections import defaultdict
+import re
+
+def parse_config(text):
+    config = defaultdict(lambda: defaultdict(str))
+    section = ''
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line[0] in ('#', ';'):
+            continue
+        if line[0].isupper():
+            section = line
+            continue
+        key, value = line.split('=', 1)
+        value = value.strip('"')
+        if '"' in value:
+            value = value.replace('"', '')
+        if '=' in value:
+            key, value = value.split('=', 1)
+        try:
+            value = float(value)
+        except ValueError:
+            try:
+                value = int(value)
+            except ValueError:
+                pass
+        if value.lower() in ('true', 'false'):
+            value = bool(value.lower() == 'true')
+        config[section][key] = value
+    return dict(config)
+```

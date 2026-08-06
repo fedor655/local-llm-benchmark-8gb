@@ -1,0 +1,23 @@
+<<<THINKING>>>
+Okay, let's see. The problem says that a bat and a ball together cost 1100 rubles. The bat is 1000 rubles more expensive than the ball. I need to find out how much the ball costs.
+
+Hmm, let me set this up with equations. Let me call the cost of the ball "x" rubles. Then the bat would be x + 1000 rubles, right? Because the bat is 1000 rubles more expensive than the ball.
+
+So together, the bat and the ball cost x + (x + 1000) = 1100. Let me write that down:
+
+x + (x + 1000) = 1100
+
+Simplifying that, combine like terms. 2x + 1000 = 1100. Then subtract 1000 from both sides:
+
+2x = 1100 - 1000
+2x = 100
+
+Then divide both sides by 2:
+
+x = 50
+
+Wait, so the ball costs 50 rubles? Let me check. If the ball is 50, then the bat is 50 + 1000 = 1050. Together, 50 + 1050 = 1100. Yep, that adds up. So the answer should be 50.
+
+<<<END THINKING>>>
+
+ОТВЕТ: 50

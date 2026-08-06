@@ -1,0 +1,61 @@
+<<<THINKING>>>
+We need to output a single code block with the class LRUCache. Use OrderedDict or custom doubly linked list + hashmap. Provide code only. No tests, no explanation. Use Python. Ensure get returns int or -1. Put updates or inserts. Use capacity. Use O(1). Provide code.
+<<<END THINKING>>>
+
+```python
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.cache = {}
+        self.head = self.tail = None
+
+    def _remove(self, node):
+        if node.prev:
+            node.prev.next = node.next
+        else:
+            self.head = node.next
+        if node.next:
+            node.next.prev = node.prev
+        else:
+            self.tail = node.prev
+
+    def _add_to_front(self, node):
+        node.prev = None
+        node.next = self.head
+        if self.head:
+            self.head.prev = node
+        self.head = node
+        if not self.tail:
+            self.tail = node
+
+    def get(self, key):
+        if key not in self.cache:
+            return -1
+        node = self.cache[key]
+        self._remove(node)
+        self._add_to_front(node)
+        return node.value
+
+    def put(self, key, value):
+        if key in self.cache:
+            node = self.cache[key]
+            node.value = value
+            self._remove(node)
+            self._add_to_front(node)
+        else:
+            if len(self.cache) == self.capacity:
+                old = self.tail
+                self._remove(old)
+                del self.cache[old.key]
+            node = _Node(key, value)
+            self._add_to_front(node)
+            self.cache[key] = node
+
+class _Node:
+    __slots__ = ('key', 'value', 'prev', 'next')
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+        self.prev = None
+        self.next = None
+```

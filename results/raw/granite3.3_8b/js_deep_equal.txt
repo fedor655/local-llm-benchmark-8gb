@@ -1,0 +1,35 @@
+```javascript
+function deepEqual(a, b) {
+    if (a === b) return true; // примитивы сравниваются строго, NaN равен NaN, +0 не равен -0
+
+    const aType = typeof a;
+    const bType = typeof b;
+
+    if (aType !== bType) return false; // типы должны быть одинаковыми
+
+    if (aType === 'object' && !Array.isArray(a) && !Array.isArray(b)) {
+        // обычные объекты сравниваются по собственным ключам и значениям
+        const aKeys = Object.keys(a);
+        const bKeys = Object.keys(b);
+
+        if (aKeys.length !== bKeys.length) return false;
+
+        for (const key of aKeys) {
+            if (!bKeys.includes(key) || !deepEqual(a[key], b[key])) return false;
+        }
+
+        return true;
+    }
+
+    // массивы сравниваются по длине и поэлементному равенству
+    if (Array.isArray(a) !== Array.isArray(b)) return false;
+
+    if (a.length !== b.length) return false;
+
+    for (let i = 0; i < a.length; i++) {
+        if (!deepEqual(a[i], b[i])) return false;
+    }
+
+    return true;
+}
+```

@@ -1,0 +1,26 @@
+```python
+from collections import defaultdict, deque
+
+def topo_sort(n: int, edges: list[tuple[int, int]]) -> list[int] | None:
+    graph = defaultdict(list)
+    for a, b in edges:
+        graph[a].append(b)
+
+    visited = set()
+    stack = []
+
+    def dfs(node):
+        if node in visited:
+            return False
+        visited.add(node)
+        for neighbor in graph[node]:
+            if not dfs(neighbor):
+                return False
+        stack.append(node)
+        return True
+
+    for i in range(n):
+        if not dfs(i):
+            return None
+    return list(reversed(stack))
+```

@@ -1,0 +1,45 @@
+```python
+def parse_config(text: str) -> dict:
+    import re
+
+    config = {}
+    current_section = ''
+    
+    for line in text.splitlines():
+        stripped_line = line.strip()
+        
+        if not stripped_line or stripped_line.startswith(('#', ';')):
+            continue
+        
+        section_match = re.match(r'\[(.*)\]', stripped_line)
+        if section_match:
+            current_section = section_match.group(1).strip()
+            config.setdefault(current_section, {})
+            continue
+        
+        key_value_match = re.match(r'([^=]+)\s*=\s*(.*)', stripped_line)
+        if key_value_match:
+            key, value = key_value_match.groups()
+            key = key.strip()
+            
+            if value.startswith('"') and value.endswith('"'):
+                value = value[1:-1]
+            else:
+                value = value.strip()
+                if value.lower() == 'true':
+                    value = True
+                elif value.lower() == 'false':
+                    value = False
+                else:
+                    try:
+                        if '.' in value:
+                            value = float(value)
+                        else:
+                            value = int(value)
+                    except ValueError:
+                        pass
+            
+            config[current_section][key] = value
+    
+    return config
+```

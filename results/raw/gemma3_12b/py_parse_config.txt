@@ -1,0 +1,61 @@
+```python
+def parse_config(text: str) -> dict:
+    result = {}
+    current_section = ""
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or line.startswith(";"):
+            continue
+
+        if line.startswith("[") and line.endswith("]"):
+            current_section = line[1:-1].strip()
+            if current_section not in result:
+                result[current_section] = {}
+        else:
+            if not current_section:
+                if current_section not in result:
+                    result[current_section] = {}
+                key, value = line.split("=", 1)
+                key = key.strip()
+                value = value.strip()
+                if value.lower() == "true":
+                    result[current_section][key] = True
+                elif value.lower() == "false":
+                    result[current_section][key] = False
+                else:
+                    try:
+                        result[current_section][key] = int(value)
+                    except ValueError:
+                        try:
+                            result[current_section][key] = float(value)
+                        except ValueError:
+                            if value.startswith('"') and value.endswith('"'):
+                                result[current_section][key] = value[1:-1]
+                            else:
+                                result[current_section][key] = value
+            else:
+                key, value = line.split("=", 1)
+                key = key.strip()
+                value = value.strip()
+                if value.lower() == "true":
+                    result[current_section][key] = True
+                elif value.lower() == "false":
+                    result[current_section][key] = False
+                else:
+                    try:
+                        result[current_section][key] = int(value)
+                    except ValueError:
+                        try:
+                            result[current_section][key] = float(value)
+                        except ValueError:
+                            if value.startswith('"') and value.endswith('"'):
+                                result[current_section][key] = value[1:-1]
+                            else:
+                                result[current_section][key] = value
+    if not current_section and len(result) == 0:
+        return {}
+    if not current_section and len(result) > 0:
+        if '' not in result:
+            result[''] = {}
+    return result
+```

@@ -1,0 +1,40 @@
+```
+import re
+
+def parse_config(text: str) -> dict:
+    config = {}
+    current_section = ''
+    
+    for line in text.splitlines():
+        line = line.strip()
+        
+        if not line or line.startswith('#') or line.startswith(';'):
+            continue
+        
+        if line.startswith('['):
+            section_match = re.match(r'\s*\[(.*?)\]\s*', line)
+            if section_match:
+                current_section = section_match.group(1)
+                config.setdefault(current_section, {})
+            continue
+        
+        key_value_match = re.match(r'\s*(.*?)\s*=\s*(.*)', line)
+        if key_value_match:
+            key, value = key_value_match.groups()
+            
+            if value.startswith('"') and value.endswith('"'):
+                value = value[1:-1]
+            else:
+                try:
+                    value = int(value)
+                except ValueError:
+                    try:
+                        value = float(value)
+                    except ValueError:
+                        if value.lower() in ['true', 'false']:
+                            value = value.lower() == 'true'
+            
+            config[current_section][key] = value
+    
+    return {k: v for k, v in config.items() if k or v}
+```

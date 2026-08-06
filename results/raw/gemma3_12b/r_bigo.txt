@@ -1,0 +1,2 @@
+O(n log n)
+ОТВЕТ: n log n

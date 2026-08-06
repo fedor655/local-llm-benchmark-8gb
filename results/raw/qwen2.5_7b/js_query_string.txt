@@ -1,0 +1,19 @@
+```javascript
+parseQuery = (qs) => {
+    qs = qs.replace(/^\?/, '').split('&').reduce((acc, cur) => {
+        if (!cur) return acc;
+        let [key, value] = cur.split('=');
+        key = decodeURIComponent(key);
+        value = value ? decodeURIComponent(value) : '';
+        if (key in acc) {
+            if (!Array.isArray(acc[key])) {
+                acc[key] = [acc[key]];
+            }
+            acc[key].push(value);
+        } else {
+            acc[key] = value;
+        }
+        return acc;
+    }, {});
+}
+```

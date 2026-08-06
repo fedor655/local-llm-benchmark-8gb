@@ -1,0 +1,26 @@
+```python
+def spiral_order(matrix: list[list[int]]) -> list[int]:
+    if not matrix or not matrix[0]:
+        return []
+
+    rows, cols = len(matrix), len(matrix[0])
+    visited = [[False] * cols for _ in range(rows)]
+    result = []
+
+    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+    direction_idx = 0
+    row, col = 0, 0
+
+    for _ in range(rows * cols):
+        result.append(matrix[row][col])
+        visited[row][col] = True
+
+        next_row, next_col = row + directions[direction_idx][0], col + directions[direction_idx][1]
+
+        if 0 <= next_row < rows and 0 <= next_col < cols and not visited[next_row][next_col]:
+            row, col = next_row, next_col
+        else:
+            direction_idx = (direction_idx + 1) % 4
+
+    return result
+```

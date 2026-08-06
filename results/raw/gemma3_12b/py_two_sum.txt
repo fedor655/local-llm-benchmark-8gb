@@ -1,0 +1,28 @@
+```python
+def two_sum(nums: list[int], target: int) -> tuple[int, int] | None:
+    """
+    Находит индексы двух чисел в списке, сумма которых равна target.
+
+    Args:
+        nums: Список целых чисел.
+        target: Целевое значение суммы.
+
+    Returns:
+        Кортеж индексов (i, j), i < j, таких что nums[i] + nums[j] == target.
+        Если пары нет — вернуть None.
+    """
+    num_map = {}
+    best_pair = None
+
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in num_map:
+            j = num_map[complement]
+            if i > j:
+                i, j = j, i
+            if best_pair is None or i < best_pair[0] or (i == best_pair[0] and j < best_pair[1]):
+                best_pair = (i, j)
+        num_map[num] = i
+
+    return best_pair
+```

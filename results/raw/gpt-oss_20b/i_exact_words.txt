@@ -1,0 +1,11 @@
+<<<THINKING>>>
+The user wants: "Опиши, что делает язык программирования Python, ровно пятью словами. Никаких знаков препинания, никаких кавычек, только пять слов через пробел и ничего больше."
+
+So we need to output exactly five words, no punctuation, no quotes, just words separated by spaces. The words should describe what Python does. For example: "interprets code, simplifies programming". That's 4 words. Need 5 words. Maybe: "interprets code, simplifies programming, automates". That's 5 words? Let's count: "interprets" (1), "code," (2) but comma is punctuation, not allowed. So we cannot use punctuation. So we need words only. No punctuation. So we need five words, no punctuation. For example: "interprets code simplifies programming automates". Count: "interprets"(1) "code"(2) "simplifies"(3) "programming"(4) "automates"(5). That works. But does it describe what Python does? It interprets code, simplifies programming, automates. That seems okay. But maybe better: "interprets code simplifies programming automates". That is five words. No punctuation. Good.
+
+But maybe we want "interprets code simplifies programming automates". That is five words. Let's double-check: "interprets" "code" "simplifies" "programming" "automates". Yes. No punctuation. Good.
+
+We should output exactly that.
+<<<END THINKING>>>
+
+interprets code simplifies programming automates

@@ -1,0 +1,27 @@
+```python
+from collections import defaultdict
+import csv
+from typing import List, Tuple
+
+def top_by_group(csv_text: str, group_col: str, value_col: str, k: int) -> List[Tuple[str, float]]:
+    reader = csv.reader(csv_line.splitlines())
+    groups = defaultdict(list)
+    
+    for row in reader:
+        if len(row) > 1 and (group := row[group_col].strip()):
+            try:
+                groups[group].append(float(row[value_col]))
+            except ValueError:
+                pass
+    
+    def sum_values(group: str) -> float:
+        return sum(val for val in groups[group] if val is not None)
+    
+    sorted_groups = sorted(
+        ((group, sum_values(group)) for group in groups
+         if groups[group]),
+        key=lambda x: (-x[1], x[0])
+    )[:k]
+    
+    return [(group, value) for group, value in sorted_groups]
+```

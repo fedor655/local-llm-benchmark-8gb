@@ -1,0 +1,169 @@
+<<<THINKING>>>
+Okay, I need to write a function for topological sorting. Let's see. The function is called topo_sort and takes n and edges. The vertices are numbered from 0 to n-1. Each edge (a, b) means a must come before b. The function should return any valid topological order or None if there's a cycle.
+
+Hmm, topological sort can be done using Kahn's algorithm, which is based on in-degree counts. Alternatively, DFS-based approach. Let me think which is easier to implement here.
+
+Kahn's algorithm involves calculating in-degrees for each node, then using a queue to process nodes with in-degree zero. For each node processed, we reduce the in-degree of its neighbors. If at any point there are no nodes with in-degree zero but not all nodes have been processed, there's a cycle.
+
+So, steps for Kahn's algorithm:
+
+1. Build the adjacency list and in-degree array.
+2. Initialize a queue with all nodes having in-degree zero.
+3. While the queue is not empty:
+   a. Dequeue a node, add it to the result.
+   b. For each neighbor, decrement their in-degree. If any becomes zero, enqueue them.
+4. If the result's length is less than n, there's a cycle, return None. Else, return the result.
+
+Wait, but the problem says to return any valid order. So Kahn's algorithm should work here.
+
+Let me think about the data structures. For the adjacency list, maybe a list of lists. For in-degrees, a list of integers.
+
+Let me outline the code:
+
+- Create adjacency list: adj = [[] for _ in range(n)]
+- Create in_degree = [0] * n
+- For each edge (a, b) in edges:
+   adj[a].append(b)
+   in_degree[b] += 1
+- Initialize a queue. Let's use a deque for efficient pops from the front.
+- Initialize the queue with all nodes where in_degree is zero.
+- result = []
+- while queue not empty:
+   node = queue.popleft()
+   result.append(node)
+   for neighbor in adj[node]:
+      in_degree[neighbor] -= 1
+      if in_degree[neighbor] == 0:
+          queue.append(neighbor)
+- After processing, check if len(result) == n. If yes, return result. Else, return None.
+
+Wait, but what about multiple possible orders? Since the queue can have multiple nodes with in-degree zero, the order in which they are processed depends on the queue's order. For example, if we use a deque and append to the end, then the nodes are processed in the order they were added. But if we use a priority queue, it would choose the smallest node first. However, the problem says any valid order is acceptable, so the order in which nodes are added to the queue doesn't matter as long as all possible nodes are processed.
+
+But in the code above, using a deque and appending to the end would process nodes in the order they were added. However, in the initial queue, nodes with in-degree zero are added. For example, if nodes 0 and 1 have in-degree zero, they might be added in that order. Then, when processing, 0 is taken first, then 1. But if the queue is a priority queue, it would take 0 first. But since the problem allows any valid order, the code should work regardless.
+
+Wait, but in the code, when we add nodes to the queue, they are added in the order they are processed. For example, if a node is processed and its neighbor's in-degree becomes zero, that neighbor is added to the queue. So the order depends on the order of processing. However, the problem allows any valid topological order, so the code should return a correct one.
+
+Now, let's think about possible edge cases. For example, if there are no edges, then the order can be 0,1,2,...n-1. The code would add all nodes to the queue initially (since in_degree is zero), and process them in the order they were added. But if the queue is a deque, then the initial nodes are added in the order of 0 to n-1? Wait, no. The initial queue is built by checking each node's in_degree. For example, if all nodes have in_degree zero, then the initial queue would have all nodes. But how are they added? For example, in the code, for each node in 0..n-1, check if in_degree is zero. If yes, add to the queue. So the initial queue would have nodes in the order 0,1,2,...n-1? No, because the loop is for each node in 0..n-1, and adding to the queue. So if all nodes have in_degree zero, the queue would have all nodes in the order 0,1,2,...n-1. Then, when processing, they are taken from the front. So the result would be 0,1,2,...n-1. Which is correct.
+
+Another case: a graph with a cycle. For example, 0 → 1 → 0. Then, in_degree for 0 is 1, 1 is 1. So initial queue is empty. So the result is empty, and len(result) is 0 < n, so return None.
+
+Another case: a graph with multiple possible orders. For example, 0 → 2, 1 → 2. Then, initial queue has 0 and 1. Suppose they are added in order 0, then 1. Then, processing 0 first, then 1. Then 2 is added. So the order is 0,1,2. Alternatively, if 1 is processed first, then 0, then 2. Both are valid. The code would return one of them, which is acceptable.
+
+So the code should work.
+
+Now, implement this in Python.
+
+Wait, but the edges are given as a list of tuples. So for each (a, b) in edges, we add an edge from a to b. So the adjacency list is built correctly.
+
+Now, code:
+
+Import deque from collections.
+
+Function topo_sort(n, edges):
+
+Initialize adj as list of lists.
+
+in_degree = [0] * n
+
+for a, b in edges:
+
+   adj[a].append(b)
+
+   in_degree[b] += 1
+
+Initialize queue. Let's loop through all nodes 0 to n-1, and if in_degree is zero, add to queue.
+
+Then process as per Kahn's algorithm.
+
+After processing, check if len(result) == n. If yes, return result, else None.
+
+But wait, in Python, the queue is a deque. So:
+
+from collections import deque
+
+def topo_sort(n: int, edges: list[tuple[int, int]]) -> list[int] | None:
+
+    adj = [[] for _ in range(n)]
+
+    in_degree = [0] * n
+
+    for a, b in edges:
+
+        adj[a].append(b)
+
+        in_degree[b] += 1
+
+    queue = deque()
+
+    for i in range(n):
+
+        if in_degree[i] == 0:
+
+            queue.append(i)
+
+    result = []
+
+    while queue:
+
+        node = queue.popleft()
+
+        result.append(node)
+
+        for neighbor in adj[node]:
+
+            in_degree[neighbor] -= 1
+
+            if in_degree[neighbor] == 0:
+
+                queue.append(neighbor)
+
+    if len(result) == n:
+
+        return result
+
+    else:
+
+        return None
+
+Wait, but what if there are multiple components? For example, if the graph is disconnected. The code should handle that, because all nodes with in_degree zero are added to the queue. So even if there are multiple components, they will be processed as long as there are no cycles.
+
+Yes. So this code should work.
+
+Testing some cases.
+
+Case 1: n=3, edges = [(0,1), (1,2)]. The in_degree for 0 is 0, 1 is 1, 2 is 1. Initial queue has 0. Process 0, add to result. Then process its neighbors (1). in_degree[1] becomes 0, add to queue. Then process 1, add to result. Then process its neighbor 2. in_degree[2] becomes 0, add to queue. Process 2. Result is [0,1,2]. Correct.
+
+Case 2: n=2, edges = [(0,1), (1,0)]. in_degree for 0 is 1, 1 is 1. Initial queue is empty. So result is empty. Return None.
+
+Another case: n=3, edges = [(0,1), (0,2)]. in_degree for 0 is 0, 1 is 1, 2 is 1. Initial queue has 0. Process 0, add to result. Then process neighbors 1 and 2. Their in_degree becomes 0. So queue now has 1 and 2. Depending on the order they are added, the result could be [0,1,2] or [0,2,1]. Both are correct.
+
+Yes. So the code should handle all cases.
+
+So the code is correct.
+
+<<<END THINKING>>>
+
+```python
+from collections import deque
+from typing import List, Optional
+
+def topo_sort(n: int, edges: List[tuple[int, int]]) -> Optional[List[int]]:
+    adj = [[] for _ in range(n)]
+    in_degree = [0] * n
+    for a, b in edges:
+        adj[a].append(b)
+        in_degree[b] += 1
+    queue = deque()
+    for i in range(n):
+        if in_degree[i] == 0:
+            queue.append(i)
+    result = []
+    while queue:
+        node = queue.popleft()
+        result.append(node)
+        for neighbor in adj[node]:
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
+    return result if len(result) == n else None
+```

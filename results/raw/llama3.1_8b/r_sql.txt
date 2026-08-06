@@ -1,0 +1,2 @@
+HAVING
+ОТВЕТ: HAVING

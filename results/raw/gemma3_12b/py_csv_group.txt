@@ -1,0 +1,27 @@
+```python
+def top_by_group(csv_text: str, group_col: str, value_col: str, k: int) -> list[tuple[str, float]]:
+    import csv
+    from io import StringIO
+
+    groups = {}
+    reader = csv.reader(StringIO(csv_text))
+    header = next(reader, None)
+    if header is None:
+        return []
+
+    group_index = header.index(group_col)
+    value_index = header.index(value_col)
+
+    for row in reader:
+        if not row:
+            continue
+        try:
+            group_value = row[group_index]
+            value = float(row[value_index])
+            groups[group_value] = groups.get(group_value, 0.0) + value
+        except (ValueError, IndexError):
+            pass
+
+    sorted_groups = sorted(groups.items(), key=lambda item: (-item[1], item[0]))
+    return sorted_groups[:k]
+```

@@ -1,0 +1,75 @@
+<<<THINKING>>>
+We need to output a single code block with the function. No explanations. The function parseQuery(qs). Implementation in JavaScript. Must handle leading '?', split by '&', ignore empty segments, decodeURIComponent, replace '+' with space before decoding. For key without '=', value empty string. For duplicate keys, accumulate into array. Return empty object if qs empty or only '?'? If qs is empty string or only '?'? Should return {}. Also if qs is null? Not specified. We'll assume string. Implementation:
+
+function parseQuery(qs) {
+  if (!qs) return {};
+  if (qs[0] === '?') qs = qs.slice(1);
+  const result = {};
+  const pairs = qs.split('&');
+  for (const pair of pairs) {
+    if (!pair) continue;
+    const idx = pair.indexOf('=');
+    let key, value;
+    if (idx === -1) {
+      key = pair;
+      value = '';
+    } else {
+      key = pair.slice(0, idx);
+      value = pair.slice(idx + 1);
+    }
+    const decodedKey = decodeURIComponent(key.replace(/\+/g, ' '));
+    const decodedValue = decodeURIComponent(value.replace(/\+/g, ' '));
+    if (result.hasOwnProperty(decodedKey)) {
+      const existing = result[decodedKey];
+      if (Array.isArray(existing)) {
+        existing.push(decodedValue);
+      } else {
+        result[decodedKey] = [existing, decodedValue];
+      }
+    } else {
+      result[decodedKey] = decodedValue;
+    }
+  }
+  return result;
+}
+
+Edge: if qs is '?' only, after slice becomes '', pairs = [''], loop skip, return {}. Good.
+
+Return global function. So just define function parseQuery(qs) { ... }.
+
+Wrap in triple backticks.
+<<<END THINKING>>>
+
+```javascript
+function parseQuery(qs) {
+  if (!qs) return {};
+  if (qs[0] === '?') qs = qs.slice(1);
+  const result = {};
+  const pairs = qs.split('&');
+  for (const pair of pairs) {
+    if (!pair) continue;
+    const idx = pair.indexOf('=');
+    let key, value;
+    if (idx === -1) {
+      key = pair;
+      value = '';
+    } else {
+      key = pair.slice(0, idx);
+      value = pair.slice(idx + 1);
+    }
+    const decodedKey = decodeURIComponent(key.replace(/\+/g, ' '));
+    const decodedValue = decodeURIComponent(value.replace(/\+/g, ' '));
+    if (Object.prototype.hasOwnProperty.call(result, decodedKey)) {
+      const existing = result[decodedKey];
+      if (Array.isArray(existing)) {
+        existing.push(decodedValue);
+      } else {
+        result[decodedKey] = [existing, decodedValue];
+      }
+    } else {
+      result[decodedKey] = decodedValue;
+    }
+  }
+  return result;
+}
+```

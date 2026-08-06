@@ -1,0 +1,50 @@
+```javascript
+function parseQuery(qs) {
+  if (!qs) {
+    return {};
+  }
+
+  qs = qs.toString();
+
+  if (qs.charAt(0) === '?') {
+    qs = qs.slice(1);
+  }
+
+  if (qs === '') {
+    return {};
+  }
+
+  const result = {};
+  const pairs = qs.split('&');
+
+  for (let i = 0; i < pairs.length; i++) {
+    const pair = pairs[i];
+    if (!pair) {
+      continue;
+    }
+
+    const parts = pair.split('=');
+    let key = parts[0];
+    let value = '';
+
+    if (parts.length > 1) {
+      value = parts[1];
+    }
+
+    key = decodeURIComponent(key.replace(/\+/g, ' '));
+    value = decodeURIComponent(value.replace(/\+/g, ' '));
+
+    if (result[key]) {
+      if (Array.isArray(result[key])) {
+        result[key].push(value);
+      } else {
+        result[key] = [result[key], value];
+      }
+    } else {
+      result[key] = value;
+    }
+  }
+
+  return result;
+}
+```

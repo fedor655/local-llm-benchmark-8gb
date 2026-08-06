@@ -1,0 +1,6 @@
+<<<THINKING>>>
+We need to solve: Let m = price of ball, b = price of bat. b + m = 1100, b = m + 1000. Substitute: (m+1000)+m = 1100 => 2m + 1000 = 1100 => 2m = 100 => m = 50. So ball costs 50 rubles. Output: "50" and then "ОТВЕТ: 50".
+<<<END THINKING>>>
+
+50
+ОТВЕТ: 50

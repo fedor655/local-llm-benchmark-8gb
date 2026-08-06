@@ -1,0 +1,22 @@
+ ```javascript
+const parseQuery = (qs) => {
+  const params = {};
+  let param, keyValue;
+
+  qs.split('&').forEach((segment) => {
+    if (!segment) return;
+
+    [keyValue, param] = segment.split('=');
+    param = decodeURIComponent(param.replace(/\+/g, ' '));
+    keyValue = decodeURIComponent(keyValue ? param : '');
+
+    if (params[keyValue]) {
+      params[keyValue].push(param);
+    } else {
+      params[keyValue] = [param];
+    }
+  });
+
+  return params;
+};
+```

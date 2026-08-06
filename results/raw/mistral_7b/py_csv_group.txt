@@ -1,0 +1,30 @@
+ ```python
+import itertools
+import re
+from typing import List
+import csv
+
+def top_by_group(csv_text: str, group_col: int, value_col: int, k: int) -> List[tuple[str, float]]:
+    rows = list(csv.reader(csv_text.split('\n'), delimiter=','))
+    rows = [row for row in rows if row and row[value_col]]
+
+    groups = {}
+    total_groups = 0
+
+    for row in rows:
+        group_name = row[group_col]
+        value = float(row[value_col])
+        if group_name not in groups:
+            groups[group_name] = [value]
+            total_groups += 1
+        else:
+            groups[group_name].append(value)
+
+    max_sums = sorted(groups.items(), key=lambda x: (-sum(x[1]), x[0]))[:k]
+
+    result = []
+    for group, sum in max_sums:
+        result.append((group, sum))
+
+    return result
+```

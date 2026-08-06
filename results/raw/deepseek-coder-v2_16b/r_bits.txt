@@ -1,0 +1,6 @@
+ ```python
+result = (0b1011 << 2) ^ 0xF
+print(int(result))
+```
+
+ОТВЕТ: 45

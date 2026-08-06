@@ -1,0 +1,10 @@
+```python
+import pandas as pd
+
+def top_by_group(csv_text: str, group_col: str, value_col: str, k: int) -> list[tuple[str, float]]:
+    df = pd.read_csv(StringIO(csv_text), sep=',')
+    df = df.dropna(subset=[value_col], how='all')
+    df['value'] = pd.to_numeric(df[value_col], errors='coerce')
+    df = df.groupby(group_col)['value'].sum().reset_index()
+    return df.sort_values(by=['value', group_col], ascending=[False, True])[:k].values.tolist()
+```

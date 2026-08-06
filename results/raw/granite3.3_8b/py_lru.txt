@@ -1,0 +1,28 @@
+```python
+from collections import OrderedDict
+
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.cache = OrderedDict()
+        self.capacity = capacity
+
+    def get(self, key) -> int:
+        if key not in self.cache:
+            return -1
+        else:
+            # Переместим полученный ключ в конец диктового аргумента,
+            # чтобы указать на его недавнее использование
+            self.cache.move_to_end(key)
+            return self.cache[key]
+
+    def put(self, key, value) -> None:
+        if key in self.cache:
+            # Если ключ уже есть в кэше, обновляем его значение и перемещаем в конец
+            self.cache[key] = value
+            self.cache.move_to_end(key)
+        else:
+            # Если кэш не переполнен, добавляем новый элемент
+            if len(self.cache) >= self.capacity:
+                self.cache.popitem(last=False)  # Удаляем начальный элемент
+            self.cache[key] = value
+```

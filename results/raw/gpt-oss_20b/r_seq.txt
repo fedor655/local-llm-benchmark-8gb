@@ -1,0 +1,5 @@
+<<<THINKING>>>
+We need to continue the sequence: 1, 11, 21, 1211, 111221, ... This is the "look-and-say" sequence. Next term after 111221 is 312211. Let's confirm: 111221: read as "three 1s, two 2s, one 1" => 312211. So answer: 312211. The instruction: "Ответь числом без пробелов." Also developer instruction: "В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение> Без пояснений после этой строки." So we need to output something, but only the last line must be "ОТВЕТ: 312211". We can include preceding lines? The instruction says "В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат". So we can have explanation lines before, but last line must be that. But developer says "Отвечай кратко." So maybe just the last line. But to be safe, we can just output the last line. The last line must be "ОТВЕТ: 312211". No explanation after. So final answer: "ОТВЕТ: 312211".
+<<<END THINKING>>>
+
+ОТВЕТ: 312211

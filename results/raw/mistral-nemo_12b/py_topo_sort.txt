@@ -1,0 +1,23 @@
+```python
+def topo_sort(n: int, edges: list[tuple[int, int]]) -> list[int] | None:
+    graph = [[] for _ in range(n)]
+    indegree = [0] * n
+
+    for a, b in edges:
+        graph[a].append(b)
+        indegree[b] += 1
+
+    queue = [i for i in range(n) if indegree[i] == 0]
+    result = []
+
+    while queue:
+        node = queue.pop(0)
+        result.append(node)
+
+        for neighbor in graph[node]:
+            indegree[neighbor] -= 1
+            if indegree[neighbor] == 0:
+                queue.append(neighbor)
+
+    return None if len(result) != n else result
+```

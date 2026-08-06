@@ -1,0 +1,29 @@
+```python
+from collections import defaultdict, deque
+
+def topo_sort(n: int, edges: list[tuple[int, int]]) -> list[int] | None:
+    graph = defaultdict(list)
+    indegree = [0] * n
+    
+    for u, v in edges:
+        graph[u].append(v)
+        indegree[v] += 1
+        
+    queue = deque([i for i in range(n) if indegree[i] == 0])
+    
+    order = []
+    
+    while queue:
+        node = queue.popleft()
+        order.append(node)
+        
+        for neighbor in graph[node]:
+            indegree[neighbor] -= 1
+            if indegree[neighbor] == 0:
+                queue.append(neighbor)
+                
+    if len(order) != n:
+        return None
+    
+    return order[::-1]
+```

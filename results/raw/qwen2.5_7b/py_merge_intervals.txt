@@ -1,0 +1,21 @@
+```python
+def merge_intervals(intervals: list[list[int]]) -> list[list[int]]:
+    if not intervals:
+        return []
+    
+    # Сортируем отрезки по левой границе
+    intervals.sort(key=lambda x: x[0])
+    
+    merged = [intervals[0]]
+    
+    for current in intervals[1:]:
+        last_merged_end = merged[-1][1]
+        
+        if current[0] <= last_merged_end:
+            # Объединяем отрезки, если правая граница последнего объединенного >= левой границы текущего
+            merged[-1][1] = max(last_merged_end, current[1])
+        else:
+            merged.append(current)
+    
+    return merged
+```

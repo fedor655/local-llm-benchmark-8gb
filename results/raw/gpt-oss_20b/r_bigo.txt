@@ -1,0 +1,5 @@
+<<<THINKING>>>
+We need asymptotic time complexity worst-case. Code: outer loop i from 0 to n-1: n iterations. Inside: j=1; while j < n: total += ...; j *= 2. So inner loop runs about log_2(n) times. So total operations ~ n * log n. So O(nlogn). Format: O(nlogn) no spaces. So answer: O(nlogn). Then last line: "ОТВЕТ: <значение>" with value. So we need to output: O(nlogn) and then last line "ОТВЕТ: O(nlogn)". Wait: The instruction: "В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение>" So we need to output something, but last line must be "ОТВЕТ: <значение>". So we can output explanation lines, but last line must be that. But we should keep answer short. They said "Отвечай кратко." So minimal. So we can just output "ОТВЕТ: O(nlogn)". But they also want answer in form O(...). So we can just output that line. But they said "В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат". So we can have only that line. So final answer: "ОТВЕТ: O(nlogn)". No other lines. That satisfies.
+<<<END THINKING>>>
+
+ОТВЕТ: O(nlogn)

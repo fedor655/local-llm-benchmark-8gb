@@ -1,0 +1,45 @@
+<<<THINKING>>>
+We need to output only one block of code in triple backticks. No explanations. Provide two functions. Should handle 1..3999. Use standard mapping. Provide roman_to_int conversion. Ensure subtractive notation. Provide code. Use Python. Let's craft.
+
+We can use mapping list of tuples for int_to_roman. For roman_to_int, iterate over string, check two-char combos. Implementation.
+
+Return int. Ensure input string uppercase. Provide error handling? Not necessary.
+
+Let's produce code.
+<<<END THINKING>>>
+
+```python
+def int_to_roman(n: int) -> str:
+    if not 1 <= n <= 3999:
+        raise ValueError("Number out of range (1..3999)")
+    vals = [
+        (1000, "M"), (900, "CM"), (500, "D"), (400, "CD"),
+        (100, "C"), (90, "XC"), (50, "L"), (40, "XL"),
+        (10, "X"), (9, "IX"), (5, "V"), (4, "IV"), (1, "I")
+    ]
+    res = []
+    for val, sym in vals:
+        while n >= val:
+            res.append(sym)
+            n -= val
+    return "".join(res)
+
+def roman_to_int(s: str) -> int:
+    s = s.upper()
+    roman_map = {"I": 1, "V": 5, "X": 10, "L": 50,
+                 "C": 100, "D": 500, "M": 1000}
+    subtractive = {"IV": 4, "IX": 9, "XL": 40, "XC": 90,
+                   "CD": 400, "CM": 900}
+    i = 0
+    total = 0
+    while i < len(s):
+        if i + 1 < len(s) and s[i:i+2] in subtractive:
+            total += subtractive[s[i:i+2]]
+            i += 2
+        else:
+            if s[i] not in roman_map:
+                raise ValueError(f"Invalid Roman numeral character: {s[i]}")
+            total += roman_map[s[i]]
+            i += 1
+    return total
+```

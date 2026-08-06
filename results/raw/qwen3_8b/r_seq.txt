@@ -1,0 +1,24 @@
+<<<THINKING>>>
+Okay, let's see. The sequence given is 1, 11, 21, 1211, 111221, and I need to find the next number. Hmm, I remember that this kind of sequence is related to something called "look-and-say" sequence. Let me think how that works.
+
+Starting with 1. The next term is 11, which makes sense because there's one '1'. Then, for 11, you describe it as two '1's, so 21. Then 21 is described as one '2' and one '1', which is 1211. Then 1211 would be one '1', one '2', two '1's, so 111221. Okay, that checks out.
+
+So the next term after 111221 should be described by reading the digits. Let's break down 111221. Let's go digit by digit:
+
+- The first three digits are 1s. So that's three '1's, which would be 31.
+- Then there are two 2s, so that's two '2's, which is 22.
+- Finally, there's a 1 at the end. So one '1', which is 11.
+
+Putting that all together: 31, 22, 11. So the next number should be 312211. Wait, let me check again to make sure I didn't miss any digits.
+
+Original number: 111221. Let's parse it step by step:
+
+- Start with the first digit: 1. How many? There are three 1s in a row. So that's 31.
+- Then comes two 2s. So that's 22.
+- Then a single 1. So that's 11.
+
+Yes, combining those gives 312211. So the next term should be 312211. Let me confirm by checking each step again to avoid mistakes. Yep, that seems right. So the answer should be 312211.
+
+<<<END THINKING>>>
+
+ОТВЕТ: 312211

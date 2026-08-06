@@ -1,0 +1,6 @@
+<<<THINKING>>>
+We need to compute (0b1011 << 2) ^ 0xF. 0b1011 is binary for decimal 11. Shift left by 2: 11 << 2 = 44. 0xF is hex for decimal 15. So 44 ^ 15 = 44 XOR 15. Compute: 44 decimal is binary 101100. 15 decimal is 001111. XOR: 101100 XOR 001111 = 100011? Let's do bitwise: 44 = 0b101100. 15 = 0b001111. Align 6 bits: 44: 10 1100. 15: 00 1111. XOR: 10 0011? Let's compute: 1 XOR 0 = 1; 0 XOR 0 = 0; 1 XOR 1 = 0; 1 XOR 1 = 0; 0 XOR 1 = 1; 0 XOR 1 = 1. So result bits: 1 0 0 0 1 1 = 0b100011 = decimal 35. Let's double-check: 44 ^ 15 =? 44 decimal 44, 15 decimal 15. 44-15=29 but XOR not subtraction. Let's compute using Python mentally: 44 ^ 15 = 44 XOR 15. 44 in binary: 101100. 15: 001111. XOR: 100011 = 35. Yes. So answer 35.
+<<<END THINKING>>>
+
+35
+ОТВЕТ: 35

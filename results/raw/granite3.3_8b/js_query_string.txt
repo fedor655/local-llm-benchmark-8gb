@@ -1,0 +1,26 @@
+```javascript
+function parseQuery(qs) {
+    const query = qs.replace(/^\?/, '');
+    const params = {};
+    let temp;
+    let key, value;
+
+    for (const segment of query.split('&')) {
+        if (!segment) continue;
+
+        temp = segment.split('=');
+        key = decodeURIComponent(temp.shift());
+        value = temp.join('=') ? decodeURIComponent(temp.pop()) : '';
+
+        if (!params[key]) {
+            params[key] = value;
+        } else if (Array.isArray(params[key])) {
+            params[key].push(value);
+        } else {
+            params[key] = [params[key], value];
+        }
+    }
+
+    return params;
+}
+```

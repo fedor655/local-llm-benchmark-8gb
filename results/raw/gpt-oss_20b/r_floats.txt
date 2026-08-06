@@ -1,0 +1,11 @@
+<<<THINKING>>>
+We need to answer: Which number is larger: 9.11 or 9.9? The larger is 9.9. The user says "Напиши само число." So just write the number. Then last line must be "ОТВЕТ: <значение>" with no explanation after. So we output "9.9" then newline "ОТВЕТ: 9.9". But we must not add any explanation. The instruction: "Отвечай кратко. В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение> Без пояснений после этой строки." So we can just output "9.9" and then "ОТВЕТ: 9.9". But maybe we need to output only the number? The instruction says "Напиши само число." So we should output the number. Then the last line must be "ОТВЕТ: 9.9". So we can output:
+
+9.9
+ОТВЕТ: 9.9
+
+That satisfies.
+<<<END THINKING>>>
+
+9.9
+ОТВЕТ: 9.9

@@ -1,0 +1,6 @@
+<<<THINKING>>>
+We need to solve: apples price 80 rub/kg, pears 120 rub/kg. Mix weight 5 kg, total cost 480 rub. Let x = kg of pears, y = kg of apples. x + y = 5. Cost: 120x + 80y = 480. Solve: 120x + 80(5 - x) = 480 => 120x + 400 - 80x = 480 => 40x + 400 = 480 => 40x = 80 => x = 2. So pears = 2 kg. Output "2" and then "ОТВЕТ: 2".
+<<<END THINKING>>>
+
+2
+ОТВЕТ: 2

@@ -1,0 +1,20 @@
+```python
+import csv
+from operator import itemgetter
+from collections import defaultdict
+
+def top_by_group(csv_text: str, group_col: str, value_col: str, k: int) -> list[tuple[str, float]]:
+    reader = csv.DictReader(csv_text.splitlines())
+    groups = defaultdict(float)
+    
+    for row in reader:
+        if row[value_col]:
+            try:
+                groups[row[group_col]] += float(row[value_col])
+            except ValueError:
+                pass
+    
+    sorted_groups = sorted(groups.items(), key=lambda x: (-x[1], x[0]))
+    
+    return [(group, sum) for group, sum in sorted_groups[:k]]
+```

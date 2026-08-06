@@ -1,0 +1,6 @@
+<<<THINKING>>>
+We need to compute day of week after 100 days from Tuesday. Tuesday + 100 days. 100 mod 7 = 2 (since 98 is divisible by 7). So Tuesday + 2 days = Thursday. So answer: Thursday. Provide one word: "Thursday". Then last line: "ОТВЕТ: Thursday". Ensure no extra explanation.
+<<<END THINKING>>>
+
+Thursday
+ОТВЕТ: Thursday

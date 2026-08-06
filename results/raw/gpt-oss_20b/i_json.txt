@@ -1,0 +1,14 @@
+<<<THINKING>>>
+The user wants a JSON object with specified fields. No extra text. Just JSON. So output:
+
+{
+  "name": "тест",
+  "count": 7,
+  "tags": ["a", "b", "c"],
+  "nested": {"ok": true}
+}
+
+Make sure it's valid JSON. Use double quotes. No trailing comma. Provide exactly that.
+<<<END THINKING>>>
+
+{"name":"тест","count":7,"tags":["a","b","c"],"nested":{"ok":true}}

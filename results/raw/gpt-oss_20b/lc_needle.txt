@@ -1,0 +1,5 @@
+<<<THINKING>>>
+We need to read the document. There's a line: "ВАЖНО: секретный код доступа к стенду нагрузочного тестирования — QX-4417-ZULU. Он меняется раз в квартал." So answer: QX-4417-ZULU. Provide in required format: "ОТВЕТ: QX-4417-ZULU".
+<<<END THINKING>>>
+
+ОТВЕТ: QX-4417-ZULU

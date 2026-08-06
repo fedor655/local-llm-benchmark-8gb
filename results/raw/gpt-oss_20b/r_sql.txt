@@ -1,0 +1,6 @@
+<<<THINKING>>>
+We need to answer: "Какое ключевое слово SQL используется для фильтрации по результату агрегатной функции?" In SQL, filtering by aggregate results uses HAVING. So answer: HAVING. The instruction: "Ответь одним словом." So just "HAVING". Then last line: "ОТВЕТ: <значение>" So we need to output "HAVING" and then last line "ОТВЕТ: HAVING". But the instruction says: "В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение> Без пояснений после этой строки." So we need to output maybe just "HAVING" then newline "ОТВЕТ: HAVING". But "Ответь одним словом." So maybe just "HAVING" and then "ОТВЕТ: HAVING". But that would be two lines. The last line must be "ОТВЕТ: HAVING". So we can just output "ОТВЕТ: HAVING". But that would not be "Ответь одним словом." The instruction says "Ответь одним словом." So we need to output a single word. But then we also need to include the last line with "ОТВЕТ: <значение>". That would be two lines. But the last line must be "ОТВЕТ: <значение>" and no explanation after. So we can output "HAVING" on the first line, then "ОТВЕТ: HAVING" on the last line. That satisfies both: answer one word, and last line with format. So final answer: first line "HAVING", second line "ОТВЕТ: HAVING".
+<<<END THINKING>>>
+
+HAVING
+ОТВЕТ: HAVING

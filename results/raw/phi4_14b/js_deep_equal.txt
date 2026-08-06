@@ -1,0 +1,28 @@
+```js
+function deepEqual(a, b) {
+    if (a === b) return a !== 0 || 1 / a === 1 / b;
+    if (a == null || typeof a != "object" || b == null || typeof b != "object") return false;
+
+    if (Array.isArray(a) && Array.isArray(b)) {
+        if (a.length !== b.length) return false;
+        for (let i = 0; i < a.length; i++) {
+            if (!deepEqual(a[i], b[i])) return false;
+        }
+        return true;
+    }
+
+    if (Object.prototype.toString.call(a) === "[object Date]" && Object.prototype.toString.call(b) === "[object Date]") {
+        return +a === +b;
+    }
+
+    let keysA = Object.keys(a), keysB = Object.keys(b);
+    if (keysA.length !== keysB.length) return false;
+
+    for (let key of keysA) {
+        if (!Object.prototype.hasOwnProperty.call(b, key)) return false;
+        if (!deepEqual(a[key], b[key])) return false;
+    }
+
+    return true;
+}
+```

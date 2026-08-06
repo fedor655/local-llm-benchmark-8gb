@@ -1,0 +1,16 @@
+<<<THINKING>>>
+Okay, let's see. I need to find the time complexity of this code in the worst case. The function f takes a list 'a' and does some operations. Let me break it down.
+
+First, the code has a loop over i from 0 to n-1. So that's O(n) iterations. Then, for each i, there's a while loop with j starting at 1 and doubling each time until j is less than n. 
+
+Wait, the inner loop's j starts at 1 and multiplies by 2 each time. So the number of steps in the inner loop depends on how many times you can multiply 1 by 2 before it's >= n. That's like log2(n) steps, right? Because 2^k >= n when k is log2(n). So the inner loop runs O(log n) times.
+
+So for each iteration of the outer loop (which is O(n)), the inner loop runs O(log n) times. Therefore, the total number of operations is O(n * log n). 
+
+But wait, what about the operations inside the loops? The code does some arithmetic and increments, but those are constant time. So the total time complexity should be O(n log n) in the worst case. 
+
+Let me double-check. The outer loop is O(n), inner loop is O(log n), so multiplying them gives O(n log n). Yeah, that makes sense. So the answer should be O(n log n).
+
+<<<END THINKING>>>
+
+ОТВЕТ: O(nlogn)
