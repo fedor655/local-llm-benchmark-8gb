@@ -1,0 +1,5 @@
+<<<THINKING>>>
+The user is asking for a secret access code mentioned in the document. I need to scan the document for this information. Looking through the text, I see a line that says: "ВАЖНО: секретный код доступа к стенду нагрузочного тестирования — QX-4417-ZULU. Он меняется раз в квартал." This appears between Paragraph 42 and Paragraph 43. The code is QX-4417-ZULU. I should provide this as the answer in the required format.
+<<<END THINKING>>>
+
+ОТВЕТ: QX-4417-ZULU

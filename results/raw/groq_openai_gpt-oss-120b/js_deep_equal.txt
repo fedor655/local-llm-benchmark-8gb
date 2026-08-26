@@ -1,0 +1,69 @@
+<<<THINKING>>>
+We need to output exactly one code block with the function deepEqual. Must meet requirements. Need to handle primitives: strict equality except NaN equal NaN, +0 not equal -0. In JS, Object.is handles NaN equality and distinguishes +0 and -0. So we can use Object.is for primitives. For objects: need to handle arrays, plain objects, Date. Also need to ensure array never equals plain object. null not equal {}. Use typeof and check null.
+
+Implementation: function deepEqual(a,b){ if (Object.is(a,b)) return true; // handles primitives and same reference for objects? Actually Object.is for objects checks same reference, not deep. So need to handle if both are objects (non-null). If either is null or not object, return false.
+
+Then handle Date: if a instanceof Date && b instanceof Date return a.getTime()===b.getTime();
+
+Handle Array: if Array.isArray(a) && Array.isArray(b) then compare lengths and each element recursively.
+
+If one is array and other not, return false.
+
+Handle plain objects: need to ensure both are objects (not array, not date). Use Object.prototype.toString.call(a) === '[object Object]' maybe. Then compare keys: const aKeys = Object.keys(a); const bKeys = Object.keys(b); if lengths differ return false; then for each key ensure b has own property and deepEqual(a[key], b[key]).
+
+Also need to ensure that functions, RegExp, etc are not considered equal unless same reference? Not required.
+
+Edge: handle Symbol? Primitive, Object.is works.
+
+Return false otherwise.
+
+Make sure to avoid infinite recursion for circular references? Not required.
+
+Write function in global scope.
+
+Return only code block.
+<<<END THINKING>>>
+
+```javascript
+function deepEqual(a, b) {
+  // Fast path for identical values, handling NaN and +/-0 correctly
+  if (Object.is(a, b)) return true;
+
+  // If either is null or not an object, they are not equal (primitives already handled)
+  if (a === null || b === null || typeof a !== 'object' || typeof b !== 'object')
+    return false;
+
+  // Date objects: compare timestamps
+  if (a instanceof Date && b instanceof Date) {
+    return a.getTime() === b.getTime();
+  }
+
+  // Arrays: must both be arrays, same length, and deep-equal elements
+  const aIsArr = Array.isArray(a);
+  const bIsArr = Array.isArray(b);
+  if (aIsArr || bIsArr) {
+    if (!aIsArr || !bIsArr) return false;
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (!deepEqual(a[i], b[i])) return false;
+    }
+    return true;
+  }
+
+  // Plain objects: ensure both are plain objects (not Date, Array, etc.)
+  const aTag = Object.prototype.toString.call(a);
+  const bTag = Object.prototype.toString.call(b);
+  if (aTag !== '[object Object]' || bTag !== '[object Object]') return false;
+
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
+  if (aKeys.length !== bKeys.length) return false;
+
+  // Same set of keys (order doesn't matter)
+  for (let key of aKeys) {
+    if (!b.hasOwnProperty(key) || !deepEqual(a[key], b[key])) return false;
+  }
+
+  return true;
+}
+```

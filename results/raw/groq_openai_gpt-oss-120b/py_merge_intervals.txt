@@ -1,0 +1,18 @@
+<<<THINKING>>>
+We need to output exactly one code block with the function. No extra text. Provide Python function merge_intervals that does not modify input list. Should sort copy. Return list of merged intervals sorted by left bound. Use typing. Provide code.
+<<<END THINKING>>>
+
+```python
+from typing import List
+
+def merge_intervals(intervals: List[List[int]]) -> List[List[int]]:
+    # Make a shallow copy to avoid mutating the input
+    sorted_intervals = sorted((interval[:] for interval in intervals), key=lambda x: x[0])
+    merged: List[List[int]] = []
+    for cur in sorted_intervals:
+        if not merged or cur[0] > merged[-1][1]:
+            merged.append(cur)
+        else:
+            merged[-1][1] = max(merged[-1][1], cur[1])
+    return merged
+```

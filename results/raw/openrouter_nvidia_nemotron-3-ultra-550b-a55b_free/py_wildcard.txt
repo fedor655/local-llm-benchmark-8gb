@@ -1,0 +1,122 @@
+<<<THINKING>>>
+We need to implement wildcard matching with '?' and '*' where pattern must match entire string.
+ We need polynomial time, so DP O(n*m) is acceptable for thousands of characters (n,m up to a few thousand -> 10^6 operations, fine).
+ However, we can optimize space to O(min(n,m)) or O(m) where m is pattern length.
+ But the problem says "не падать на строках длиной несколько тысяч символов", so O(n*m) time and O(m) space is fine.
+
+ Let's design DP:
+ dp[i][j] = True if s[:i] matches p[:j]
+ We can do 1D DP: dp[j] for current i.
+
+ Base: dp[0] = True (empty pattern matches empty string)
+ For pattern p, we need to handle leading '*' which can match empty string.
+
+ Transition:
+ For each character in s (i from 1 to n):
+   new_dp[0] = False (non-empty string cannot match empty pattern)
+   For each j from 1 to m:
+     if p[j-1] == '*':
+         new_dp[j] = new_dp[j-1] or dp[j]   # '*' matches empty (new_dp[j-1]) or matches one more char (dp[j])
+     elif p[j-1] == '?' or p[j-1] == s[i-1]:
+         new_dp[j] = dp[j-1]
+     else:
+         new_dp[j] = False
+
+ But we can optimize by using a single array and updating in place? For '*', we need dp[j] (previous row) and new_dp[j-1] (current row).
+ So we can do:
+   dp = [False]*(m+1)
+   dp[0] = True
+   for j in range(1, m+1):
+       if p[j-1] == '*':
+           dp[j] = dp[j-1]
+       else:
+           break  # once we hit non-star, rest are False
+
+   for i in range(1, n+1):
+       new_dp = [False]*(m+1)
+       # new_dp[0] = False (already)
+       for j in range(1, m+1):
+           if p[j-1] == '*':
+               new_dp[j] = new_dp[j-1] or dp[j]
+           elif p[j-1] == '?' or p[j-1] == s[i-1]:
+               new_dp[j] = dp[j-1]
+           else:
+               new_dp[j] = False
+       dp = new_dp
+
+   return dp[m]
+
+ However, we can further optimize space by using a single array and a variable for dp[j-1] from previous row? Actually, for '*', we need dp[j] (old) and new_dp[j-1] (new). So we can update in place if we iterate j from 1 to m and keep a variable for the previous new_dp[j-1]? But we also need the old dp[j] which gets overwritten. So we need two arrays or we can use a temporary variable to store the old dp[j] before overwriting? Let's see:
+
+ We can do:
+   dp = [False]*(m+1)
+   dp[0] = True
+   for j in range(1, m+1):
+       if p[j-1] == '*':
+           dp[j] = dp[j-1]
+       else:
+           break
+
+   for i in range(1, n+1):
+       prev = dp[0]  # dp[i-1][0] which is False for i>0
+       dp[0] = False
+       for j in range(1, m+1):
+           temp = dp[j]  # save old dp[j] (which is dp[i-1][j])
+           if p[j-1] == '*':
+               # new_dp[j] = new_dp[j-1] or old_dp[j]
+               # new_dp[j-1] is dp[j-1] (already updated in this row)
+               # old_dp[j] is temp
+               dp[j] = dp[j-1] or temp
+           elif p[j-1] == '?' or p[j-1] == s[i-1]:
+               dp[j] = prev
+           else:
+               dp[j] = False
+           prev = temp  # for next j, prev becomes old dp[j] (which is dp[i-1][j])
+   return dp[m]
+
+ This works and uses O(m) space.
+
+ Let's test with simple cases:
+ s = "aa", p = "a" -> False
+ s = "aa", p = "*" -> True
+ s = "cb", p = "?a" -> False
+ s = "adceb", p = "*a*b" -> True
+ s = "acdcb", p = "a*c?b" -> False
+
+ Edge cases: empty string, empty pattern.
+ If both empty -> True.
+ If pattern empty and string not -> False.
+ If string empty and pattern not -> only if pattern is all '*'.
+
+ The initialization handles pattern with leading stars.
+
+ Time complexity: O(n*m), space O(m). For thousands, it's fine.
+
+ We'll write the function accordingly.
+<<<END THINKING>>>
+
+```python
+def is_match(s: str, p: str) -> bool:
+    n, m = len(s), len(p)
+    dp = [False] * (m + 1)
+    dp[0] = True
+    for j in range(1, m + 1):
+        if p[j - 1] == '*':
+            dp[j] = dp[j - 1]
+        else:
+            break
+
+    for i in range(1, n + 1):
+        prev = dp[0]
+        dp[0] = False
+        for j in range(1, m + 1):
+            temp = dp[j]
+            if p[j - 1] == '*':
+                dp[j] = dp[j - 1] or temp
+            elif p[j - 1] == '?' or p[j - 1] == s[i - 1]:
+                dp[j] = prev
+            else:
+                dp[j] = False
+            prev = temp
+    return dp[m]
+```

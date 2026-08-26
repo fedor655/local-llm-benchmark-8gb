@@ -1,0 +1,6 @@
+<<<THINKING>>>
+The user asks: "Which number is larger: 9.11 or 9.9? Write the number itself." The answer is 9.9. The developer instruction: respond briefly, and in the very last line of the answer, must write result in format: ОТВЕТ: <value>. No explanations after that line. So we need to give a short answer, maybe just the number, then final line "ОТВЕТ: 9.9". Ensure no extra text after that line. Probably we can say "9.9" then newline "ОТВЕТ: 9.9". No extra.
+<<<END THINKING>>>
+
+9.9
+ОТВЕТ: 9.9

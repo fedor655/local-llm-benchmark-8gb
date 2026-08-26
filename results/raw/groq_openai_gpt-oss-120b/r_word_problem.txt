@@ -1,0 +1,5 @@
+<<<THINKING>>>
+We need solve linear equations. Let x = kg apples, y = kg pears. x + y = 5. Price: 80x + 120y = 480. Solve. From first, x = 5 - y. Plug: 80(5 - y) + 120y = 480 => 400 - 80y + 120y = 480 => 400 + 40y = 480 => 40y = 80 => y = 2. So 2 kg pears. Need answer as number. Provide short answer, last line "ОТВЕТ: 2". No extra after.
+<<<END THINKING>>>
+
+ОТВЕТ: 2

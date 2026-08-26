@@ -1,0 +1,30 @@
+<<<THINKING>>>
+We need to return corrected function. Issues: using / for mid gives float, need integer division. Also binary search boundaries: typical search for first occurrence: lo=0, hi=len(nums)-1? Actually using half-open interval [lo, hi). For first occurrence: while lo < hi: mid = (lo+hi)//2; if nums[mid] < target: lo = mid+1 else: hi = mid. After loop, first = lo if lo < len(nums) and nums[lo]==target else -1. For last occurrence: we can find first index of >target then subtract 1. Use lo=0, hi=len(nums). while lo < hi: mid = (lo+hi)//2; if nums[mid] <= target: lo = mid+1 else: hi = mid. Then last = lo-1 if last >=0 and nums[last]==target else -1. Return (first, last). Also need to handle empty list. Ensure correct. Provide function with same name and signature. Return tuple.
+<<<END THINKING>>>
+
+```python
+def search_range(nums, target):
+    # Find first occurrence
+    lo, hi = 0, len(nums)
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if nums[mid] < target:
+            lo = mid + 1
+        else:
+            hi = mid
+    first = lo
+    if first >= len(nums) or nums[first] != target:
+        return (-1, -1)
+
+    # Find position after last occurrence
+    lo, hi = 0, len(nums)
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if nums[mid] <= target:
+            lo = mid + 1
+        else:
+            hi = mid
+    last = lo - 1
+
+    return (first, last)
+```

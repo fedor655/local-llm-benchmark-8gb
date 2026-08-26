@@ -1,0 +1,11 @@
+<<<THINKING>>>
+The user is asking for the protocol used for transferring hypertext on the internet.
+The answer is HTTP.
+Constraints:
+1. One word.
+2. Uppercase letters.
+3. No period.
+4. No other symbols.
+<<<END THINKING>>>
+
+HTTP

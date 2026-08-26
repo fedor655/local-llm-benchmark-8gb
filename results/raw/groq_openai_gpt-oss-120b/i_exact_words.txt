@@ -1,0 +1,9 @@
+<<<THINKING>>>
+The user asks: "Опиши, что делает язык программирования Python, РОВНО пятью словами. Никаких знаков препинания, никаких кавычек, только пять слов через пробел и ничего больше."
+
+We must comply: Provide exactly five words, no punctuation, no quotes, just five words separated by spaces, nothing else. Must describe what Python does. Something like "выполняет код быстро и". That's not five words. Need five words describing Python: "интерпретирует код, упрощает задачи". That's more than five words and includes commas. Need exactly five words, no punctuation. So maybe: "интерпретирует код упрощает задачи". That's 4 words? Let's count: "интерпретирует" (1), "код" (2), "упрощает" (3), "задачи" (4). Need five. Add "разработку". So: "интерпретирует код упрощает задачи разработку". That's five words? Count: интерпретирует(1) код(2) упрощает(3) задачи(4) разработку(5). No punctuation. Good.
+
+Check: No punctuation, no quotes. Exactly five words separated by spaces. Provide only that line. Should be fine.
+<<<END THINKING>>>
+
+интерпретирует код упрощает задачи разработку

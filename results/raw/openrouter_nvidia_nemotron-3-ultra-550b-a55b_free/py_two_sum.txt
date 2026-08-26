@@ -1,0 +1,119 @@
+<<<THINKING>>>
+The user wants a Python function `two_sum` with specific requirements:
+1. Signature: `two_sum(nums: list[int], target: int) -> tuple[int, int] | None`
+2. Returns indices (i, j) where i < j and nums[i] + nums[j] == target.
+3. Returns None if no pair exists.
+4. Time complexity O(n).
+5. Tie-breaking: smallest i, then smallest j.
+6. Output must be a single code block with no extra text.
+
+Standard two-sum uses a hash map storing value -> index.
+However, the tie-breaking rule "smallest i, then smallest j" requires careful handling.
+If I iterate i from 0 to n-1, and check if complement exists in map.
+The map usually stores the *first* occurrence of a value.
+If I iterate forward:
+At index i, I look for target - nums[i] in the map.
+The map contains indices < i.
+If found, the pair is (map[complement], i).
+Since I iterate i increasing, the first time I find a valid pair, it will have the smallest possible j for that i? No.
+Wait. If I find a pair at index i, the other index is from the map (which stores earliest index).
+So the pair is (prev_index, i).
+Since i increases, the first found pair might not have the smallest i.
+Example: nums = [3, 2, 4], target = 6.
+i=0, val=3. map={}. add 3->0.
+i=1, val=2. map={3:0}. complement=4 not in map. add 2->1.
+i=2, val=4. map={3:0, 2:1}. complement=2 in map (index 1). Pair (1, 2).
+Correct pair is (1, 2).
+What if nums = [1, 1, 1], target = 2.
+i=0, val=1. map={}. add 1->0.
+i=1, val=1. complement=1 in map (index 0). Pair (0, 1). Return. Correct.
+
+What if nums = [2, 2, 3], target = 4.
+i=0, val=2. map={}. add 2->0.
+i=1, val=2. complement=2 in map (index 0). Pair (0, 1). Return. Correct.
+
+What if nums = [3, 3], target = 6.
+i=0, val=3. map={}. add 3->0.
+i=1, val=3. complement=3 in map (index 0). Pair (0, 1). Return. Correct.
+
+Does this guarantee smallest i?
+Suppose a pair (i, j) exists.
+When we reach j, we check map for target - nums[j].
+If i is in map, we return (i, j).
+Since we iterate j from 0 to n-1, the first time we return, j is minimal for that specific i?
+Actually, the map stores the *first* occurrence of a value.
+So if there are multiple i's for the same value, map stores the smallest i.
+When we are at j, we pair with the smallest i < j such that nums[i] == target - nums[j].
+So for a fixed j, we get the smallest possible i.
+Since we iterate j increasing, the first pair found will have the smallest j.
+But the requirement is: smallest i, then smallest j.
+Consider nums = [1, 2, 1, 2], target = 3.
+Pairs: (0, 1), (0, 3), (2, 1) invalid i<j, (2, 3).
+Valid pairs: (0, 1), (0, 3), (2, 3).
+Smallest i is 0. Among those, smallest j is 1. Answer (0, 1).
+Algorithm:
+i=0, val=1. map={}. add 1->0.
+i=1, val=2. complement=1 in map (0). Return (0, 1). Correct.
+
+Consider nums = [2, 1, 2], target = 3.
+Pairs: (0, 1), (1, 2).
+Smallest i is 0. Answer (0, 1).
+Algorithm:
+i=0, val=2. map={}. add 2->0.
+i=1, val=1. complement=2 in map (0). Return (0, 1). Correct.
+
+Consider nums = [1, 3, 1, 2], target = 3.
+Pairs: (0, 3) -> 1+2. (2, 3) -> 1+2.
+Smallest i is 0. Answer (0, 3).
+Algorithm:
+i=0, val=1. map={}. add 1->0.
+i=1, val=3. complement=0 not in map. add 3->1.
+i=2, val=1. complement=2 not in map. map has 1->0 already (don't update).
+i=3, val=2. complement=1 in map (0). Return (0, 3). Correct.
+
+Consider nums = [3, 2, 3], target = 6.
+Pairs: (0, 2).
+Algorithm:
+i=0, val=3. map={}. add 3->0.
+i=1, val=2. complement=4 not in map. add 2->1.
+i=2, val=3. complement=3 in map (0). Return (0, 2). Correct.
+
+Is there any case where standard forward pass with "store first index only" fails the "smallest i" criteria?
+Suppose pairs (i1, j1) and (i2, j2) with i1 < i2.
+We want (i1, j1).
+Since i1 < i2, and j > i.
+When we reach j1, we check map. i1 is in map (since i1 < j1). We return (i1, j1).
+We never reach j2. Correct.
+What if i1 == i2? Then we want smallest j.
+Since we store first occurrence of complement, and iterate j increasing, the first time we see a valid complement for that i, we return. That gives smallest j for that i.
+So the standard algorithm:
+`seen = {}`
+`for i, num in enumerate(nums):`
+  `complement = target - num`
+  `if complement in seen:`
+    `return (seen[complement], i)`
+  `if num not in seen:` # Only store first occurrence
+    `seen[num] = i`
+`return None`
+
+This satisfies O(n) time, O(n) space.
+Returns tuple[int, int] | None.
+Indices i < j guaranteed because seen only has indices < current i.
+Tie-breaking satisfied as argued.
+
+Edge cases: empty list, single element list -> returns None.
+Negative numbers, zeros work fine.
+Type hints: list[int], target: int -> tuple[int, int] | None. Python 3.10+ syntax.
+<<<END THINKING>>>
+
+```python
+def two_sum(nums: list[int], target: int) -> tuple[int, int] | None:
+    seen: dict[int, int] = {}
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:
+            return (seen[complement], i)
+        if num not in seen:
+            seen[num] = i
+    return None
+```

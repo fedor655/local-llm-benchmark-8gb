@@ -1,0 +1,83 @@
+<<<THINKING>>>
+We need to output a single code block with the function parse_config. Must follow rules. Use Python. Implement parsing line by line. Keep current_section = '' initially but only create dict for '' if any key before first section. We'll have a dict result = {}. We'll have a flag before_first_section_has_pairs = False. When encountering a key-value line, if current_section not in result, create empty dict. For '' section, only create if needed.
+
+Parsing: strip line, ignore if empty or startswith # or ; after strip.
+
+If line starts with '[' and ends with ']' after stripping spaces? Should detect section line: line startswith '[' and contains ']' maybe at end after stripping spaces. We'll find first ']' after '['. Use regex? Simpler: if line.startswith('[') and line.endswith(']'): section_name = line[1:-1].strip().
+
+Key-value: split on '=', maxsplit=1. left, right = line.split('=', 1). Strip both.
+
+Value parsing: if value starts and ends with double quotes (") and length >=2: value = value[1:-1]; keep as string.
+
+Else lower = value.lower(); if lower == 'true' -> True; if lower == 'false' -> False; else try int, then float. Use try/except.
+
+Return result.
+
+Edge: sections may be empty; we must ensure they appear in result even if no pairs. So when encountering a new section, we add result[section_name] = result.get(section_name, {}).
+
+If duplicate keys, later overrides.
+
+Implementation.
+
+Also ensure that if there are no pairs before first section, we don't create '' entry.
+
+Ok. Provide code.
+<<<END THINKING>>>
+
+```python
+def parse_config(text: str) -> dict:
+    result = {}
+    current = None
+    pre_section_has_pairs = False
+
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith('#') or line.startswith(';'):
+            continue
+
+        if line.startswith('[') and line.endswith(']'):
+            current = line[1:-1].strip()
+            if current not in result:
+                result[current] = {}
+            continue
+
+        # key=value line
+        if '=' not in line:
+            continue
+        key, value = line.split('=', 1)
+        key = key.strip()
+        value = value.strip()
+
+        # ensure a section exists
+        if current is None:
+            current = ''
+            if '' not in result:
+                result[''] = {}
+            pre_section_has_pairs = True
+
+        # value parsing
+        if len(value) >= 2 and value[0] == '"' and value[-1] == '"':
+            parsed = value[1:-1]
+        else:
+            low = value.lower()
+            if low == 'true':
+                parsed = True
+            elif low == 'false':
+                parsed = False
+            else:
+                try:
+                    parsed = int(value)
+                except ValueError:
+                    try:
+                        parsed = float(value)
+                    except ValueError:
+                        parsed = value
+
+        result[current][key] = parsed
+
+    # remove empty pre-section if never used
+    if not pre_section_has_pairs and '' in result:
+        del result['']
+
+    return result
+```

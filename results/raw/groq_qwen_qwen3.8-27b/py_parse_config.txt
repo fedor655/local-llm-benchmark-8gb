@@ -1,0 +1,51 @@
+```python
+def parse_config(text: str) -> dict:
+    result = {}
+    current_section = None
+    has_default_section = False
+
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith('#') or stripped.startswith(';'):
+            continue
+
+        if stripped.startswith('[') and stripped.endswith(']'):
+            section_name = stripped[1:-1].strip()
+            current_section = section_name
+            if section_name not in result:
+                result[section_name] = {}
+        else:
+            if '=' not in stripped:
+                continue
+            key, value = stripped.split('=', 1)
+            key = key.strip()
+            value = value.strip()
+
+            if current_section is None:
+                current_section = ''
+                has_default_section = True
+
+            if value.startswith('"') and value.endswith('"') and len(value) >= 2:
+                value = value[1:-1]
+            else:
+                lower_value = value.lower()
+                if lower_value == 'true':
+                    value = True
+                elif lower_value == 'false':
+                    value = False
+                else:
+                    try:
+                        value = int(value)
+                    except ValueError:
+                        try:
+                            value = float(value)
+                        except ValueError:
+                            pass
+
+            result[current_section][key] = value
+
+    if not has_default_section and '' in result:
+        del result['']
+
+    return result
+```

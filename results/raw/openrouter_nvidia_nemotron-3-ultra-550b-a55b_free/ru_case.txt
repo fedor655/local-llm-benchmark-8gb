@@ -1,0 +1,15 @@
+<<<THINKING>>>
+The user asks: "Поставь слово «дерево» в родительный падеж множественного числа. Ответь одним словом." (Put the word "дерево" in genitive plural. Answer with one word.)
+
+The word "дерево" (tree) in genitive plural is "деревьев". So answer: "деревьев". Must output only that word, and then the last line must be "ОТВЕТ: <значение>" with the value. The instruction: "В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение> Без пояснений после этой строки." So we need to output the answer (one word) and then the last line "ОТВЕТ: деревьев". But the user also says "Ответь одним словом." That might conflict with the system instruction to include the "ОТВЕТ:" line. However the system instruction is higher priority: "В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение> Без пояснений после этой строки." So we must include that line. The user wants a single word answer, but we must follow system instruction. Usually we can output the word and then the required line. But the user says "Ответь одним словом." That might be a request to output only the word. But the system instruction says we must include the "ОТВЕТ:" line. The system instruction is higher priority. So we should output the word and then the "ОТВЕТ:" line. However the user might be expecting just the word. But we must follow the system instruction. The system instruction says: "Отвечай кратко. В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение> Без пояснений после этой строки." So we need to produce a short answer, and the last line must be "ОТВЕТ: деревьев". Probably we can output just "деревьев" then newline "ОТВЕТ: деревьев". That satisfies both: the answer is one word (the first line), and the last line is the required format. The user said "Ответь одним словом." But we can interpret that as the answer content is one word, not that the entire response must be only one word. The system instruction is more explicit about the format. So we will output:
+
+деревьев
+ОТВЕТ: деревьев
+
+But the system says "В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение> Без пояснений после этой строки." So the last line must be exactly that. So we need to ensure no extra text after that line. So we will output two lines: first line the word, second line the required format. That should be acceptable.
+
+Thus final answer: "деревьев" then "ОТВЕТ: деревьев".
+<<<END THINKING>>>
+
+деревьев
+ОТВЕТ: деревьев

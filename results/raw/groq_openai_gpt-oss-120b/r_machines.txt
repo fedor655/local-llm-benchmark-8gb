@@ -1,0 +1,5 @@
+<<<THINKING>>>
+We need to solve: 5 machines make 5 parts in 5 minutes. So each machine makes 1 part in 5 minutes? Actually 5 machines produce 5 parts in 5 minutes, so total production rate = 5 parts / 5 min = 1 part per minute total. With 5 machines, each contributes 0.2 parts per minute? Wait: 5 machines produce 5 parts in 5 minutes => each machine produces 1 part in 5 minutes (assuming equal). So each machine rate = 0.2 parts per minute. For 100 machines, rate = 100 * 0.2 = 20 parts per minute. Need 100 parts => 100 / 20 = 5 minutes. So answer 5.
+<<<END THINKING>>>
+
+ОТВЕТ: 5

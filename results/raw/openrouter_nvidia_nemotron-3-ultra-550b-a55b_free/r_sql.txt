@@ -1,0 +1,10 @@
+<<<THINKING>>>
+The user is asking for the SQL keyword used to filter by the result of an aggregate function.
+The context is a query like: SELECT user_id FROM orders WHERE status='paid' GROUP BY user_id HAVING SUM(amount) > 1000.
+The keyword is HAVING.
+The user wants a one-word answer.
+The last line must be "ОТВЕТ: <значение>".
+<<<END THINKING>>>
+
+HAVING
+ОТВЕТ: HAVING

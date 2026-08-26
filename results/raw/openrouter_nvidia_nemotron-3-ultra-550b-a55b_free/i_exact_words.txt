@@ -1,0 +1,51 @@
+<<<THINKING>>>
+The user wants a description of what Python does, in exactly five words.
+Constraints:
+1. Exactly five words.
+2. No punctuation marks.
+3. No quotation marks.
+4. Words separated by spaces.
+5. Nothing else.
+
+Possible options:
+- "Python executes code dynamically interpreted" (5 words)
+- "Interprets code runs programs dynamically" (5 words)
+- "Executes scripts interprets code dynamically" (5 words)
+- "Runs code interprets high level" (5 words)
+- "Interprets executes high level code" (5 words)
+
+Let's check "Interprets executes high level code" -> 5 words. No punctuation. Good.
+Let's check "Runs scripts interprets code dynamically" -> 5 words. Good.
+Let's check "Executes code dynamically high level" -> 5 words. Good.
+
+"Interprets and executes code dynamically" -> 5 words? No, "and" makes it 5? Interprets (1) and (2) executes (3) code (4) dynamically (5). Yes. But "and" is a stop word, better to avoid if possible to be more descriptive.
+
+"High level interpreted programming language" -> 5 words. Describes *what it is*, not *what it does*. The prompt asks "что делает" (what does it do).
+
+"Interprets executes high level code" -> 5 words. Action oriented.
+"Runs interprets high level code" -> 5 words.
+"Executes high level interpreted code" -> 5 words.
+
+Let's go with: "Интерпретирует выполняет высокоуровневый код динамически" (Russian)
+Wait, the prompt is in Russian. Should I answer in Russian or English? Usually, if the prompt is in Russian, the answer should be in Russian unless specified otherwise.
+
+Russian options:
+"Интерпретирует код выполняет скрипты динамически" (5 words)
+"Выполняет код интерпретирует скрипты высокоуровнево" (5 words, "высокоуровнево" is not a word, "высокоуровневый" is adj).
+"Интерпретирует выполняет высокоуровневый программный код" (5 words).
+
+Let's count:
+1. Интерпретирует
+2. выполняет
+3. высокоуровневый
+4. программный
+5. код
+Total 5. No punctuation. Perfect.
+
+Another option:
+"Запускает интерпретирует высокоуровневый код скриптов" (5 words).
+
+Let's use: "Интерпретирует выполняет высокоуровневый программный код"
+<<<END THINKING>>>
+
+Интерпретирует выполняет высокоуровневый программный код

@@ -1,0 +1,5 @@
+<<<THINKING>>>
+We need to answer with short answer, final line "ОТВЕТ: <value>" and no extra text after that line. The secret code is given: "QX-4417-ZULU". So answer: ОТВЕТ: QX-4417-ZULU. Ensure no extra.
+<<<END THINKING>>>
+
+ОТВЕТ: QX-4417-ZULU

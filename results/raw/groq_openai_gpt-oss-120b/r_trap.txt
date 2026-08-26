@@ -1,0 +1,5 @@
+<<<THINKING>>>
+We need to solve: let ball = x, bat = x+1000. Sum = 1100 => x + (x+1000) = 1100 => 2x + 1000 = 1100 => 2x = 100 => x = 50. So answer 50. Must be brief, final line "ОТВЕТ: 50". No extra after.
+<<<END THINKING>>>
+
+ОТВЕТ: 50

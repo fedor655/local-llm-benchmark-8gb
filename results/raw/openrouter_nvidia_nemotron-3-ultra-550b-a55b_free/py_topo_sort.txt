@@ -1,0 +1,30 @@
+<<<THINKING>>>
+The user wants a Python function `topo_sort` that performs topological sorting.
+Input: `n` (number of vertices 0 to n-1), `edges` (list of tuples (a, b) meaning a -> b).
+Output: List of vertices in topological order, or None if a cycle exists.
+Constraints: Return exactly one code block, no explanations, no tests.
+<<<END THINKING>>>
+
+```python
+from collections import deque
+
+def topo_sort(n: int, edges: list[tuple[int, int]]) -> list[int] | None:
+    adj = [[] for _ in range(n)]
+    indeg = [0] * n
+    for u, v in edges:
+        adj[u].append(v)
+        indeg[v] += 1
+    
+    q = deque([i for i in range(n) if indeg[i] == 0])
+    order = []
+    
+    while q:
+        u = q.popleft()
+        order.append(u)
+        for v in adj[u]:
+            indeg[v] -= 1
+            if indeg[v] == 0:
+                q.append(v)
+                
+    return order if len(order) == n else None
+```

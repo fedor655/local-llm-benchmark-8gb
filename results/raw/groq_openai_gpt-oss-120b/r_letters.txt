@@ -1,0 +1,20 @@
+<<<THINKING>>>
+The user asks: "Сколько раз буква «р» встречается в слове «программирование»?" They want a short answer, and in the very last line of the answer must write "ОТВЕТ: <value>" with no explanations after that line. Also they said "Отвечай кратко." So we need to count the letter "р" in the Russian word "программирование". Let's count.
+
+Word: п р о г р а м м и р о в а н и е
+
+Let's write letters: п, р, о, г, р, а, м, м, и, р, о, в, а, н, и, е.
+
+Count "р": positions: 2nd letter (р), 5th letter (р), 10th letter (р). So total 3 times.
+
+Thus answer: ОТВЕТ: 3
+
+We need to output short answer, maybe just the line. But they said "В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение> Без пояснений после этой строки." So we can give a brief answer, maybe "Три" then line "ОТВЕТ: 3". But they said no explanations after that line. So we can have preceding line(s) but last line must be that. Provide short answer. Let's do:
+
+"Буква «р» встречается 3 раза."
+
+Then line "ОТВЕТ: 3". That satisfies.
+<<<END THINKING>>>
+
+Буква «р» встречается 3 раза.  
+ОТВЕТ: 3

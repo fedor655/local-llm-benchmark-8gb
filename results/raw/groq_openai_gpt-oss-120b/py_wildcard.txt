@@ -1,0 +1,26 @@
+<<<THINKING>>>
+We need to output a single code block with the function is_match(s, p) implementing wildcard matching with ? and *. Must be polynomial time, efficient for thousands length. Use DP with O(len(s)*len(p)) time and O(min(len(s), len(p))) space. Provide code only. Use Python. Return bool. Use DP with two rows. Ensure correct handling. Provide function definition only.
+<<<END THINKING>>>
+
+```python
+def is_match(s: str, p: str) -> bool:
+    n, m = len(s), len(p)
+    # dp[j] = whether s[:i] matches p[:j]
+    dp = [False] * (m + 1)
+    dp[0] = True
+
+    # Initialize first row for empty s
+    for j in range(1, m + 1):
+        dp[j] = dp[j - 1] and p[j - 1] == '*'
+
+    for i in range(1, n + 1):
+        new_dp = [False] * (m + 1)
+        for j in range(1, m + 1):
+            if p[j - 1] == '*':
+                # '*' matches empty (dp[j-1]) or one more char (new_dp[j-1] or dp[j])
+                new_dp[j] = new_dp[j - 1] or dp[j]
+            elif p[j - 1] == '?' or p[j - 1] == s[i - 1]:
+                new_dp[j] = dp[j - 1]
+        dp = new_dp
+    return dp[m]
+```

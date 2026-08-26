@@ -1,0 +1,17 @@
+<<<THINKING>>>
+The user asks: "Есть таблица orders(id, user_id, amount, status). Нужно вывести user_id пользователей, у которых суммарная amount по строкам со status='paid' больше 1000. Какое ключевое слово SQL используется для фильтрации по результату агрегатной функции? Ответь одним словом."
+
+They want the SQL keyword used to filter on aggregate function results: that's HAVING.
+
+We must answer with one word, and then in the very last line of the answer, we must write "ОТВЕТ: <value>" with no explanations after that line. Also they said "Отвечай кратко." So we should just output "HAVING" and then the required line.
+
+But the required format: In the very last line, we must write "ОТВЕТ: <значение>". So we need to output the answer word, then the line "ОТВЕТ: HAVING". Probably we should not include any extra text after that line. The answer should be short.
+
+Thus final answer:
+
+HAVING
+ОТВЕТ: HAVING
+<<<END THINKING>>>
+
+HAVING
+ОТВЕТ: HAVING

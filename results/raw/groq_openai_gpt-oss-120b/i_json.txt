@@ -1,0 +1,5 @@
+<<<THINKING>>>
+The user asks: "Верни JSON-объект с полями: ...". The developer says: "Ты возвращаешь только валидный JSON, без пояснений и без markdown-разметки." So we must output only JSON, no extra text, no markdown fences. Provide JSON object with fields name, count, tags, nested. Ensure correct types: name string "тест", count number 7, tags array of three strings "a","b","c", nested object with field ok true. Output exactly JSON.
+<<<END THINKING>>>
+
+{"name":"тест","count":7,"tags":["a","b","c"],"nested":{"ok":true}}

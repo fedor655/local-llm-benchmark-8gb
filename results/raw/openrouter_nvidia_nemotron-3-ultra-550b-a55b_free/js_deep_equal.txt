@@ -1,0 +1,195 @@
+<<<THINKING>>>
+The user wants a JavaScript function `deepEqual(a, b)` with specific requirements:
+1. Primitives compared strictly, but NaN === NaN, +0 !== -0
+2. Arrays equal if same length and element-wise equal
+3. Plain objects equal if same own keys and equal values
+4. Array never equals plain object
+5. null !== {}
+6. Date compared by time value
+
+Need to handle circular references? Not mentioned, but good to handle. However, the requirements don't specify, so maybe not needed. But deepEqual typically should handle cycles. I'll include a WeakMap for visited pairs.
+
+Implementation steps:
+- Check if a and b are same reference (===) but handle NaN and +/-0.
+- For primitives: typeof a !== 'object' or null. Compare with Object.is but with NaN handling? Object.is(NaN, NaN) true, Object.is(+0, -0) false. So Object.is works perfectly for primitives! Actually Object.is handles NaN and +/-0 correctly. So for primitives, we can use Object.is(a, b). But need to ensure both are primitives. If both are null, Object.is(null, null) true. If both undefined, true. So we can use Object.is for non-objects.
+
+- For objects: check if both are objects (including arrays, Date, etc). If one is object and other not, false.
+- Check if both are Date: compare getTime().
+- Check if both are arrays: compare length and each element recursively.
+- Check if both are plain objects: compare own keys (Object.keys) and each value recursively.
+- Array vs plain object: false.
+- null vs object: null is object type but we handle null earlier as primitive? Actually typeof null === 'object', so need to check null before object check.
+
+Better approach:
+function deepEqual(a, b) {
+  // Use Object.is for primitives and same reference
+  if (Object.is(a, b)) return true;
+  // If either is not object (including null), return false because Object.is would have caught equality
+  if (a === null || b === null || typeof a !== 'object' || typeof b !== 'object') return false;
+  // Now both are objects (including arrays, Date, etc)
+  // Check Date
+  if (a instanceof Date && b instanceof Date) {
+    return a.getTime() === b.getTime();
+  }
+  // Check arrays
+  const aIsArray = Array.isArray(a);
+  const bIsArray = Array.isArray(b);
+  if (aIsArray !== bIsArray) return false; // one array, one not
+  if (aIsArray) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (!deepEqual(a[i], b[i])) return false;
+    }
+    return true;
+  }
+  // Plain objects
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+  if (keysA.length !== keysB.length) return false;
+  for (const key of keysA) {
+    if (!Object.prototype.hasOwnProperty.call(b, key)) return false;
+    if (!deepEqual(a[key], b[key])) return false;
+  }
+  return true;
+}
+
+But this doesn't handle circular references. Could add a WeakMap to track visited pairs. However, the problem doesn't mention cycles. Usually deepEqual should handle cycles to avoid infinite recursion. I'll include a simple cycle detection using a WeakMap passed as third argument, but the function signature is deepEqual(a, b). Could create an internal function with memo. Since the requirement says "declare function in global scope", we can define deepEqual as a function that uses an internal helper with WeakMap.
+
+But the user said "Return exactly one code block". So I'll write the function with cycle detection.
+
+Let's implement:
+
+function deepEqual(a, b) {
+  const visited = new WeakMap();
+  function eq(x, y) {
+    if (Object.is(x, y)) return true;
+    if (x === null || y === null || typeof x !== 'object' || typeof y !== 'object') return false;
+    // Check visited
+    if (visited.has(x)) {
+      return visited.get(x) === y;
+    }
+    visited.set(x, y);
+    // Date
+    if (x instanceof Date && y instanceof Date) {
+      return x.getTime() === y.getTime();
+    }
+    // Arrays
+    const xArr = Array.isArray(x);
+    const yArr = Array.isArray(y);
+    if (xArr !== yArr) return false;
+    if (xArr) {
+      if (x.length !== y.length) return false;
+      for (let i = 0; i < x.length; i++) {
+        if (!eq(x[i], y[i])) return false;
+      }
+      return true;
+    }
+    // Plain objects
+    const keysX = Object.keys(x);
+    const keysY = Object.keys(y);
+    if (keysX.length !== keysY.length) return false;
+    for (const key of keysX) {
+      if (!Object.prototype.hasOwnProperty.call(y, key)) return false;
+      if (!eq(x[key], y[key])) return false;
+    }
+    return true;
+  }
+  return eq(a, b);
+}
+
+But note: visited map stores x -> y. However, if there are multiple references to same object, we need to ensure we compare correctly. The typical approach is to store a map of x to a set of y? Actually for deep equality with cycles, we need to track pairs (x, y) that are being compared. Using a WeakMap of WeakMaps? Simpler: use a Set of pairs serialized? But we can't use WeakMap for pairs. Alternative: use a Map with key as x and value as y, but that only works if each x is compared to at most one y. In deep equality, the same object x might be compared to different y in different branches? Actually in a tree, each node is visited once per comparison. But with cycles, we might revisit the same pair. The standard algorithm: maintain a map of visited pairs (x, y). Since we can't use WeakMap for pairs, we can use a Map with a combined key? But x and y are objects, we can use a WeakMap of WeakMaps: visited = new WeakMap(); visited.set(x, new WeakMap()); visited.get(x).set(y, true). But that's heavy.
+
+Simpler: since the problem likely doesn't require cycle handling, we can omit it. The requirements don't mention cycles. Many deepEqual implementations ignore cycles. I'll omit cycle detection to keep it simple and meet the exact requirements.
+
+But the user said "experienced programmer". Might expect cycle handling. However, the instruction: "Return exactly one code block". I'll provide a clean implementation without cycles, as the requirements don't specify. If they test with cycles, it might stack overflow. But typical interview deepEqual doesn't require cycles.
+
+Let's stick to the requirements exactly.
+
+Edge cases:
+- NaN: Object.is(NaN, NaN) true.
+- +0 vs -0: Object.is(+0, -0) false.
+- null vs {}: null is caught by `a === null || b === null` after Object.is? Actually Object.is(null, {}) false, then we check if either is null -> return false. Good.
+- Array vs object: Array.isArray check.
+- Date: instanceof Date.
+
+What about other object types like RegExp, Map, Set? Not required. The requirement says "обычные объекты" (plain objects). So we treat any non-array, non-Date object as plain object? But if it's a RegExp, it's not a plain object. The requirement: "обычные объекты равны при одинаковом наборе собственных ключей и равных значениях". That implies we only consider plain objects (object literals). But what if someone passes a RegExp? The spec doesn't say. Usually deepEqual would compare RegExp by source and flags. But not required. I'll treat any object that is not Array or Date as plain object, comparing own keys. That might be okay.
+
+But note: `Object.keys` returns only enumerable own properties. For plain objects, that's fine.
+
+Also, need to ensure that prototype chain doesn't matter. Only own keys.
+
+Implementation:
+
+function deepEqual(a, b) {
+  if (Object.is(a, b)) return true;
+  if (a === null || b === null || typeof a !== 'object' || typeof b !== 'object') return false;
+  if (a instanceof Date && b instanceof Date) {
+    return a.getTime() === b.getTime();
+  }
+  const aIsArray = Array.isArray(a);
+  const bIsArray = Array.isArray(b);
+  if (aIsArray !== bIsArray) return false;
+  if (aIsArray) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (!deepEqual(a[i], b[i])) return false;
+    }
+    return true;
+  }
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+  if (keysA.length !== keysB.length) return false;
+  for (const key of keysA) {
+    if (!Object.prototype.hasOwnProperty.call(b, key)) return false;
+    if (!deepEqual(a[key], b[key])) return false;
+  }
+  return true;
+}
+
+This should satisfy all requirements.
+
+Let's test mentally:
+- deepEqual(NaN, NaN) -> Object.is true -> true.
+- deepEqual(+0, -0) -> Object.is false -> then typeof number not object -> false. Good.
+- deepEqual([1,2], [1,2]) -> arrays, length equal, elements deepEqual -> true.
+- deepEqual({a:1}, {a:1}) -> keys equal, values equal -> true.
+- deepEqual([], {}) -> aIsArray true, bIsArray false -> false.
+- deepEqual(null, {}) -> a === null -> false.
+- deepEqual(new Date(123), new Date(123)) -> Date instance, getTime equal -> true.
+- deepEqual(new Date(123), new Date(456)) -> false.
+- deepEqual({a: {b: 1}}, {a: {b: 1}}) -> recursive -> true.
+
+What about sparse arrays? Array.isArray works, length includes empty slots. deepEqual on empty slots: a[i] is undefined, b[i] undefined -> Object.is(undefined, undefined) true. So sparse arrays with same holes are equal. That's fine.
+
+What about objects with different prototype? Object.keys only own keys, so prototype doesn't matter. Good.
+
+Now, the function is declared in global scope. No export.
+
+I'll output the code block.
+<<<END THINKING>>>
+
+function deepEqual(a, b) {
+  if (Object.is(a, b)) return true;
+  if (a === null || b === null || typeof a !== 'object' || typeof b !== 'object') return false;
+  if (a instanceof Date && b instanceof Date) {
+    return a.getTime() === b.getTime();
+  }
+  const aIsArray = Array.isArray(a);
+  const bIsArray = Array.isArray(b);
+  if (aIsArray !== bIsArray) return false;
+  if (aIsArray) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (!deepEqual(a[i], b[i])) return false;
+    }
+    return true;
+  }
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+  if (keysA.length !== keysB.length) return false;
+  for (const key of keysA) {
+    if (!Object.prototype.hasOwnProperty.call(b, key)) return false;
+    if (!deepEqual(a[key], b[key])) return false;
+  }
+  return true;
+}

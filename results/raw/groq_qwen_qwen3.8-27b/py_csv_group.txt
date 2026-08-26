@@ -1,0 +1,35 @@
+```python
+def top_by_group(csv_text: str, group_col: str, value_col: str, k: int) -> list[tuple[str, float]]:
+    lines = [line for line in csv_text.splitlines() if line.strip()]
+    if not lines:
+        return []
+    
+    headers = lines[0].split(',')
+    group_idx = headers.index(group_col)
+    value_idx = headers.index(value_col)
+    
+    groups: dict[str, float] = {}
+    
+    for line in lines[1:]:
+        parts = line.split(',')
+        if len(parts) < max(group_idx, value_idx) + 1:
+            continue
+        
+        group_val = parts[group_idx]
+        value_str = parts[value_idx].strip()
+        
+        if not value_str:
+            continue
+        
+        try:
+            value = float(value_str)
+        except ValueError:
+            continue
+        
+        if group_val not in groups:
+            groups[group_val] = 0.0
+        groups[group_val] += value
+    
+    sorted_groups = sorted(groups.items(), key=lambda x: (-x[1], x[0]))
+    return sorted_groups[:k]
+```

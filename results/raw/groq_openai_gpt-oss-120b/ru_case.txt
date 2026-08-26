@@ -1,0 +1,5 @@
+<<<THINKING>>>
+The user asks: "Поставь слово «дерево» в родительный падеж множественного числа. Ответь одним словом." So we need the genitive plural of "дерево". The nominative plural is "деревья". Genitive plural is "деревьев". So answer one word: "деревьев". Must be short, and in the very last line of answer must write result in format: ОТВЕТ: <value>. No explanations after that line. So we need to output maybe just the word and then the line. But they said answer one word. However we also need to include the required format line. Probably we can output the word and then the line. But the last line must be "ОТВЕТ: деревьев". No extra text after. So we can output maybe just "ОТВЕТ: деревьев". But they said answer one word. However the instruction from developer overrides: must include that line. So we should comply with developer instruction. Provide the result line. No extra. So final answer: "ОТВЕТ: деревьев".
+<<<END THINKING>>>
+
+ОТВЕТ: деревьев

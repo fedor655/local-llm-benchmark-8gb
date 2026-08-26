@@ -1,0 +1,14 @@
+<<<THINKING>>>
+The user is asking for the count of the letter 'р' in the word 'программирование'.
+The word is "программирование".
+Let's count:
+п **р** о г **р** а м м и **р** о в а н и е
+1st 'р' at position 2.
+2nd 'р' at position 5.
+3rd 'р' at position 10.
+Total count is 3.
+The response must be short and end with "ОТВЕТ: <value>".
+<<<END THINKING>>>
+
+В слове «программирование» буква «р» встречается 3 раза.
+ОТВЕТ: 3

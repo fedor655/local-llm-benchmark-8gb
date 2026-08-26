@@ -1,0 +1,7 @@
+<<<THINKING>>>
+The user asks: "Какой протокол используется для передачи гипертекста в интернете? Ответь ОДНИМ словом ЗАГЛАВНЫМИ БУКВАМИ, без точки и без каких-либо других символов."
+
+They want a single word in uppercase, no punctuation. The answer: HTTP. That's uppercase, one word, no punctuation. Should comply.
+<<<END THINKING>>>
+
+HTTP

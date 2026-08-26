@@ -1,0 +1,12 @@
+<<<THINKING>>>
+The user wants a JSON object with specific fields. Must output only JSON, no markdown, no extra text. Provide exactly the JSON. Ensure valid JSON.
+<<<END THINKING>>>
+
+{
+  "name": "тест",
+  "count": 7,
+  "tags": ["a", "b", "c"],
+  "nested": {
+    "ok": true
+  }
+}

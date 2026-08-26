@@ -1,0 +1,36 @@
+<<<THINKING>>>
+We need to output a single code block with the function. Should implement parsing CSV manually (splitlines, split(',')). No quotes. Need to handle empty lines at end. Return list of tuples (group_name, sum) where sum is float. Sorting as described. Use typing. Ensure k groups. Return list. Use dict to accumulate sums. Skip rows where value cannot be parsed to float. If group has at least one valid row, include. If group has no valid rows, exclude. Implementation straightforward.
+<<<END THINKING>>>
+
+```python
+from typing import List, Tuple
+
+def top_by_group(csv_text: str, group_col: str, value_col: str, k: int) -> List[Tuple[str, float]]:
+    lines = [ln for ln in csv_text.splitlines() if ln.strip() != ""]
+    if not lines:
+        return []
+    header = lines[0].split(",")
+    try:
+        g_idx = header.index(group_col)
+        v_idx = header.index(value_col)
+    except ValueError:
+        return []  # required columns not found
+    sums = {}
+    valid_counts = {}
+    for line in lines[1:]:
+        parts = line.split(",")
+        if len(parts) <= max(g_idx, v_idx):
+            continue
+        group = parts[g_idx]
+        val_str = parts[v_idx].strip()
+        try:
+            val = float(val_str)
+        except ValueError:
+            continue
+        sums[group] = sums.get(group, 0.0) + val
+        valid_counts[group] = valid_counts.get(group, 0) + 1
+    # keep only groups with at least one valid value
+    result = [(g, sums[g]) for g in sums if valid_counts.get(g, 0) > 0]
+    result.sort(key=lambda x: (-x[1], x[0]))
+    return result[:k]
+```

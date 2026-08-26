@@ -1,0 +1,13 @@
+<<<THINKING>>>
+We need compute 7^100 mod 13. Use modular exponentiation. Compute 7 mod13 =7. Compute powers.
+
+We can note that φ(13)=12, so 7^12 ≡1 mod13 (since 13 prime, 7 not divisible). So 7^100 = 7^(12*8 +4) because 12*8=96, remainder 4. So 7^100 ≡ (7^12)^8 * 7^4 ≡1^8 * 7^4 ≡7^4 mod13.
+
+Compute 7^2 =49 ≡49-39=10 mod13. 7^4 = (7^2)^2 ≡10^2=100 ≡100-91=9 mod13. So answer 9.
+
+Thus output format: last line "ОТВЕТ: 9". Also need brief answer earlier maybe just number? The instruction: answer briefly, in the last line write result. So we can just give maybe "9" then line. But must include the line. Provide maybe nothing else. Let's output:
+
+ОТВЕТ: 9
+<<<END THINKING>>>
+
+ОТВЕТ: 9

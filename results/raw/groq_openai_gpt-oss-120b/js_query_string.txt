@@ -1,0 +1,54 @@
+<<<THINKING>>>
+We need to output a single code block with the function parseQuery defined globally. Must meet requirements. Implement parsing.
+
+Edge cases: leading '?', ignore. Split by '&', filter out empty segments. For each segment, find first '=', if not present, key = segment, value = ''.
+
+Replace '+' with space before decode? Actually decodeURIComponent doesn't handle '+', so we need to replace '+' with ' ' before decode. So we can do: decodeURIComponent(part.replace(/\+/g, ' '))
+
+Multiple keys: if key not present, set value; if present and not array, convert to array [old, new]; if already array, push.
+
+Return object.
+
+Empty string => {}.
+
+Implement.
+
+Make sure global: just function parseQuery(qs) { ... }
+
+Return object.
+
+Ok.
+<<<END THINKING>>>
+
+```javascript
+function parseQuery(qs) {
+  const result = {};
+  if (!qs) return result;
+  if (qs[0] === '?') qs = qs.slice(1);
+  const pairs = qs.split('&');
+  for (let pair of pairs) {
+    if (!pair) continue;
+    let idx = pair.indexOf('=');
+    let rawKey, rawVal;
+    if (idx === -1) {
+      rawKey = pair;
+      rawVal = '';
+    } else {
+      rawKey = pair.slice(0, idx);
+      rawVal = pair.slice(idx + 1);
+    }
+    const key = decodeURIComponent(rawKey.replace(/\+/g, ' '));
+    const val = decodeURIComponent(rawVal.replace(/\+/g, ' '));
+    if (Object.prototype.hasOwnProperty.call(result, key)) {
+      if (Array.isArray(result[key])) {
+        result[key].push(val);
+      } else {
+        result[key] = [result[key], val];
+      }
+    } else {
+      result[key] = val;
+    }
+  }
+  return result;
+}
+```

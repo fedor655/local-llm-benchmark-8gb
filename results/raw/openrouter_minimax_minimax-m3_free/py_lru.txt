@@ -1,0 +1,56 @@
+```python
+class LRUCache:
+    class _Node:
+        __slots__ = ("key", "value", "prev", "next")
+        def __init__(self, key, value):
+            self.key = key
+            self.value = value
+            self.prev = None
+            self.next = None
+
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.cache = {}
+        # sentinel nodes to avoid edge cases
+        self.head = self._Node(0, 0)
+        self.tail = self._Node(0, 0)
+        self.head.next = self.tail
+        self.tail.prev = self.head
+
+    def _remove(self, node):
+        prev = node.prev
+        nxt = node.next
+        prev.next = nxt
+        nxt.prev = prev
+
+    def _add_to_front(self, node):
+        node.prev = self.head
+        node.next = self.head.next
+        self.head.next.prev = node
+        self.head.next = node
+
+    def _move_to_front(self, node):
+        self._remove(node)
+        self._add_to_front(node)
+
+    def get(self, key) -> int:
+        node = self.cache.get(key)
+        if node is None:
+            return -1
+        self._move_to_front(node)
+        return node.value
+
+    def put(self, key, value) -> None:
+        node = self.cache.get(key)
+        if node is not None:
+            node.value = value
+            self._move_to_front(node)
+            return
+        if len(self.cache) >= self.capacity:
+            lru = self.tail.prev
+            self._remove(lru)
+            del self.cache[lru.key]
+        new_node = self._Node(key, value)
+        self._add_to_front(new_node)
+        self.cache[key] = new_node
+```

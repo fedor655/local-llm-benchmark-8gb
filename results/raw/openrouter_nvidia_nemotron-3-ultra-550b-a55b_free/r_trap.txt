@@ -1,0 +1,16 @@
+<<<THINKING>>>
+The user wants me to solve a simple math riddle.
+Bat + Ball = 1100
+Bat = Ball + 1000
+
+Substitute Bat in the first equation:
+(Ball + 1000) + Ball = 1100
+2 * Ball + 1000 = 1100
+2 * Ball = 100
+Ball = 50
+
+The user wants the answer as a number, and the last line must be "ОТВЕТ: <value>".
+<<<END THINKING>>>
+
+50
+ОТВЕТ: 50

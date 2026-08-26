@@ -1,0 +1,5 @@
+<<<THINKING>>>
+We need to continue the "look-and-say" sequence. Given terms: 1, 11, 21, 1211, 111221, next is 312211. So answer: 312211. Must output short, last line "ОТВЕТ: 312211". No extra after.
+<<<END THINKING>>>
+
+ОТВЕТ: 312211

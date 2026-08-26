@@ -1,0 +1,26 @@
+<<<THINKING>>>
+The user asks: "Maria has four brothers and three sisters. How many sisters does Maria's brother have? Answer with a number."
+
+Let's analyze: Maria is a girl. She has 4 brothers and 3 sisters. So total children in family: Maria + 3 sisters = 4 girls. And 4 brothers = 4 boys. So total 8 children.
+
+Now, take one of Maria's brothers. He is a boy. His sisters are all the girls in the family. That includes Maria and her 3 sisters. So total sisters for that brother = 4 girls.
+
+Thus answer: 4.
+
+The user wants the answer in the last line: "ОТВЕТ: <значение>" and no explanations after that line. Also they said "Отвечай кратко." So we can give a short explanation then the answer line.
+
+But they said: "В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение> Без пояснений после этой строки."
+
+So we must ensure the last line is exactly "ОТВЕТ: 4" and nothing after.
+
+We can provide a brief explanation before that, but the last line must be exactly that.
+
+Thus final answer: maybe "У брата Марии 4 сестры. ОТВЕТ: 4" but ensure last line is exactly "ОТВЕТ: 4". Probably they want just the answer line as last line. But they said "Отвечай кратко." So we can just output the answer line? But they also said "В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение> Без пояснений после этой строки." That implies we can have preceding lines, but the last line must be that format. So we can write a short explanation then the answer line.
+
+I'll write: "У брата Марии 4 сестры. ОТВЕТ: 4" but that would have the answer line not as the last line? Actually it would be the last line if we put it on its own line. Better to put explanation then newline then "ОТВЕТ: 4". That satisfies.
+
+Thus final.
+<<<END THINKING>>>
+
+У брата Марии 4 сестры.
+ОТВЕТ: 4

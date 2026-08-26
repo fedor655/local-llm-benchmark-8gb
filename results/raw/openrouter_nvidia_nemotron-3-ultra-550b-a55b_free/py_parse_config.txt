@@ -1,0 +1,173 @@
+<<<THINKING>>>
+The user wants a Python function `parse_config(text: str) -> dict` that parses an INI-like configuration string.
+Rules summary:
+1. Sections: `[section_name]` starts a new section. Whitespace around name trimmed.
+2. Key-value pairs: `key = value`. Added to current section.
+3. Pairs before first section go to section `''` (empty string).
+4. Ignore empty lines and comments (lines starting with `#` or `;` after stripping).
+5. Whitespace around section name, key, value trimmed.
+6. Value type parsing:
+   - `true`/`false` (case-insensitive) -> bool
+   - integer -> int
+   - float -> float
+   - else -> str
+   - Exception: if value wrapped in double quotes `""`, strip quotes and keep as string (no type parsing).
+7. Value can contain `=`, split only on first `=`.
+8. Duplicate keys: last value wins.
+9. Sections included in result even if empty. Section `''` only created if there were pairs before first section.
+
+Implementation plan:
+- Split text into lines.
+- Initialize `result = {}`, `current_section = ''`, `has_pairs_in_default = False`.
+- Iterate lines.
+- Strip whitespace.
+- Skip if empty or startswith `#` or `;`.
+- Check if line startswith `[` and endswith `]` -> section header.
+  - Extract name, strip.
+  - Set `current_section = name`.
+  - Ensure `result[current_section] = {}` (create empty dict for section).
+- Else: key-value pair.
+  - Split by first `=`.
+  - If no `=`, maybe ignore or treat as key with empty value? Spec says "строки вида `ключ = значение`", implies `=` exists. I'll assume valid input or skip malformed.
+  - Key = part before `=`, stripped.
+  - Value = part after `=`, stripped.
+  - Parse value:
+    - If startswith `"` and endswith `"` (and len >= 2): value = value[1:-1], type str.
+    - Else: try parse bool, int, float, else str.
+  - If `current_section == ''`: `has_pairs_in_default = True`.
+  - Ensure `result[current_section]` exists (should exist if section header seen, or default).
+  - `result[current_section][key] = value`.
+- After loop: if `''` in result and not `has_pairs_in_default`: delete `result['']`? Wait, rule: "секция `''` создаётся только если до первой секции реально были пары". So if no pairs in default, don't include it.
+- Return result.
+
+Edge cases:
+- Section header whitespace: `[ section ]` -> `section`.
+- Value quotes: `"true"` -> string "true", not bool.
+- Value quotes with spaces: `" hello "` -> " hello " (quotes stripped, inner spaces kept).
+- Lines with only whitespace -> ignored.
+- Comment chars only at start after strip? "starts with `#` or `;` (after trimming spaces)". So `key = value # comment` is not a comment, it's part of value. The rule says "строки, начинающиеся с `#` или `;` (после обрезки пробелов)". So inline comments not supported unless specified. I will treat whole line as value if not starting with comment char.
+
+Code structure:
+```python
+def parse_config(text: str) -> dict:
+    result = {}
+    current_section = ''
+    has_default_pairs = False
+    
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped[0] in '#;':
+            continue
+        
+        if stripped.startswith('[') and stripped.endswith(']'):
+            section_name = stripped[1:-1].strip()
+            current_section = section_name
+            if current_section not in result:
+                result[current_section] = {}
+            continue
+        
+        # Key-value
+        if '=' in stripped:
+            key, val = stripped.split('=', 1)
+            key = key.strip()
+            val = val.strip()
+            
+            # Parse value
+            if len(val) >= 2 and val.startswith('"') and val.endswith('"'):
+                parsed_val = val[1:-1]
+            else:
+                lower_val = val.lower()
+                if lower_val == 'true':
+                    parsed_val = True
+                elif lower_val == 'false':
+                    parsed_val = False
+                else:
+                    try:
+                        parsed_val = int(val)
+                    except ValueError:
+                        try:
+                            parsed_val = float(val)
+                        except ValueError:
+                            parsed_val = val
+            
+            if current_section == '':
+                has_default_pairs = True
+            
+            if current_section not in result:
+                result[current_section] = {}
+            result[current_section][key] = parsed_val
+            
+    if '' in result and not has_default_pairs:
+        del result['']
+        
+    return result
+```
+
+Check requirements again:
+- "секция попадает в результат, даже если она пустая" -> handled by creating entry on section header.
+- "секция `''` создаётся только если до первой секции реально были пары" -> handled by `has_default_pairs` flag and cleanup.
+- "значение разбирается по типам... если значение обёрнуто в двойные кавычки, кавычки снимаются и значение всегда остаётся строкой" -> handled.
+- "в значении может встречаться знак `=`, делить нужно только по первому" -> `split('=', 1)`.
+- "при повторе ключа побеждает последнее значение" -> dict assignment handles this.
+
+One detail: `stripped[0] in '#;'` assumes stripped is not empty. Checked `if not stripped` before.
+What if line is `[section` without closing bracket? Spec says "строки вида `[секция]`". I'll assume valid format or ignore malformed. Current code ignores if not ending with `]`. That seems safe.
+
+Final check on imports: None needed.
+Function signature: `def parse_config(text: str) -> dict:`
+
+Ready to output.
+<<<END THINKING>>>
+
+```python
+def parse_config(text: str) -> dict:
+    result = {}
+    current_section = ''
+    has_default_pairs = False
+
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped[0] in '#;':
+            continue
+
+        if stripped.startswith('[') and stripped.endswith(']'):
+            section_name = stripped[1:-1].strip()
+            current_section = section_name
+            if current_section not in result:
+                result[current_section] = {}
+            continue
+
+        if '=' in stripped:
+            key, val = stripped.split('=', 1)
+            key = key.strip()
+            val = val.strip()
+
+            if len(val) >= 2 and val.startswith('"') and val.endswith('"'):
+                parsed_val = val[1:-1]
+            else:
+                lower_val = val.lower()
+                if lower_val == 'true':
+                    parsed_val = True
+                elif lower_val == 'false':
+                    parsed_val = False
+                else:
+                    try:
+                        parsed_val = int(val)
+                    except ValueError:
+                        try:
+                            parsed_val = float(val)
+                        except ValueError:
+                            parsed_val = val
+
+            if current_section == '':
+                has_default_pairs = True
+
+            if current_section not in result:
+                result[current_section] = {}
+            result[current_section][key] = parsed_val
+
+    if '' in result and not has_default_pairs:
+        del result['']
+
+    return result
+```

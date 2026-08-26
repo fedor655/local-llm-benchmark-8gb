@@ -1,0 +1,62 @@
+<<<THINKING>>>
+We need to output exactly one code block with the function. Should be Python. Must meet O(n). Need to return earliest pair by i then j. Standard approach: iterate i from 0..n-1, maintain dict of value->index of first occurrence? But need earliest i. For each i, we need to find j>i such that nums[i]+nums[j]==target. To get minimal i, we can iterate i from 0 to n-1, and for each i, check if complement exists later. Could use dict mapping value to list of indices? Simpler: iterate i, and for each i, we can check if complement already seen earlier? That would give minimal j? Not correct. We need minimal i, then minimal j. So we can just brute O(n^2) but need O(n). Approach: Use dict to store first index of each number seen so far. While iterating j from 0..n-1, we look for complement = target - nums[j]; if complement in dict, we have i = dict[complement]; Since we iterate j increasing, the first found pair will have minimal j, but not necessarily minimal i overall. However, because dict stores earliest i for each value, the pair found will have minimal i among those with current j. But could there be a pair with smaller i but larger j that appears later? Since we iterate j increasing, the first pair found will have smallest j. But requirement is minimal i first, then minimal j. Example: nums = [1,2,3,4], target=5. Pairs: (0,3) (1,2). Minimal i is 0, j=3. Our algorithm: j=0 no complement; j=1 complement=3 not seen; j=2 complement=2 seen at index1 => pair (1,2) found first (i=1). That's not minimal i. So need different approach.
+
+We need to find minimal i first. So we can iterate i from 0..n-1, and for each i, we need to know if there exists j>i with complement. To achieve O(n), we can precompute a map from value to list of indices (or earliest index after i). Could maintain a dict of value->list of indices sorted. Then for each i, we can check if complement exists with index > i using binary search. Complexity O(n log n). Need O(n). Could we do one pass from right to left building dict of values seen to the right, storing earliest index (which will be the smallest index > i). Iterate i from 0..n-1, but we need dict of values to the smallest index > i. If we iterate i from n-1 down to 0, we can maintain dict of value->index (the smallest index seen so far, which is the nearest to the left? Actually when iterating from right, we add nums[i] after checking. For each i, we need to know if complement exists in dict (which contains indices > i). Since we are moving leftwards, dict will contain the smallest index > i for each value because we insert as we go left, but the first insertion for a value will be the rightmost occurrence (largest index). However we need the smallest j > i, i.e., the leftmost occurrence to the right of i. When iterating from right to left, the first time we encounter a value, that's the rightmost index. Later, when we encounter same value earlier, we would overwrite dict with a smaller index (closer to i). So we should update dict[value] = i (current index) each iteration, which ensures dict always holds the smallest index seen so far (i.e., the leftmost among processed positions, which are to the right of the upcoming i). Since we process from rightmost to leftmost, at step i, dict contains the smallest index > i for each value. Good.
+
+Thus algorithm: Initialize empty dict. For i from len(nums)-1 down to 0:
+    complement = target - nums[i]
+    if complement in dict:
+        j = dict[complement]  # smallest index > i
+        return (i, j)
+    # then store current value if not already stored (or store i as it's smaller than any later)
+    if nums[i] not in dict:
+        dict[nums[i]] = i
+    else:
+        # we already have a smaller index (since we are moving leftwards, current i is smaller)
+        dict[nums[i]] = i  # update to smaller index
+But we need to ensure dict holds smallest index > current i for future iterations (i.e., for earlier i). So we should always set dict[nums[i]] = i (overwrites with smaller index). That's fine.
+
+Now about minimal i: Since we iterate i decreasing, the first pair we encounter will have the smallest i? Actually we start from rightmost i, decreasing. The first pair found will have the largest i (closest to end). That's opposite. We need minimal i. So we need to iterate i from 0 upwards, but need dict of future indices. Could precompute dict of value->list of indices, then for each i we can get smallest j>i. That may be O(n) if we store for each value the next occurrence index using a queue. Approach: Build dict mapping value to deque of indices (sorted ascending). Then iterate i from 0..n-1: pop leftmost index from its deque because it's i itself. For complement, look at deque of complement, if not empty, the leftmost index is the smallest j>i. Since we maintain deques, each index is popped once, O(n). Implementation:
+
+from collections import deque, defaultdict
+
+pos = defaultdict(deque)
+for idx, val in enumerate(nums):
+    pos[val].append(idx)
+
+for i, val in enumerate(nums):
+    pos[val].popleft()  # remove current index
+    comp = target - val
+    if pos[comp]:
+        j = pos[comp][0]
+        return (i, j)
+return None
+
+This yields minimal i because we iterate i increasing, and for each i we pick smallest j>i (leftmost remaining). So first found pair is minimal i, and minimal j for that i.
+
+Complexities O(n) time, O(n) space.
+
+Return type: tuple[int, int] | None.
+
+Now produce code block only.
+<<<END THINKING>>>
+
+```python
+from collections import defaultdict, deque
+from typing import List, Tuple, Optional
+
+def two_sum(nums: List[int], target: int) -> Optional[Tuple[int, int]]:
+    # map each value to a queue of its indices (ascending)
+    idx_map: defaultdict[int, deque[int]] = defaultdict(deque)
+    for idx, val in enumerate(nums):
+        idx_map[val].append(idx)
+
+    for i, val in enumerate(nums):
+        # remove current index from its queue
+        idx_map[val].popleft()
+        complement = target - val
+        if idx_map[complement]:
+            j = idx_map[complement][0]  # smallest index > i
+            return (i, j)
+    return None
+```

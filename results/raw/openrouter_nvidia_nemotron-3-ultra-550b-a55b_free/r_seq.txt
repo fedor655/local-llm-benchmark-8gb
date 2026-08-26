@@ -1,0 +1,25 @@
+<<<THINKING>>>
+We need to continue the sequence: 1, 11, 21, 1211, 111221, ... This is the "look-and-say" sequence. Each term describes the previous term.
+
+Let's verify:
+1 -> "one 1" -> 11
+11 -> "two 1s" -> 21
+21 -> "one 2, one 1" -> 1211
+1211 -> "one 1, one 2, two 1s" -> 111221
+111221 -> "three 1s, two 2s, one 1" -> 312211
+
+So the next number is 312211.
+
+The user asks: "Продолжи последовательность: 1, 11, 21, 1211, 111221, ... Какое число идёт следующим? Ответь числом без пробелов." So answer: 312211.
+
+We must output the answer in the last line as "ОТВЕТ: <значение>" without explanations after that line. Also we need to answer briefly. The instruction: "Отвечай кратко. В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение> Без пояснений после этой строки."
+
+So we can give a short explanation then the final line. But the final line must be exactly "ОТВЕТ: 312211". No extra spaces? The format: "ОТВЕТ: <значение>". So "ОТВЕТ: 312211". Ensure no trailing spaces or extra text.
+
+We'll produce a short answer then the required line.
+<<<END THINKING>>>
+
+Последовательность «look-and-say»: каждое число описывает предыдущее.  
+111221 → «три 1, две 2, одна 1» → 312211.
+
+ОТВЕТ: 312211

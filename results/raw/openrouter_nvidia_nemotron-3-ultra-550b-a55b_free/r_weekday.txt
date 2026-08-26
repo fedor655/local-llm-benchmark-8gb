@@ -1,0 +1,32 @@
+<<<THINKING>>>
+The user asks: "Today is Tuesday. What day of the week will it be exactly 100 days from now? Answer with one word."
+
+We need to compute the day of the week after 100 days from Tuesday.
+
+We know that days of the week repeat every 7 days. So we compute 100 mod 7.
+
+100 ÷ 7 = 14 * 7 = 98, remainder 2. So 100 days later is 2 days after Tuesday.
+
+Tuesday + 2 days = Thursday.
+
+Thus answer: Thursday.
+
+But the user says "Ответь одним словом." (Answer with one word). And the system says: "Отвечай кратко. В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение> Без пояснений после этой строки."
+
+So we need to output the answer in the last line as "ОТВЕТ: Thursday" (or "ОТВЕТ: Четверг"? The user asked in Russian, but the answer could be in English or Russian. The user said "Ответь одним словом." Probably they expect the day name in Russian? The question: "Сегодня вторник. Какой день недели будет ровно через 100 дней? Ответь одним словом." The user is Russian, so likely they want the answer in Russian: "Четверг". But the system says "Отвечай кратко. В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение> Без пояснений после этой строки." It doesn't specify language. Usually we answer in the same language as the user. So we should output "ОТВЕТ: Четверг". But the user said "Ответь одним словом." That might be just the day name. But the system requires the last line to be "ОТВЕТ: <значение>". So we need to include that. The user might want just the day name, but the system forces a specific format. We must follow the system instruction: "В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение> Без пояснений после этой строки." So we need to output something like:
+
+Четверг
+ОТВЕТ: Четверг
+
+But the system says "Отвечай кратко." So maybe just the last line with the answer. But the user says "Ответь одним словом." That could be interpreted as the answer should be a single word. But the system requires the format. Usually these tasks require the answer in the specified format. So we should output just the last line "ОТВЕТ: Четверг". But the user might want the day name only. However, the system instruction is higher priority. The system says: "Отвечай кратко. В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение> Без пояснений после этой строки." So we must ensure the last line is exactly that format. We can include a short explanation before, but the last line must be the answer. The user says "Ответь одним словом." That might be a request to answer with one word, but the system overrides. Usually we follow the system. So we can output:
+
+ОТВЕТ: Четверг
+
+But that is not a single word; it's "ОТВЕТ: Четверг". However, the system says "В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение>". So we must do that. The user might be okay with that. The system is the developer instruction. So we comply.
+
+Thus final answer: "ОТВЕТ: Четверг". But we need to ensure it's the last line. We can just output that line alone. That is brief. The user asked "Ответь одним словом." But we are giving a formatted answer. However, the system says "Отвечай кратко." So we can just give the formatted answer. That is acceptable.
+
+Thus final output: "ОТВЕТ: Четверг".
+<<<END THINKING>>>
+
+ОТВЕТ: Четверг

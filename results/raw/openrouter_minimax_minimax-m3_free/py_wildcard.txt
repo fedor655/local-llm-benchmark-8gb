@@ -1,0 +1,27 @@
+```python
+def is_match(s: str, p: str) -> bool:
+    n, m = len(s), len(p)
+    s_idx, p_idx = 0, 0
+    star = -1
+    s_tmp = -1
+
+    while s_idx < n:
+        if p_idx < m and p[p_idx] == '*':
+            star = p_idx
+            s_tmp = s_idx
+            p_idx += 1
+        elif p_idx < m and (p[p_idx] == '?' or p[p_idx] == s[s_idx]):
+            s_idx += 1
+            p_idx += 1
+        elif star != -1:
+            p_idx = star + 1
+            s_tmp += 1
+            s_idx = s_tmp
+        else:
+            return False
+
+    while p_idx < m and p[p_idx] == '*':
+        p_idx += 1
+
+    return p_idx == m
+```

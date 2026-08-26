@@ -1,0 +1,59 @@
+<<<THINKING>>>
+We need to output a single code block with the class implementation. No extra text. Provide Python code implementing LRUCache with O(1) using OrderedDict or custom double linked list + dict. Provide methods get and put. Ensure capacity handling. Provide only code block.
+<<<END THINKING>>>
+
+```python
+class LRUCache:
+    class _Node:
+        __slots__ = ('key', 'value', 'prev', 'next')
+        def __init__(self, key, value):
+            self.key = key
+            self.value = value
+            self.prev = None
+            self.next = None
+
+    def __init__(self, capacity: int):
+        self._capacity = capacity
+        self._cache = {}                     # key -> node
+        # dummy head and tail for O(1) insert/remove
+        self._head = self._Node(0, 0)
+        self._tail = self._Node(0, 0)
+        self._head.next = self._tail
+        self._tail.prev = self._head
+
+    def _remove(self, node):
+        prev, nxt = node.prev, node.next
+        prev.next = nxt
+        nxt.prev = prev
+
+    def _add_to_front(self, node):
+        node.prev = self._head
+        node.next = self._head.next
+        self._head.next.prev = node
+        self._head.next = node
+
+    def get(self, key):
+        node = self._cache.get(key)
+        if not node:
+            return -1
+        # move to front (most recently used)
+        self._remove(node)
+        self._add_to_front(node)
+        return node.value
+
+    def put(self, key, value):
+        node = self._cache.get(key)
+        if node:
+            node.value = value
+            self._remove(node)
+            self._add_to_front(node)
+        else:
+            if len(self._cache) >= self._capacity:
+                # evict LRU (node before tail)
+                lru = self._tail.prev
+                self._remove(lru)
+                del self._cache[lru.key]
+            new_node = self._Node(key, value)
+            self._cache[key] = new_node
+            self._add_to_front(new_node)
+```

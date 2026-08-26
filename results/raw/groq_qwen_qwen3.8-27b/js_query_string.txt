@@ -1,0 +1,41 @@
+```javascript
+function parseQuery(qs) {
+  if (typeof qs !== 'string') return {};
+  let str = qs;
+  if (str.charAt(0) === '?') str = str.slice(1);
+  if (str === '') return {};
+
+  const result = {};
+  const segments = str.split('&');
+
+  for (const segment of segments) {
+    if (segment === '') continue;
+
+    const eqIndex = segment.indexOf('=');
+    let key, value;
+
+    if (eqIndex === -1) {
+      key = segment;
+      value = '';
+    } else {
+      key = segment.slice(0, eqIndex);
+      value = segment.slice(eqIndex + 1);
+    }
+
+    key = decodeURIComponent(key.replace(/\+/g, ' '));
+    value = decodeURIComponent(value.replace(/\+/g, ' '));
+
+    if (key in result) {
+      if (Array.isArray(result[key])) {
+        result[key].push(value);
+      } else {
+        result[key] = [result[key], value];
+      }
+    } else {
+      result[key] = value;
+    }
+  }
+
+  return result;
+}
+```

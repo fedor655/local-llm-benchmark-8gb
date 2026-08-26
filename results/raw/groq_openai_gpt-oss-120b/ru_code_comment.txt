@@ -1,0 +1,52 @@
+<<<THINKING>>>
+We need to output exactly one code block with the function definition, docstring in Russian, handling normalization. Should return None if not valid. Should accept various formats, strip non-digits, then process.
+
+Rules: Russian phone number: either 11 digits starting with 7 or 8, or 10 digits (without country code). If 10 digits, assume leading 7. Output '+7' + 10-digit number.
+
+If 11 digits starting with 8, treat as 7? Usually convert to +7. So if 11 digits and first digit is 8, replace with 7. If first digit is 7, keep. If other, invalid.
+
+If 10 digits, just prefix with 7.
+
+If other length, invalid.
+
+Implementation: import re, extract digits via re.sub. Then logic.
+
+Return string '+7' + rest10.
+
+Edge: if 11 digits and first digit is 7, then rest = digits[1:]; output '+7' + rest. If first digit is 8, same.
+
+If 10 digits, output '+7' + digits.
+
+Else None.
+
+Docstring in Russian.
+
+Return type annotation: -> str | None (Python 3.10+). Provide function.
+
+One code block only.
+<<<END THINKING>>>
+
+```python
+import re
+
+def нормализовать_телефон(s: str) -> str | None:
+    """
+    Приводит телефонный номер к каноническому виду +79123456789.
+
+    Принимает строку, содержащую российский номер телефона в произвольном формате.
+    Извлекает все цифры и проверяет:
+    - 11 цифр, первая из которых 7 или 8 (код страны);
+    - 10 цифр без кода страны.
+    В случае 11‑значного номера первая цифра заменяется на 7,
+    а в случае 10‑значного номера к нему добавляется префикс 7.
+    Возвращает строку в виде '+7' + 10 цифр или None, если номер не соответствует требованиям.
+    """
+    digits = re.sub(r'\D', '', s)
+    if len(digits) == 11 and digits[0] in ('7', '8'):
+        core = digits[1:]
+    elif len(digits) == 10:
+        core = digits
+    else:
+        return None
+    return f'+7{core}'
+```

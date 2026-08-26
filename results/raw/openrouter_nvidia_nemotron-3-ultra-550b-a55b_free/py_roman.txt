@@ -1,0 +1,50 @@
+<<<THINKING>>>
+The user wants two functions: int_to_roman and roman_to_int.
+Constraints: 1 to 3999. Subtractive notation required.
+Output format: Single code block, no explanations, no tests.
+<<<END THINKING>>>
+
+```python
+def int_to_roman(n: int) -> str:
+    if not 1 <= n <= 3999:
+        raise ValueError("Number out of range (1..3999)")
+    val = [
+        1000, 900, 500, 400,
+        100, 90, 50, 40,
+        10, 9, 5, 4,
+        1
+    ]
+    syms = [
+        "M", "CM", "D", "CD",
+        "C", "XC", "L", "XL",
+        "X", "IX", "V", "IV",
+        "I"
+    ]
+    res = []
+    for i, v in enumerate(val):
+        count, n = divmod(n, v)
+        res.append(syms[i] * count)
+    return "".join(res)
+
+def roman_to_int(s: str) -> int:
+    roman_map = {
+        'I': 1, 'V': 5, 'X': 10, 'L': 50,
+        'C': 100, 'D': 500, 'M': 1000
+    }
+    total = 0
+    prev_value = 0
+    for char in reversed(s):
+        value = roman_map.get(char)
+        if value is None:
+            raise ValueError(f"Invalid Roman numeral character: {char}")
+        if value < prev_value:
+            total -= value
+        else:
+            total += value
+        prev_value = value
+    if not 1 <= total <= 3999:
+        raise ValueError("Roman numeral out of range (1..3999)")
+    if int_to_roman(total) != s:
+        raise ValueError("Invalid Roman numeral format")
+    return total
+```

@@ -1,0 +1,49 @@
+<<<THINKING>>>
+We need to compute the value of the expression `(0b1011 << 2) ^ 0xF` in Python, and output the decimal integer result.
+
+Let's break it down:
+
+- `0b1011` is binary literal for decimal 11 (since 1*8 + 0*4 + 1*2 + 1*1 = 11).
+- `<< 2` left shift by 2 bits: 11 << 2 = 11 * 4 = 44. In binary: 1011 becomes 101100 (which is 44).
+- `0xF` is hexadecimal for decimal 15 (binary 1111).
+- `^` is bitwise XOR.
+
+Compute 44 ^ 15.
+
+44 in binary: 32 + 8 + 4 = 44 -> 101100 (6 bits). 15 in binary: 1111 (4 bits). Align bits:
+
+44: 101100
+15: 001111 (since 15 is 1111, we can pad to 6 bits: 001111)
+
+XOR: 
+1 0 1 1 0 0
+0 0 1 1 1 1
+= 1 0 0 0 1 1? Let's do bitwise:
+
+Bit positions (from most significant to least, 6 bits):
+44: 1 0 1 1 0 0
+15: 0 0 1 1 1 1
+XOR: 1^0=1, 0^0=0, 1^1=0, 1^1=0, 0^1=1, 0^1=1 => 1 0 0 0 1 1 = binary 100011.
+
+100011 binary = 32 + 2 + 1 = 35? Wait: 100011 = 1*32 + 0*16 + 0*8 + 0*4 + 1*2 + 1*1 = 32+2+1=35.
+
+But let's double-check: 44 ^ 15 = 35? Let's compute manually: 44 decimal, 15 decimal. 44 XOR 15 = 35? Let's verify with known values: 44 = 0x2C, 15 = 0x0F. 0x2C ^ 0x0F = 0x23? 0x2C = 0010 1100, 0x0F = 0000 1111, XOR = 0010 0011 = 0x23 = 35 decimal. Yes.
+
+So result is 35.
+
+The answer should be just the decimal number, and the last line must be "ОТВЕТ: 35". No extra text after that.
+
+We need to output the answer with the required format. The user says: "Отвечай кратко. В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение> Без пояснений после этой строки."
+
+So we can provide a brief explanation, but the last line must be exactly "ОТВЕТ: 35". And no extra text after that line.
+
+I'll write a short explanation then the required line.
+<<<END THINKING>>>
+
+Выражение `(0b1011 << 2) ^ 0xF` вычисляется так:
+- `0b1011` = 11
+- `11 << 2` = 44
+- `0xF` = 15
+- `44 ^ 15` = 35
+
+ОТВЕТ: 35

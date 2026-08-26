@@ -1,0 +1,5 @@
+<<<THINKING>>>
+We need to answer: Maria has 4 brothers and 3 sisters. How many sisters does Maria's brother have? The brother is one of the 4 brothers. He has the same siblings as Maria: 3 sisters (including Maria? Wait, Maria is a sister to the brother. The question: "Сколько сестёр у брата Марии?" Means "How many sisters does Maria's brother have?" The brother's sisters are the female siblings of that brother. Maria is a sister, plus the other two sisters? Actually Maria has 3 sisters total. That includes Maria herself? Usually "у Марии три сестры" means Maria has three sisters, i.e., besides herself, there are three other girls. So total female children = Maria + 3 sisters = 4 girls. For a brother, his sisters are all the girls: Maria plus the three sisters = 4 sisters. So answer is 4.
+<<<END THINKING>>>
+
+ОТВЕТ: 4

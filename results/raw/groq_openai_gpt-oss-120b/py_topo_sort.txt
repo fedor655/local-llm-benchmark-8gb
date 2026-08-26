@@ -1,0 +1,28 @@
+<<<THINKING>>>
+We need to output a single code block with the function. Should be Python. Provide topological sort using Kahn's algorithm. Return list or None. Use typing. Provide function definition only? Probably include imports. Provide code block only.
+<<<END THINKING>>>
+
+```python
+from collections import deque
+from typing import List, Tuple, Optional
+
+def topo_sort(n: int, edges: List[Tuple[int, int]]) -> Optional[List[int]]:
+    indeg = [0] * n
+    adj = [[] for _ in range(n)]
+    for a, b in edges:
+        adj[a].append(b)
+        indeg[b] += 1
+
+    q = deque([v for v in range(n) if indeg[v] == 0])
+    order = []
+
+    while q:
+        v = q.popleft()
+        order.append(v)
+        for nb in adj[v]:
+            indeg[nb] -= 1
+            if indeg[nb] == 0:
+                q.append(nb)
+
+    return order if len(order) == n else None
+```

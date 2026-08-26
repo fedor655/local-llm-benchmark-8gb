@@ -1,0 +1,12 @@
+```python
+def two_sum(nums: list[int], target: int) -> tuple[int, int] | None:
+    seen = {}
+    best = None
+    for j, num in enumerate(nums):
+        i = seen.get(num)
+        if i is not None:
+            if best is None or (i, j) < best:
+                best = (i, j)
+        seen[target - num] = j
+    return best
+```

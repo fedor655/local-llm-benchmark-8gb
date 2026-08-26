@@ -1,0 +1,46 @@
+<<<THINKING>>>
+The user wants a Python function `top_by_group` that processes CSV text.
+Constraints:
+- Input: CSV text string, header in first line, comma delimiter, no quotes/escaping.
+- Group by `group_col`.
+- Sum numeric values in `value_col`.
+- Skip rows where `value_col` is empty or not a number, but keep group if at least one valid row exists.
+- Return top `k` groups by sum descending, tie-break by group name ascending.
+- Return list of tuples `(group_name, sum)`.
+- Ignore empty lines at end of file.
+- Output: Exactly one code block with the function. No tests, no examples, no explanations.
+<<<END THINKING>>>
+
+```python
+def top_by_group(csv_text: str, group_col: str, value_col: str, k: int) -> list[tuple[str, float]]:
+    lines = csv_text.strip().splitlines()
+    if not lines:
+        return []
+    
+    header = lines[0].split(',')
+    try:
+        group_idx = header.index(group_col)
+        value_idx = header.index(value_col)
+    except ValueError:
+        return []
+
+    sums = {}
+    for line in lines[1:]:
+        if not line:
+            continue
+        parts = line.split(',')
+        if len(parts) <= max(group_idx, value_idx):
+            continue
+        group = parts[group_idx]
+        val_str = parts[value_idx].strip()
+        if not val_str:
+            continue
+        try:
+            val = float(val_str)
+        except ValueError:
+            continue
+        sums[group] = sums.get(group, 0.0) + val
+
+    sorted_groups = sorted(sums.items(), key=lambda x: (-x[1], x[0]))
+    return sorted_groups[:k]
+```

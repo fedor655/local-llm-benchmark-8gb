@@ -1,0 +1,32 @@
+<<<THINKING>>>
+The user wants a Python function `нормализовать_телефон` that normalizes Russian phone numbers.
+Requirements:
+1. Input: string `s`.
+2. Output: string in format `+7XXXXXXXXXX` (11 digits starting with 7) or `None`.
+3. Acceptable inputs: various formats like '+7 (912) 345-67-89', '8-912-345-67-89', '89123456789'.
+4. Logic: Extract digits. If 11 digits and starts with 7 or 8 -> replace leading 8 with 7, add +. If 10 digits -> add +7. Else None.
+5. Docstring in Russian.
+6. Output format: Exactly one code block with python code. No extra text.
+<<<END THINKING>>>
+
+```python
+def нормализовать_телефон(s: str) -> str | None:
+    """
+    Нормализует российский номер телефона в формат +7XXXXXXXXXX.
+
+    Args:
+        s: Строка с номером телефона в произвольном формате.
+
+    Returns:
+        Номер в формате +7XXXXXXXXXX (11 цифр с кодом страны) или None,
+        если номер некорректен.
+    """
+    digits = "".join(filter(str.isdigit, s))
+
+    if len(digits) == 11 and digits[0] in ("7", "8"):
+        return "+7" + digits[1:]
+    if len(digits) == 10:
+        return "+7" + digits
+
+    return None
+```

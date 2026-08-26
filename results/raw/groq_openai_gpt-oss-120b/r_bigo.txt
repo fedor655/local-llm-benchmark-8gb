@@ -1,0 +1,6 @@
+<<<THINKING>>>
+We need to analyze code: outer loop for i in range(n): runs n times. Inside, j starts at 1, while j < n: each iteration multiplies j by 2, so number of iterations = floor(log2(n-1)) + 1 ≈ O(log n). So total operations O(n log n). So answer O(nlogn). Need format O(... ) without spaces, using n. So O(nlogn). Then final line: ОТВЕТ: O(nlogn). Ensure no extra explanation after that line. Also need brief answer earlier? The instruction: "Отвечай кратко." So just answer. Provide O(nlogn) and final line.
+<<<END THINKING>>>
+
+O(nlogn)
+ОТВЕТ: O(nlogn)

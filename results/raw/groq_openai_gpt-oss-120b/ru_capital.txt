@@ -1,0 +1,5 @@
+<<<THINKING>>>
+The user asks: "Назови столицу Австралии. Ответь одним словом." They want the capital of Australia, one word. The capital is Canberra. So answer with "Canberra". Must be short, and in the very last line of answer must write "ОТВЕТ: <value>" with no explanation after that line. So we need to output something, maybe just the answer line. The instruction: "В САМОЙ ПОСЛЕДНЕЙ строке ответа обязательно напиши результат в формате: ОТВЕТ: <значение> Без пояснений после этой строки." So we can give maybe the answer word and then the line. But the last line must be the ОТВЕТ line. So we can put the answer word before, then the ОТВЕТ line. Or we can just output the ОТВЕТ line with the value. That would satisfy. Probably they want the answer in that format. So final line: ОТВЕТ: Канберра. Use Russian spelling? The capital is "Канберра". The user asked in Russian, so answer in Russian. So "Канберра". So final line: ОТВЕТ: Канберра. No extra.
+<<<END THINKING>>>
+
+ОТВЕТ: Канберра

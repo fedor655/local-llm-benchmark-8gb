@@ -1,0 +1,19 @@
+<<<THINKING>>>
+The user asks: "Write one sentence about the sea in Russian, which contains no letter 'а', length at least 5 words. Output only the sentence."
+
+We must comply. Need a Russian sentence about the sea, no letter "а". Must be at least 5 words. No letter "а" anywhere, including in any word. Must be a single sentence. Must output only the sentence.
+
+We need to avoid letter "а". Russian letters: we must avoid 'а' both uppercase and lowercase. Also avoid 'А'.
+
+We need at least 5 words. Let's think of words about sea: "море" (contains 'о', 'р', 'е' - fine). "синий" (contains 'н', 'и', 'й' - fine). "весенний" (contains 'а'? no). "волнуется" (contains 'а'? no). "песок" (contains 'а'? no). "покой" (no a). "тишина" (contains 'а' - can't). "покрыт" (contains 'а'? no). "свет" (no a). "глубокий" (no a). "покорный"? no a. "бриз" (no a). "покорный" has 'о', 'р', 'н', 'ы', 'й' - fine.
+
+We need a sentence about the sea, no 'а'. Example: "Синий берег покрыт тихим песком, шепчет волна." Let's check letters: "Синий" (no a), "берег" (no a), "покрыт" (no a), "тихим" (no a), "песком," (no a), "шепчет" (no a), "волна." Wait "волна" contains 'а' at end, can't. So need replace "волна" with "волн". But "волн" is not proper. Could use "волн". Or "волн". Or "волн". Could use "волн". Or "волн". Actually "волн" is a form? Could use "волн". Or "волн". Or "волн". Better: "шепчет прибой". "прибой" no a. Good.
+
+Now sentence: "Синий берег покрыт тихим песком, шепчет прибой." Count words: "Синий(1) берег2 покрыт3 тихим4 песком,5 шепчет6 прибой7." That's 7 words, okay. No letter 'а'? Check each: Синий (С, и, н, и, й) ok. берег (б, е, р, е, г) ok. покрыт (п, о, к, р, ы, т) ok. тихим (т, и, х, и, м) ok. песком (п, е, с, к, о, м) ok. шепчет (ш, е, п, ч, е, т) ok. прибой (п, р, и, б, о, й) ok. No 'а'. Good.
+
+Make sure no hidden 'а' in punctuation? punctuation fine. Output only the sentence.
+
+Thus answer: "Синий берег покрыт тихим песком, шепчет прибой."
+<<<END THINKING>>>
+
+Синий берег покрыт тихим песком, шепчет прибой.

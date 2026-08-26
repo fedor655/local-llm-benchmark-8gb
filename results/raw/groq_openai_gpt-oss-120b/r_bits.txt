@@ -1,0 +1,5 @@
+<<<THINKING>>>
+We need compute (0b1011 << 2) ^ 0xF. 0b1011 is binary 1011 = decimal 11. Left shift by 2: 11 << 2 = 44 (since 11*4). 0xF is 15. XOR: 44 ^ 15. Compute: 44 decimal is binary 101100. 15 is 001111. XOR: 101100 xor 001111 = 100011 (since 1^0=1,0^0=0,1^1=0,1^1=0,0^1=1,0^1=1? Let's do bitwise aligning 6 bits: 44 = 101100, 15 = 001111. XOR each bit: 1 xor 0 =1, 0 xor 0=0, 1 xor 1=0, 1 xor 1=0, 0 xor 1=1, 0 xor 1=1 => 100011 which is binary 35? Let's compute: 1*32 +0*16+0*8+0*4+1*2+1*1 = 32+2+1=35. So result 35. Need answer decimal. Provide short answer and final line "ОТВЕТ: 35".
+<<<END THINKING>>>
+
+ОТВЕТ: 35
