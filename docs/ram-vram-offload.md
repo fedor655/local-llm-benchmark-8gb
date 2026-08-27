@@ -1,4 +1,4 @@
-# FreeToken — критический разбор
+# Инференс с офлоадом в RAM вдобавок к VRAM (FreeToken и аналоги)
 
 Движок [FlashML-org/FreeToken](https://github.com/FlashML-org/FreeToken):
 «edge-native MoE serving engine» — запуск больших MoE-моделей на потребительском
