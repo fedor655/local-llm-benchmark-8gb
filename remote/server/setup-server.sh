@@ -17,6 +17,7 @@ WEBUI_PORT=3000
 WEBUI_TAG="${WEBUI_TAG:-0.11}"
 
 log()  { printf '\n\033[1;32m==> %s\033[0m\n' "$*"; }
+warn() { printf '\033[1;33m[!] %s\033[0m\n' "$*"; }
 die()  { printf '\033[1;31m[x] %s\033[0m\n' "$*" >&2; exit 1; }
 
 [ "$(id -u)" -eq 0 ] || die "Запускать от root."
@@ -29,8 +30,20 @@ apt-get install -y -qq curl ca-certificates nginx jq openssl tar >/dev/null
 
 # ---------------------------------------------------------------- docker
 if ! command -v docker >/dev/null 2>&1; then
+  # Docker при установке выставляет политику цепочки FORWARD в DROP.
+  # Если сервер что-то маршрутизирует - VPN-шлюз, WireGuard, OpenVPN,
+  # проброс для домашней сети - транзитный трафик после этого умирает,
+  # и со стороны это выглядит как "интернет вдруг стал еле работать".
+  # Запоминаем политику до установки и возвращаем, если Docker её сменил.
+  FWD_BEFORE="$(iptables -S FORWARD 2>/dev/null | head -1 || true)"
   log "Ставлю Docker"
   curl -fsSL https://get.docker.com | sh
+  FWD_AFTER="$(iptables -S FORWARD 2>/dev/null | head -1 || true)"
+  if [ "$FWD_BEFORE" = "-P FORWARD ACCEPT" ] && [ "$FWD_AFTER" = "-P FORWARD DROP" ]; then
+    warn "Docker сменил политику FORWARD на DROP - возвращаю ACCEPT,"
+    warn "иначе сломается любая маршрутизация через этот сервер (VPN и прочее)."
+    iptables -P FORWARD ACCEPT
+  fi
 else
   log "Docker уже стоит: $(docker --version)"
 fi
@@ -178,7 +191,12 @@ server {
 }
 EOF
 
-rm -f /etc/nginx/sites-enabled/default
+# Не удаляем, а отодвигаем: если на сервере был свой сайт на 80 порту,
+# он должен восстанавливаться одной командой, а не заново писаться.
+if [ -e /etc/nginx/sites-enabled/default ]; then
+  mv -f /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default.disabled-by-llm-setup
+  warn "Прежний сайт по умолчанию отключён, копия: /etc/nginx/sites-available/default.disabled-by-llm-setup"
+fi
 ln -sfn /etc/nginx/sites-available/llm /etc/nginx/sites-enabled/llm
 nginx -t
 systemctl reload nginx
